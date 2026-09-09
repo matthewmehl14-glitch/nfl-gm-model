@@ -22,11 +22,22 @@ TEAM_MAPPING = {
 ROSTER_OVERRIDES = {"Saquon Barkley": "PHI"}
 INJURY_OVERRIDES = {"Kyren Williams": "Active", "David Montgomery": "Active"}
 
-def get_nfl_epa_stats(season=2026):
-    pbp = nfl.import_pbp_data([season])
-    pbp = pbp[(pbp['play_type'].isin(['pass', 'run'])) & (pbp['epa'].notna())]
-    
-    # Calculate Offensive EPA and Dynamic Pace (plays per game)
+def load_season_pbp(season):
+    """Safely fetch play-by-play data for a single season."""
+    try:
+        pbp = nfl.import_pbp_data([season])
+        if pbp is not None and not pbp.empty:
+            pbp = pbp[(pbp['play_type'].isin(['pass', 'run'])) & (pbp['epa'].notna())]
+            return pbp
+    except Exception as e:
+        print(f"Notice: No data available for {season} ({e}).")
+    return None
+
+def compute_raw_stats(pbp):
+    """Calculates offensive/defensive EPA and pace from a play-by-play DataFrame."""
+    if pbp is None or pbp.empty:
+        return {}
+
     off_epa = pbp.groupby('posteam').agg(
         off_epa_per_play=('epa', 'mean'),
         off_pass_epa=('epa', lambda x: x[pbp['play_type'] == 'pass'].mean()),
@@ -44,23 +55,62 @@ def get_nfl_epa_stats(season=2026):
     stats = {}
     for _, row in off_epa.iterrows():
         stats[row['posteam']] = {
-            "off_epa_per_play": round(row['off_epa_per_play'], 3),
-            "off_pass_epa": round(row['off_pass_epa'], 3),
-            "off_rush_epa": round(row['off_rush_epa'], 3),
-            "pace": round(row['plays'] / row['games'], 1) if row['games'] > 0 else 63.0
+            "off_epa_per_play": float(row['off_epa_per_play']),
+            "off_pass_epa": float(row['off_pass_epa']),
+            "off_rush_epa": float(row['off_rush_epa']),
+            "plays": int(row['plays']),
+            "pace": float(row['plays'] / row['games']) if row['games'] > 0 else 63.0
         }
+
     for _, row in def_epa.iterrows():
         team = row['defteam']
         if team in stats:
             stats[team].update({
-                "def_epa_per_play": round(row['def_epa_per_play'], 3),
-                "def_pass_epa": round(row['def_pass_epa'], 3),
-                "def_rush_epa": round(row['def_rush_epa'], 3)
+                "def_epa_per_play": float(row['def_epa_per_play']),
+                "def_pass_epa": float(row['def_pass_epa']),
+                "def_rush_epa": float(row['def_rush_epa'])
             })
     return stats
 
+def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0):
+    """Blends prior season baselines with current season metrics using play-count weighting."""
+    print(f"Loading {prior_season} baseline data...")
+    pbp_prior = load_season_pbp(prior_season)
+    prior_stats = compute_raw_stats(pbp_prior)
+
+    print(f"Checking for {current_season} in-season data...")
+    pbp_current = load_season_pbp(current_season)
+    current_stats = compute_raw_stats(pbp_current)
+
+    blended_stats = {}
+    all_teams = set(prior_stats.keys()).union(set(current_stats.keys()))
+
+    for team in all_teams:
+        p_team = prior_stats.get(team, {})
+        c_team = current_stats.get(team, {})
+
+        current_plays = c_team.get("plays", 0)
+
+        # Scale weight from 0.0 to 1.0 based on offensive snap volume
+        w_current = min(1.0, current_plays / sample_threshold)
+        w_prior = 1.0 - w_current
+
+        metrics = [
+            "off_epa_per_play", "off_pass_epa", "off_rush_epa",
+            "def_epa_per_play", "def_pass_epa", "def_rush_epa", "pace"
+        ]
+
+        blended_stats[team] = {"plays": current_plays}
+        for m in metrics:
+            val_prior = p_team.get(m, 0.0)
+            val_current = c_team.get(m, val_prior)
+            blended_stats[team][m] = round((w_current * val_current) + (w_prior * val_prior), 3)
+
+    return blended_stats
+
 def get_pinnacle_odds(api_key):
-    if not api_key: return {}
+    if not api_key:
+        return {}
     url = f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={api_key}&bookmakers=pinnacle&markets=h2h,spreads,totals&oddsFormat=american"
     try:
         res = requests.get(url)
@@ -104,12 +154,14 @@ def american_to_decimal(am_odds):
     return (am_odds / 100.0) + 1.0 if am_odds > 0 else (100.0 / abs(am_odds)) + 1.0
 
 def calculate_ev(prob_pct, am_odds, push_pct=0.0):
-    if not am_odds or prob_pct == 0: return None
+    if not am_odds or prob_pct == 0:
+        return None
     prob, p_push, dec = prob_pct / 100.0, push_pct / 100.0, american_to_decimal(am_odds)
     return round(((prob * dec) - 1.0 + p_push) * 100, 1)
 
 def calc_kelly_units(prob_pct, am_odds, push_pct=0.0, multiplier=0.25):
-    if not am_odds or prob_pct == 0: return 0.0
+    if not am_odds or prob_pct == 0:
+        return 0.0
     prob = prob_pct / 100.0
     b = american_to_decimal(am_odds) - 1.0
     q = 1.0 - prob
@@ -117,7 +169,6 @@ def calc_kelly_units(prob_pct, am_odds, push_pct=0.0, multiplier=0.25):
     return round((k * 100) * multiplier, 2) if k > 0 else 0.0
 
 def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, iterations=10000):
-    # Dynamic Pace Engine
     expected_plays = (away_epa.get("pace", 63.0) + home_epa.get("pace", 63.0)) / 2.0
     
     away_adv = (away_epa["off_epa_per_play"] - home_epa["def_epa_per_play"]) * expected_plays
@@ -132,7 +183,7 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
     margin_sims = np.round(home_sims - away_sims)
     total_sims = np.round(away_sims + home_sims)
     
-    # Key Number Clustering 
+    # Key Number Clustering (3, 7, 10 margins)
     for i in range(iterations):
         if margin_sims[i] in [2, 4] and np.random.random() < 0.35: margin_sims[i] = 3
         elif margin_sims[i] in [-2, -4] and np.random.random() < 0.35: margin_sims[i] = -3
@@ -177,9 +228,8 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
     return results
 
 def generate_nfl_json():
-    season = 2026
-    print("Auditing Active Rosters...")
-    epa_stats = get_nfl_epa_stats(season)
+    print("Executing dynamic 2025/2026 Bayesian EPA blend...")
+    epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0)
     
     api_key = os.environ.get("ODDS_API_KEY")
     pinnacle_data = get_pinnacle_odds(api_key)
@@ -219,8 +269,9 @@ def generate_nfl_json():
         "teams": epa_stats,
         "todays_games": todays_games
     }
-    with open('data.json', 'w') as f: json.dump(output_data, f, indent=4)
-    print(f"NFL Engine Updated for {len(todays_games)} matchups.")
+    with open('data.json', 'w') as f:
+        json.dump(output_data, f, indent=4)
+    print(f"NFL Engine successfully updated for {len(todays_games)} matchups.")
 
 if __name__ == "__main__":
     generate_nfl_json()
