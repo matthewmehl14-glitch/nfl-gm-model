@@ -257,17 +257,28 @@ def generate_nfl_json():
             )
             
             if mkt:
+                # Moneyline EV & Units
                 mkt["away_ml_ev"] = calculate_ev(sim_res["away_win_prob"], mkt.get('h2h', {}).get('away'))
                 mkt["away_ml_units"] = calc_kelly_units(sim_res["away_win_prob"], mkt.get('h2h', {}).get('away'))
                 mkt["home_ml_ev"] = calculate_ev(sim_res["home_win_prob"], mkt.get('h2h', {}).get('home'))
                 mkt["home_ml_units"] = calc_kelly_units(sim_res["home_win_prob"], mkt.get('h2h', {}).get('home'))
                 
+                # Spread EV & Units
                 if spread_line is not None:
                     mkt["away_sp_ev"] = calculate_ev(sim_res["spread_probs"]["away"] * 100, mkt.get('spreads', {}).get('away'), sim_res["spread_probs"]["push"] * 100)
                     mkt["away_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["away"] * 100, mkt.get('spreads', {}).get('away'), sim_res["spread_probs"]["push"] * 100)
                     mkt["home_sp_ev"] = calculate_ev(sim_res["spread_probs"]["home"] * 100, mkt.get('spreads', {}).get('home'), sim_res["spread_probs"]["push"] * 100)
                     mkt["home_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["home"] * 100, mkt.get('spreads', {}).get('home'), sim_res["spread_probs"]["push"] * 100)
                 
+                # Totals EV & Units
+                if total_line is not None:
+                    over_odds = mkt.get('totals', {}).get('over')
+                    under_odds = mkt.get('totals', {}).get('under')
+                    mkt["over_ev"] = calculate_ev(sim_res["ou_probs"]["over"] * 100, over_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["over_units"] = calc_kelly_units(sim_res["ou_probs"]["over"] * 100, over_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["under_ev"] = calculate_ev(sim_res["ou_probs"]["under"] * 100, under_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["under_units"] = calc_kelly_units(sim_res["ou_probs"]["under"] * 100, under_odds, sim_res["ou_probs"]["push"] * 100)
+
             todays_games.append({
                 "away_team": away_abbr, "home_team": home_abbr,
                 "away_offense": epa_stats[away_abbr], "home_offense": epa_stats[home_abbr],
