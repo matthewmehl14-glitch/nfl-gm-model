@@ -8,43 +8,48 @@
     <style>
         :root { --bg-color: #0B1120; --card-bg: #131E32; --border-color: #1E293B; --text-main: #F8FAFC; --text-muted: #94A3B8; --cyan-team: #00B4D8; --red-team: #FF4D4D; --gold: #F59E0B; }
         * { box-sizing: border-box; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 16px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; }
         .container { width: 100%; max-width: 860px; display: flex; flex-direction: column; gap: 20px; }
-        select { width: 100%; padding: 12px; background-color: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; }
-        .prediction-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 20px; }
+        select { width: 100%; padding: 12px; background-color: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; outline: none; }
+        .prediction-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; }
         .prob-row { display: flex; justify-content: space-between; margin-top: 15px; }
-        .team-prob-box { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .team-prob-box { display: flex; flex-direction: column; gap: 8px; flex: 1; }
         .team-prob-box.right { text-align: right; align-items: flex-end; }
-        .pinny-box { display: flex; align-items: center; gap: 6px; }
-        .ev-tag { font-size: 12px; font-weight: 800; padding: 2px 6px; border-radius: 4px; }
+        .pinny-box { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600;}
+        .ev-tag { font-size: 13px; font-weight: 800; padding: 4px 8px; border-radius: 6px; }
         .ev-positive { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
         .ev-negative { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-        .unit-rec { font-size: 11px; color: var(--gold); font-weight: bold; margin-top: 2px; }
+        .unit-rec { font-size: 13px; color: var(--gold); font-weight: bold; margin-top: 2px; }
+        .team-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 4px; }
+        h3 { text-align: center; margin: 0 0 16px 0; color: var(--text-muted); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
+        .chart-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
     </style>
 </head>
 <body>
     <div class="container">
-        <h2 style="text-align: center; color: var(--gold); margin: 0;">NFL EXPECTED VALUE SCANNER</h2>
+        <h2 style="text-align: center; color: var(--gold); margin: 0 0 10px 0; letter-spacing: 1px;">NFL EXPECTED VALUE SCANNER</h2>
         <select id="game-select"></select>
         
         <div class="prediction-card">
-            <h3 style="text-align: center; margin: 0 0 10px 0;">MONEYLINE</h3>
+            <h3>MONEYLINE</h3>
             <div class="prob-row">
                 <div class="team-prob-box">
-                    <span id="away-name" style="font-weight: bold; color: var(--cyan-team);">Away</span>
+                    <img id="away-logo" class="team-logo" src="" alt="Away">
+                    <span id="away-name" style="font-weight: 900; font-size: 24px; color: var(--cyan-team);">Away</span>
                     <div class="pinny-box"><span id="away-ml-pinny">ML: --</span> <span id="away-ml-ev" class="ev-tag">EV: --</span></div>
                     <span id="away-ml-units" class="unit-rec">Unit Size Rec: --</span>
                 </div>
                 <div class="team-prob-box right">
-                    <span id="home-name" style="font-weight: bold; color: var(--red-team);">Home</span>
+                    <img id="home-logo" class="team-logo" src="" alt="Home">
+                    <span id="home-name" style="font-weight: 900; font-size: 24px; color: var(--red-team);">Home</span>
                     <div class="pinny-box"><span id="home-ml-pinny">ML: --</span> <span id="home-ml-ev" class="ev-tag">EV: --</span></div>
                     <span id="home-ml-units" class="unit-rec">Unit Size Rec: --</span>
                 </div>
             </div>
             
-            <hr style="border: 1px solid var(--border-color); margin: 20px 0;">
+            <hr style="border: 0; height: 1px; background: var(--border-color); margin: 24px 0;">
             
-            <h3 style="text-align: center; margin: 0 0 10px 0;">SPREAD</h3>
+            <h3>SPREAD</h3>
             <div class="prob-row">
                 <div class="team-prob-box">
                     <div class="pinny-box"><span id="away-sp-pinny">SP: --</span> <span id="away-sp-ev" class="ev-tag">EV: --</span></div>
@@ -57,13 +62,20 @@
             </div>
         </div>
         
-        <div class="prediction-card"><canvas id="spiderChart"></canvas></div>
+        <div class="chart-container">
+            <canvas id="spiderChart"></canvas>
+        </div>
     </div>
 
     <script>
         let todaysGames = [];
         let spiderChart = null;
+        
+        // Data keys
         const stats = ['off_epa_per_play', 'off_pass_epa', 'off_rush_epa', 'def_epa_per_play', 'def_pass_epa', 'def_rush_epa'];
+        
+        // Human-readable labels for the chart
+        const statLabels = ['Offense EPA/Play', 'Pass Offense EPA', 'Rush Offense EPA', 'Defense EPA/Play', 'Pass Defense EPA', 'Rush Defense EPA'];
 
         function renderEV(id, ev) {
             const el = document.getElementById(id);
@@ -84,7 +96,29 @@
 
         function initChart() {
             spiderChart = new Chart(document.getElementById('spiderChart').getContext('2d'), {
-                type: 'radar', data: { labels: stats, datasets: [ { label: 'Away', data: [], borderColor: '#00B4D8' }, { label: 'Home', data: [], borderColor: '#FF4D4D' } ] }
+                type: 'radar', 
+                data: { 
+                    labels: statLabels, 
+                    datasets: [ 
+                        { label: 'Away', data: [], backgroundColor: 'rgba(0, 180, 216, 0.35)', borderColor: '#00B4D8', pointBackgroundColor: '#00B4D8' }, 
+                        { label: 'Home', data: [], backgroundColor: 'rgba(255, 77, 77, 0.35)', borderColor: '#FF4D4D', pointBackgroundColor: '#FF4D4D' } 
+                    ] 
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        r: {
+                            min: 0, max: 100,
+                            ticks: { display: false },
+                            grid: { color: '#1E293B' }, 
+                            angleLines: { color: '#1E293B' }, 
+                            pointLabels: { color: '#E2E8F0', font: { size: 12, weight: 'bold' } }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
             });
         }
 
@@ -93,8 +127,13 @@
             const game = todaysGames[document.getElementById('game-select').value];
             const mkt = game.market_data || {};
             
+            // Text updates
             document.getElementById('away-name').textContent = game.away_team;
             document.getElementById('home-name').textContent = game.home_team;
+            
+            // Logos using ESPN CDN
+            document.getElementById('away-logo').src = `https://a.espncdn.com/i/teamlogos/nfl/500/${game.away_team.toLowerCase()}.png`;
+            document.getElementById('home-logo').src = `https://a.espncdn.com/i/teamlogos/nfl/500/${game.home_team.toLowerCase()}.png`;
             
             // ML Updates
             document.getElementById('away-ml-pinny').textContent = `ML: ${mkt.h2h?.away || 'N/A'}`;
@@ -111,7 +150,9 @@
             document.getElementById('home-sp-units').textContent = `Unit Size Rec: ${mkt.home_sp_units || 0}u`;
 
             // Chart Update (Scaling EPA between -0.3 and 0.3 approx)
+            spiderChart.data.datasets[0].label = game.away_team;
             spiderChart.data.datasets[0].data = stats.map(s => ((game.away_offense[s] + 0.3) / 0.6) * 100);
+            spiderChart.data.datasets[1].label = game.home_team;
             spiderChart.data.datasets[1].data = stats.map(s => ((game.home_offense[s] + 0.3) / 0.6) * 100);
             spiderChart.update();
         }
