@@ -182,12 +182,21 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
     # Dynamic Pace Engine
     expected_plays = (away_epa.get("pace", 63.0) + home_epa.get("pace", 63.0)) / 2.0
     
-    away_adv = (away_epa["off_epa_per_play"] - home_epa["def_epa_per_play"]) * expected_plays
-    home_adv = (home_epa["off_epa_per_play"] - away_epa["def_epa_per_play"]) * expected_plays
+    # 1. Correct Sign: Def EPA is points allowed, so ADD it (good defense has negative EPA)
+    # 2. Scale Factor: Regress net EPA by 0.55 to account for game-to-game regression to the mean
+    scale_factor = 0.55
+    away_net_epa = (away_epa["off_epa_per_play"] + home_epa["def_epa_per_play"]) * scale_factor
+    home_net_epa = (home_epa["off_epa_per_play"] + away_epa["def_epa_per_play"]) * scale_factor
     
-    away_exp = 21.0 + away_adv
-    home_exp = 22.5 + home_adv 
+    # Base NFL expectation: ~21.5 away, ~23.0 home (incorporates ~1.5 HFA)
+    away_exp = 21.5 + (away_net_epa * expected_plays)
+    home_exp = 23.0 + (home_net_epa * expected_plays)
     
+    # Realistic guardrails: keep average expectations between 13 and 34 points
+    away_exp = max(13.0, min(34.0, away_exp))
+    home_exp = max(13.0, min(34.0, home_exp))
+    
+    # NFL single-team score standard deviation is historically ~9.5 - 10.0
     away_sims = np.random.normal(away_exp, 9.5, iterations)
     home_sims = np.random.normal(home_exp, 9.5, iterations)
     
@@ -226,7 +235,7 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
             "push": float(push_spread / iterations)
         }
         
-    if total_line:
+    if total_line is not None:
         over = np.sum(total_sims > total_line)
         under = np.sum(total_sims < total_line)
         push_tot = np.sum(total_sims == total_line)
