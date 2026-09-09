@@ -3,7 +3,7 @@ import requests
 import json
 import numpy as np
 import nfl_data_py as nfl
-from datetime import datetime
+from datetime import datetime, timedelta
 
 TEAM_MAPPING = {
     "Arizona Cardinals": "ARI", "Atlanta Falcons": "ATL", "Baltimore Ravens": "BAL",
@@ -18,9 +18,6 @@ TEAM_MAPPING = {
     "San Francisco 49ers": "SF", "Seattle Seahawks": "SEA", "Tampa Bay Buccaneers": "TB",
     "Tennessee Titans": "TEN", "Washington Commanders": "WAS"
 }
-
-ROSTER_OVERRIDES = {"Saquon Barkley": "PHI"}
-INJURY_OVERRIDES = {"Kyren Williams": "Active", "David Montgomery": "Active"}
 
 def load_season_pbp(season):
     """Safely fetch play-by-play data for a single season."""
@@ -111,7 +108,13 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_thresho
 def get_pinnacle_odds(api_key):
     if not api_key:
         return {}
-    url = f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={api_key}&bookmakers=pinnacle&markets=h2h,spreads,totals&oddsFormat=american"
+        
+    # Calculate a strict 7-day cutoff window to isolate the current NFL week
+    cutoff = (datetime.utcnow() + timedelta(days=7)).strftime('%Y-%m-%dT%H:%M:%SZ')
+    
+    # Append commenceTimeTo to the API URL
+    url = f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={api_key}&bookmakers=pinnacle&markets=h2h,spreads,totals&oddsFormat=american&commenceTimeTo={cutoff}"
+    
     try:
         res = requests.get(url)
         res.raise_for_status()
@@ -162,13 +165,21 @@ def calculate_ev(prob_pct, am_odds, push_pct=0.0):
 def calc_kelly_units(prob_pct, am_odds, push_pct=0.0, multiplier=0.25):
     if not am_odds or prob_pct == 0:
         return 0.0
+    
     prob = prob_pct / 100.0
     b = american_to_decimal(am_odds) - 1.0
     q = 1.0 - prob
     k = ((b * prob) - q) / b
-    return round((k * 100) * multiplier, 2) if k > 0 else 0.0
+    
+    if k > 0:
+        units = round((k * 100) * multiplier, 2)
+        # Enforce a strict 2.0 unit ceiling to protect the bankroll
+        return min(units, 2.0)
+        
+    return 0.0
 
 def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, iterations=10000):
+    # Dynamic Pace Engine
     expected_plays = (away_epa.get("pace", 63.0) + home_epa.get("pace", 63.0)) / 2.0
     
     away_adv = (away_epa["off_epa_per_play"] - home_epa["def_epa_per_play"]) * expected_plays
