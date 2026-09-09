@@ -6,62 +6,355 @@
     <title>NFL +EV Projection Engine</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        :root { --bg-color: #0B1120; --card-bg: #131E32; --border-color: #1E293B; --text-main: #F8FAFC; --text-muted: #94A3B8; --cyan-team: #00B4D8; --red-team: #FF4D4D; --gold: #F59E0B; }
+        :root {
+            --bg-color: #0B1120;
+            --card-bg: #131E32;
+            --border-color: #1E293B;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+            --cyan-team: #00B4D8;
+            --red-team: #FF4D4D;
+            --gold: #F59E0B;
+        }
+
         * { box-sizing: border-box; }
-        body { font-family: -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-main); margin: 0; padding: 24px 16px; display: flex; flex-direction: column; align-items: center; }
-        .container { width: 100%; max-width: 860px; display: flex; flex-direction: column; gap: 20px; }
-        select { width: 100%; padding: 12px; background-color: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 8px; font-size: 16px; outline: none; }
-        .prediction-card { background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; }
-        .prob-row { display: flex; justify-content: space-between; margin-top: 15px; }
-        .team-prob-box { display: flex; flex-direction: column; gap: 8px; flex: 1; }
-        .team-prob-box.right { text-align: right; align-items: flex-end; }
-        .pinny-box { display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 600;}
-        .ev-tag { font-size: 13px; font-weight: 800; padding: 4px 8px; border-radius: 6px; }
-        .ev-positive { background: rgba(34, 197, 94, 0.15); color: #4ade80; }
-        .ev-negative { background: rgba(239, 68, 68, 0.15); color: #f87171; }
-        .unit-rec { font-size: 13px; color: var(--gold); font-weight: bold; margin-top: 2px; }
-        .team-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: 4px; }
-        h3 { text-align: center; margin: 0 0 16px 0; color: var(--text-muted); font-size: 14px; letter-spacing: 1px; text-transform: uppercase; }
-        .chart-container { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 12px; padding: 24px; position: relative; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 24px 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #last-updated {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 860px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        h2 {
+            margin: 0 0 4px 0;
+            text-align: center;
+            font-size: 22px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 13px;
+            margin: 0 0 16px 0;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        select {
+            width: 100%;
+            max-width: 600px;
+            padding: 12px;
+            background-color: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .prediction-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 8px;
+        }
+
+        .prob-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .team-prob-box {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .team-prob-box.right {
+            text-align: right;
+            align-items: flex-end;
+        }
+
+        .team-logo {
+            width: 54px;
+            height: 54px;
+            object-fit: contain;
+            margin-bottom: 2px;
+        }
+
+        .prob-val {
+            font-size: 34px;
+            font-weight: 800;
+        }
+
+        .prob-name {
+            font-size: 18px;
+            color: var(--text-main);
+            font-weight: bold;
+        }
+
+        .fair-line {
+            font-size: 13px;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 4px;
+        }
+
+        .market-section-title {
+            text-align: center;
+            font-size: 11px;
+            color: var(--gold);
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
+
+        .market-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 8px;
+            padding: 10px 14px;
+        }
+
+        .market-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .market-item.right {
+            text-align: right;
+            align-items: flex-end;
+        }
+
+        .pinny-line {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            background: #1e293b;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .ev-tag {
+            font-size: 12px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            display: inline-block;
+        }
+
+        .ev-positive {
+            background: rgba(34, 197, 94, 0.15);
+            color: #4ade80;
+        }
+
+        .ev-negative {
+            background: rgba(239, 68, 68, 0.15);
+            color: #f87171;
+        }
+
+        .unit-rec {
+            font-size: 12px;
+            color: var(--gold);
+            font-weight: bold;
+        }
+
+        .prob-bar-container {
+            height: 10px;
+            width: 100%;
+            background-color: var(--red-team);
+            border-radius: 5px;
+            overflow: hidden;
+            display: flex;
+            margin-top: 6px;
+        }
+
+        .prob-bar-fill {
+            height: 100%;
+            background-color: var(--cyan-team);
+            transition: width 0.5s ease-in-out;
+        }
+
+        .total-banner {
+            text-align: center;
+            font-size: 14px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .total-banner span {
+            color: var(--text-main);
+            font-weight: bold;
+        }
+
+        .chart-container {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+        }
     </style>
 </head>
 <body>
+    <div id="last-updated">Updating...</div>
+
     <div class="container">
-        <h2 style="text-align: center; color: var(--gold); margin: 0 0 10px 0; letter-spacing: 1px;">NFL EXPECTED VALUE SCANNER</h2>
-        <select id="game-select"></select>
-        
+        <div>
+            <h2>NFL Matchup Prediction Engine</h2>
+            <p class="subtitle" id="date-subtitle">Loading Weekly Slate...</p>
+        </div>
+
+        <div class="controls">
+            <select id="game-select"></select>
+        </div>
+
         <div class="prediction-card">
-            <h3>MONEYLINE</h3>
+            <div class="card-header">
+                <span>Monte Carlo Projections (10,000 Sims)</span>
+                <span id="proj-total-badge">Proj. Total: --</span>
+            </div>
+
+            <!-- Team Projections & Win Probabilities -->
             <div class="prob-row">
                 <div class="team-prob-box">
                     <img id="away-logo" class="team-logo" src="" alt="Away">
-                    <span id="away-name" style="font-weight: 900; font-size: 24px; color: var(--cyan-team);">Away</span>
-                    <div class="pinny-box"><span id="away-ml-pinny">ML: --</span> <span id="away-ml-ev" class="ev-tag">EV: --</span></div>
-                    <span id="away-ml-units" class="unit-rec">Unit Size Rec: --</span>
+                    <span class="prob-val" id="away-prob" style="color: var(--cyan-team)">--%</span>
+                    <span class="prob-name" id="away-name">Away Team</span>
+                    <span class="fair-line" id="away-fair-ml">Fair ML: --</span>
+                    <span class="fair-line" id="away-fair-sp">Fair Spread: --</span>
                 </div>
                 <div class="team-prob-box right">
                     <img id="home-logo" class="team-logo" src="" alt="Home">
-                    <span id="home-name" style="font-weight: 900; font-size: 24px; color: var(--red-team);">Home</span>
-                    <div class="pinny-box"><span id="home-ml-pinny">ML: --</span> <span id="home-ml-ev" class="ev-tag">EV: --</span></div>
-                    <span id="home-ml-units" class="unit-rec">Unit Size Rec: --</span>
+                    <span class="prob-val" id="home-prob" style="color: var(--red-team)">--%</span>
+                    <span class="prob-name" id="home-name">Home Team</span>
+                    <span class="fair-line" id="home-fair-ml">Fair ML: --</span>
+                    <span class="fair-line" id="home-fair-sp">Fair Spread: --</span>
                 </div>
             </div>
-            
-            <hr style="border: 0; height: 1px; background: var(--border-color); margin: 24px 0;">
-            
-            <h3>SPREAD</h3>
-            <div class="prob-row">
-                <div class="team-prob-box">
-                    <div class="pinny-box"><span id="away-sp-pinny">SP: --</span> <span id="away-sp-ev" class="ev-tag">EV: --</span></div>
-                    <span id="away-sp-units" class="unit-rec">Unit Size Rec: --</span>
+
+            <div class="prob-bar-container">
+                <div class="prob-bar-fill" id="prob-bar" style="width: 50%;"></div>
+            </div>
+
+            <div class="total-banner">
+                Projected Score: <span id="proj-score">--</span>
+            </div>
+
+            <!-- Pinnacle Moneyline Market -->
+            <div class="market-section-title">Pinnacle Moneyline Market</div>
+            <div class="market-row">
+                <div class="market-item">
+                    <div>
+                        <span class="pinny-line" id="away-ml-pinny">PINN: --</span>
+                        <span class="ev-tag" id="away-ml-ev">EV: --</span>
+                    </div>
+                    <span class="unit-rec" id="away-ml-units">Rec: --</span>
                 </div>
-                <div class="team-prob-box right">
-                    <div class="pinny-box"><span id="home-sp-pinny">SP: --</span> <span id="home-sp-ev" class="ev-tag">EV: --</span></div>
-                    <span id="home-sp-units" class="unit-rec">Unit Size Rec: --</span>
+                <div class="market-item right">
+                    <div>
+                        <span class="pinny-line" id="home-ml-pinny">PINN: --</span>
+                        <span class="ev-tag" id="home-ml-ev">EV: --</span>
+                    </div>
+                    <span class="unit-rec" id="home-ml-units">Rec: --</span>
+                </div>
+            </div>
+
+            <!-- Pinnacle Spread Market -->
+            <div class="market-section-title">Pinnacle Spread Market</div>
+            <div class="market-row">
+                <div class="market-item">
+                    <div>
+                        <span class="pinny-line" id="away-sp-pinny">PINN: --</span>
+                        <span class="ev-tag" id="away-sp-ev">EV: --</span>
+                    </div>
+                    <span class="unit-rec" id="away-sp-units">Rec: --</span>
+                </div>
+                <div class="market-item right">
+                    <div>
+                        <span class="pinny-line" id="home-sp-pinny">PINN: --</span>
+                        <span class="ev-tag" id="home-sp-ev">EV: --</span>
+                    </div>
+                    <span class="unit-rec" id="home-sp-units">Rec: --</span>
+                </div>
+            </div>
+
+            <!-- Pinnacle Totals Market -->
+            <div id="totals-container" style="display: none;">
+                <div class="market-section-title">Pinnacle Total Market</div>
+                <div class="market-row">
+                    <div class="market-item">
+                        <div>
+                            <span class="pinny-line" id="over-pinny">O --</span>
+                            <span class="ev-tag" id="over-ev">EV: --</span>
+                        </div>
+                        <span class="unit-rec" id="over-units">Rec: --</span>
+                    </div>
+                    <div class="market-item right">
+                        <div>
+                            <span class="pinny-line" id="under-pinny">U --</span>
+                            <span class="ev-tag" id="under-ev">EV: --</span>
+                        </div>
+                        <span class="unit-rec" id="under-units">Rec: --</span>
+                    </div>
                 </div>
             </div>
         </div>
-        
+
         <div class="chart-container">
             <canvas id="spiderChart"></canvas>
         </div>
@@ -70,39 +363,64 @@
     <script>
         let todaysGames = [];
         let spiderChart = null;
-        
-        // Data keys
         const stats = ['off_epa_per_play', 'off_pass_epa', 'off_rush_epa', 'def_epa_per_play', 'def_pass_epa', 'def_rush_epa'];
-        
-        // Human-readable labels for the chart
         const statLabels = ['Offense EPA/Play', 'Pass Offense EPA', 'Rush Offense EPA', 'Defense EPA/Play', 'Pass Defense EPA', 'Rush Defense EPA'];
 
-        function renderEV(id, ev) {
-            const el = document.getElementById(id);
-            if (!ev) { el.textContent = "EV: N/A"; el.className = "ev-tag"; return; }
-            el.textContent = `EV: ${ev > 0 ? '+' : ''}${ev}%`;
-            el.className = `ev-tag ${ev > 0 ? 'ev-positive' : 'ev-negative'}`;
+        function probToMoneyline(prob) {
+            const p = prob / 100;
+            if (p <= 0 || p >= 1) return "--";
+            if (p >= 0.5) return Math.round((-100 * p) / (1 - p)).toString();
+            return `+${Math.round((100 * (1 - p)) / p)}`;
+        }
+
+        function setEV(elementId, evValue) {
+            const el = document.getElementById(elementId);
+            if (evValue === null || evValue === undefined) {
+                el.textContent = "EV: N/A";
+                el.className = "ev-tag";
+                return;
+            }
+            const sign = evValue > 0 ? '+' : '';
+            el.textContent = `EV: ${sign}${evValue}%`;
+            el.className = `ev-tag ${evValue > 0 ? 'ev-positive' : 'ev-negative'}`;
         }
 
         fetch('./data.json?t=' + new Date().getTime(), { cache: 'no-store' })
             .then(res => res.json())
             .then(data => {
+                if (data.last_updated) {
+                    const updateTime = new Date(data.last_updated);
+                    document.getElementById('last-updated').textContent = "Updated: " + updateTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                }
+
                 todaysGames = data.todays_games || [];
+                document.getElementById('date-subtitle').textContent = `Slate for ${data.date} (10,000 Sims per game)`;
+
                 const sel = document.getElementById('game-select');
+                sel.innerHTML = '';
+                if (todaysGames.length === 0) {
+                    sel.innerHTML = '<option>No games found for this slate</option>';
+                    return;
+                }
+
                 todaysGames.forEach((g, i) => sel.appendChild(new Option(`${g.away_team} @ ${g.home_team}`, i)));
                 initChart();
                 updateDash();
+            })
+            .catch(err => {
+                console.error("Error loading JSON:", err);
+                document.getElementById('date-subtitle').textContent = "Error loading data.";
             });
 
         function initChart() {
             spiderChart = new Chart(document.getElementById('spiderChart').getContext('2d'), {
-                type: 'radar', 
-                data: { 
-                    labels: statLabels, 
-                    datasets: [ 
-                        { label: 'Away', data: [], backgroundColor: 'rgba(0, 180, 216, 0.35)', borderColor: '#00B4D8', pointBackgroundColor: '#00B4D8' }, 
-                        { label: 'Home', data: [], backgroundColor: 'rgba(255, 77, 77, 0.35)', borderColor: '#FF4D4D', pointBackgroundColor: '#FF4D4D' } 
-                    ] 
+                type: 'radar',
+                data: {
+                    labels: statLabels,
+                    datasets: [
+                        { label: 'Away', data: [], backgroundColor: 'rgba(0, 180, 216, 0.35)', borderColor: '#00B4D8', pointBackgroundColor: '#00B4D8' },
+                        { label: 'Home', data: [], backgroundColor: 'rgba(255, 77, 77, 0.35)', borderColor: '#FF4D4D', pointBackgroundColor: '#FF4D4D' }
+                    ]
                 },
                 options: {
                     responsive: true,
@@ -110,8 +428,8 @@
                         r: {
                             min: 0, max: 100,
                             ticks: { display: false },
-                            grid: { color: '#1E293B' }, 
-                            angleLines: { color: '#1E293B' }, 
+                            grid: { color: '#1E293B' },
+                            angleLines: { color: '#1E293B' },
                             pointLabels: { color: '#E2E8F0', font: { size: 12, weight: 'bold' } }
                         }
                     },
@@ -123,39 +441,71 @@
         }
 
         function updateDash() {
-            if(!todaysGames.length) return;
+            if (!todaysGames.length) return;
             const game = todaysGames[document.getElementById('game-select').value];
+            const sim = game.simulation || {};
             const mkt = game.market_data || {};
-            
-            // Text updates
+
+            // Names & Logos
             document.getElementById('away-name').textContent = game.away_team;
             document.getElementById('home-name').textContent = game.home_team;
-            
-            // Logos using ESPN CDN
             document.getElementById('away-logo').src = `https://a.espncdn.com/i/teamlogos/nfl/500/${game.away_team.toLowerCase()}.png`;
             document.getElementById('home-logo').src = `https://a.espncdn.com/i/teamlogos/nfl/500/${game.home_team.toLowerCase()}.png`;
-            
-            // ML Updates
-            document.getElementById('away-ml-pinny').textContent = `ML: ${mkt.h2h?.away || 'N/A'}`;
-            document.getElementById('home-ml-pinny').textContent = `ML: ${mkt.h2h?.home || 'N/A'}`;
-            renderEV('away-ml-ev', mkt.away_ml_ev); renderEV('home-ml-ev', mkt.home_ml_ev);
-            document.getElementById('away-ml-units').textContent = `Unit Size Rec: ${mkt.away_ml_units || 0}u`;
-            document.getElementById('home-ml-units').textContent = `Unit Size Rec: ${mkt.home_ml_units || 0}u`;
-            
-            // Spread Updates
-            document.getElementById('away-sp-pinny').textContent = `${mkt.spreads?.away_line > 0 ? '+':''}${mkt.spreads?.away_line || '-'} (${mkt.spreads?.away || 'N/A'})`;
-            document.getElementById('home-sp-pinny').textContent = `${mkt.spreads?.home_line > 0 ? '+':''}${mkt.spreads?.home_line || '-'} (${mkt.spreads?.home || 'N/A'})`;
-            renderEV('away-sp-ev', mkt.away_sp_ev); renderEV('home-sp-ev', mkt.home_sp_ev);
-            document.getElementById('away-sp-units').textContent = `Unit Size Rec: ${mkt.away_sp_units || 0}u`;
-            document.getElementById('home-sp-units').textContent = `Unit Size Rec: ${mkt.home_sp_units || 0}u`;
 
-            // Chart Update (Scaling EPA between -0.3 and 0.3 approx)
+            // Projections & Probabilities
+            document.getElementById('away-prob').textContent = `${sim.away_win_prob || '--'}%`;
+            document.getElementById('home-prob').textContent = `${sim.home_win_prob || '--'}%`;
+            document.getElementById('prob-bar').style.width = `${sim.away_win_prob || 50}%`;
+            document.getElementById('proj-total-badge').textContent = `Proj. Total: ${sim.total_proj || '--'}`;
+            document.getElementById('proj-score').textContent = `${game.away_team} ${sim.away_proj || 0} - ${game.home_team} ${sim.home_proj || 0}`;
+
+            // Fair Lines
+            document.getElementById('away-fair-ml').textContent = `Fair ML: ${probToMoneyline(sim.away_win_prob)}`;
+            document.getElementById('home-fair-ml').textContent = `Fair ML: ${probToMoneyline(sim.home_win_prob)}`;
+
+            const fairMargin = (sim.home_proj - sim.away_proj).toFixed(1);
+            document.getElementById('away-fair-sp').textContent = `Fair Spread: ${fairMargin > 0 ? '+' : ''}${fairMargin}`;
+            document.getElementById('home-fair-sp').textContent = `Fair Spread: ${fairMargin > 0 ? '-' : '+'}${Math.abs(fairMargin)}`;
+
+            // Pinnacle Moneyline
+            document.getElementById('away-ml-pinny').textContent = `PINN: ${mkt.h2h?.away > 0 ? '+' : ''}${mkt.h2h?.away || 'N/A'}`;
+            document.getElementById('home-ml-pinny').textContent = `PINN: ${mkt.h2h?.home > 0 ? '+' : ''}${mkt.h2h?.home || 'N/A'}`;
+            setEV('away-ml-ev', mkt.away_ml_ev);
+            setEV('home-ml-ev', mkt.home_ml_ev);
+            document.getElementById('away-ml-units').textContent = `Rec: ${mkt.away_ml_units || 0}u`;
+            document.getElementById('home-ml-units').textContent = `Rec: ${mkt.home_ml_units || 0}u`;
+
+            // Pinnacle Spread
+            const spAwayLine = mkt.spreads?.away_line;
+            const spHomeLine = mkt.spreads?.home_line;
+            document.getElementById('away-sp-pinny').textContent = `PINN: ${spAwayLine > 0 ? '+' : ''}${spAwayLine || '-'} (${mkt.spreads?.away > 0 ? '+' : ''}${mkt.spreads?.away || 'N/A'})`;
+            document.getElementById('home-sp-pinny').textContent = `PINN: ${spHomeLine > 0 ? '+' : ''}${spHomeLine || '-'} (${mkt.spreads?.home > 0 ? '+' : ''}${mkt.spreads?.home || 'N/A'})`;
+            setEV('away-sp-ev', mkt.away_sp_ev);
+            setEV('home-sp-ev', mkt.home_sp_ev);
+            document.getElementById('away-sp-units').textContent = `Rec: ${mkt.away_sp_units || 0}u`;
+            document.getElementById('home-sp-units').textContent = `Rec: ${mkt.home_sp_units || 0}u`;
+
+            // Pinnacle Totals
+            if (mkt.totals?.point) {
+                document.getElementById('totals-container').style.display = 'block';
+                document.getElementById('over-pinny').textContent = `O ${mkt.totals.point} (${mkt.totals.over > 0 ? '+' : ''}${mkt.totals.over || 'N/A'})`;
+                document.getElementById('under-pinny').textContent = `U ${mkt.totals.point} (${mkt.totals.under > 0 ? '+' : ''}${mkt.totals.under || 'N/A'})`;
+                setEV('over-ev', mkt.over_ev);
+                setEV('under-ev', mkt.under_ev);
+                document.getElementById('over-units').textContent = `Rec: ${mkt.over_units || 0}u`;
+                document.getElementById('under-units').textContent = `Rec: ${mkt.under_units || 0}u`;
+            } else {
+                document.getElementById('totals-container').style.display = 'none';
+            }
+
+            // Radar Chart Update
             spiderChart.data.datasets[0].label = game.away_team;
             spiderChart.data.datasets[0].data = stats.map(s => ((game.away_offense[s] + 0.3) / 0.6) * 100);
             spiderChart.data.datasets[1].label = game.home_team;
             spiderChart.data.datasets[1].data = stats.map(s => ((game.home_offense[s] + 0.3) / 0.6) * 100);
             spiderChart.update();
         }
+
         document.getElementById('game-select').addEventListener('change', updateDash);
     </script>
 </body>
