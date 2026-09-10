@@ -1,7 +1,117 @@
 {
-    "date": "2026-09-09",
-    "last_updated": "2026-09-09T15:47:23.743713Z",
+    "date": "2026-09-10",
+    "last_updated": "2026-09-10T14:23:04.466085Z",
     "teams": {
+        "PIT": {
+            "plays": 0,
+            "off_epa_per_play": -0.005,
+            "off_pass_epa": -0.012,
+            "off_rush_epa": 0.006,
+            "def_epa_per_play": 0.022,
+            "def_pass_epa": 0.028,
+            "def_rush_epa": 0.013,
+            "pace": 57.278
+        },
+        "BAL": {
+            "plays": 0,
+            "off_epa_per_play": 0.034,
+            "off_pass_epa": -0.035,
+            "off_rush_epa": 0.1,
+            "def_epa_per_play": 0.025,
+            "def_pass_epa": 0.074,
+            "def_rush_epa": -0.052,
+            "pace": 56.235
+        },
+        "NE": {
+            "plays": 67,
+            "off_epa_per_play": 0.057,
+            "off_pass_epa": 0.118,
+            "off_rush_epa": -0.017,
+            "def_epa_per_play": -0.065,
+            "def_pass_epa": -0.069,
+            "def_rush_epa": -0.056,
+            "pace": 61.49
+        },
+        "JAX": {
+            "plays": 0,
+            "off_epa_per_play": 0.031,
+            "off_pass_epa": 0.057,
+            "off_rush_epa": -0.002,
+            "def_epa_per_play": -0.086,
+            "def_pass_epa": -0.119,
+            "def_rush_epa": -0.025,
+            "pace": 62.667
+        },
+        "NYG": {
+            "plays": 0,
+            "off_epa_per_play": 0.012,
+            "off_pass_epa": -0.008,
+            "off_rush_epa": 0.036,
+            "def_epa_per_play": 0.087,
+            "def_pass_epa": 0.028,
+            "def_rush_epa": 0.167,
+            "pace": 63.471
+        },
+        "SF": {
+            "plays": 0,
+            "off_epa_per_play": 0.061,
+            "off_pass_epa": 0.125,
+            "off_rush_epa": -0.023,
+            "def_epa_per_play": 0.07,
+            "def_pass_epa": 0.106,
+            "def_rush_epa": 0.021,
+            "pace": 62.105
+        },
+        "SEA": {
+            "plays": 47,
+            "off_epa_per_play": 0.047,
+            "off_pass_epa": 0.138,
+            "off_rush_epa": -0.049,
+            "def_epa_per_play": -0.121,
+            "def_pass_epa": -0.117,
+            "def_rush_epa": -0.13,
+            "pace": 57.811
+        },
+        "CIN": {
+            "plays": 0,
+            "off_epa_per_play": -0.008,
+            "off_pass_epa": -0.027,
+            "off_rush_epa": 0.025,
+            "def_epa_per_play": 0.13,
+            "def_pass_epa": 0.165,
+            "def_rush_epa": 0.087,
+            "pace": 61.706
+        },
+        "LA": {
+            "plays": 0,
+            "off_epa_per_play": 0.145,
+            "off_pass_epa": 0.221,
+            "off_rush_epa": 0.035,
+            "def_epa_per_play": -0.047,
+            "def_pass_epa": -0.047,
+            "def_rush_epa": -0.046,
+            "pace": 63.0
+        },
+        "BUF": {
+            "plays": 0,
+            "off_epa_per_play": 0.138,
+            "off_pass_epa": 0.164,
+            "off_rush_epa": 0.11,
+            "def_epa_per_play": -0.011,
+            "def_pass_epa": -0.091,
+            "def_rush_epa": 0.085,
+            "pace": 63.316
+        },
+        "DET": {
+            "plays": 0,
+            "off_epa_per_play": 0.082,
+            "off_pass_epa": 0.168,
+            "off_rush_epa": -0.041,
+            "def_epa_per_play": -0.01,
+            "def_pass_epa": -0.006,
+            "def_rush_epa": -0.015,
+            "pace": 61.824
+        },
         "TB": {
             "plays": 0,
             "off_epa_per_play": -0.009,
@@ -12,15 +122,15 @@
             "def_rush_epa": -0.072,
             "pace": 62.647
         },
-        "SEA": {
+        "IND": {
             "plays": 0,
-            "off_epa_per_play": 0.045,
-            "off_pass_epa": 0.133,
-            "off_rush_epa": -0.047,
-            "def_epa_per_play": -0.123,
-            "def_pass_epa": -0.115,
-            "def_rush_epa": -0.135,
-            "pace": 59.25
+            "off_epa_per_play": 0.072,
+            "off_pass_epa": 0.056,
+            "off_rush_epa": 0.094,
+            "def_epa_per_play": 0.004,
+            "def_pass_epa": 0.04,
+            "def_rush_epa": -0.05,
+            "pace": 59.471
         },
         "WAS": {
             "plays": 0,
@@ -42,86 +152,6 @@
             "def_rush_epa": 0.028,
             "pace": 58.833
         },
-        "BAL": {
-            "plays": 0,
-            "off_epa_per_play": 0.034,
-            "off_pass_epa": -0.035,
-            "off_rush_epa": 0.1,
-            "def_epa_per_play": 0.025,
-            "def_pass_epa": 0.074,
-            "def_rush_epa": -0.052,
-            "pace": 56.235
-        },
-        "NO": {
-            "plays": 0,
-            "off_epa_per_play": -0.088,
-            "off_pass_epa": -0.079,
-            "off_rush_epa": -0.101,
-            "def_epa_per_play": -0.059,
-            "def_pass_epa": -0.046,
-            "def_rush_epa": -0.073,
-            "pace": 62.588
-        },
-        "HOU": {
-            "plays": 0,
-            "off_epa_per_play": -0.031,
-            "off_pass_epa": -0.001,
-            "off_rush_epa": -0.071,
-            "def_epa_per_play": -0.161,
-            "def_pass_epa": -0.217,
-            "def_rush_epa": -0.077,
-            "pace": 64.0
-        },
-        "LAC": {
-            "plays": 0,
-            "off_epa_per_play": -0.035,
-            "off_pass_epa": -0.071,
-            "off_rush_epa": 0.014,
-            "def_epa_per_play": -0.079,
-            "def_pass_epa": -0.089,
-            "def_rush_epa": -0.065,
-            "pace": 63.278
-        },
-        "NYG": {
-            "plays": 0,
-            "off_epa_per_play": 0.012,
-            "off_pass_epa": -0.008,
-            "off_rush_epa": 0.036,
-            "def_epa_per_play": 0.087,
-            "def_pass_epa": 0.028,
-            "def_rush_epa": 0.167,
-            "pace": 63.471
-        },
-        "MIN": {
-            "plays": 0,
-            "off_epa_per_play": -0.115,
-            "off_pass_epa": -0.188,
-            "off_rush_epa": -0.015,
-            "def_epa_per_play": -0.099,
-            "def_pass_epa": -0.148,
-            "def_rush_epa": -0.053,
-            "pace": 55.471
-        },
-        "IND": {
-            "plays": 0,
-            "off_epa_per_play": 0.072,
-            "off_pass_epa": 0.056,
-            "off_rush_epa": 0.094,
-            "def_epa_per_play": 0.004,
-            "def_pass_epa": 0.04,
-            "def_rush_epa": -0.05,
-            "pace": 59.471
-        },
-        "ATL": {
-            "plays": 0,
-            "off_epa_per_play": -0.021,
-            "off_pass_epa": -0.013,
-            "off_rush_epa": -0.031,
-            "def_epa_per_play": -0.004,
-            "def_pass_epa": -0.029,
-            "def_rush_epa": 0.028,
-            "pace": 60.941
-        },
         "NYJ": {
             "plays": 0,
             "off_epa_per_play": -0.127,
@@ -131,166 +161,6 @@
             "def_pass_epa": 0.253,
             "def_rush_epa": 0.035,
             "pace": 59.353
-        },
-        "SF": {
-            "plays": 0,
-            "off_epa_per_play": 0.061,
-            "off_pass_epa": 0.125,
-            "off_rush_epa": -0.023,
-            "def_epa_per_play": 0.07,
-            "def_pass_epa": 0.106,
-            "def_rush_epa": 0.021,
-            "pace": 62.105
-        },
-        "ARI": {
-            "plays": 0,
-            "off_epa_per_play": -0.019,
-            "off_pass_epa": 0.002,
-            "off_rush_epa": -0.059,
-            "def_epa_per_play": 0.088,
-            "def_pass_epa": 0.15,
-            "def_rush_epa": 0.008,
-            "pace": 63.176
-        },
-        "DAL": {
-            "plays": 0,
-            "off_epa_per_play": 0.098,
-            "off_pass_epa": 0.161,
-            "off_rush_epa": 0.005,
-            "def_epa_per_play": 0.167,
-            "def_pass_epa": 0.221,
-            "def_rush_epa": 0.095,
-            "pace": 64.941
-        },
-        "TEN": {
-            "plays": 0,
-            "off_epa_per_play": -0.16,
-            "off_pass_epa": -0.221,
-            "off_rush_epa": -0.057,
-            "def_epa_per_play": 0.101,
-            "def_pass_epa": 0.167,
-            "def_rush_epa": 0.017,
-            "pace": 58.529
-        },
-        "JAX": {
-            "plays": 0,
-            "off_epa_per_play": 0.031,
-            "off_pass_epa": 0.057,
-            "off_rush_epa": -0.002,
-            "def_epa_per_play": -0.086,
-            "def_pass_epa": -0.119,
-            "def_rush_epa": -0.025,
-            "pace": 62.667
-        },
-        "BUF": {
-            "plays": 0,
-            "off_epa_per_play": 0.138,
-            "off_pass_epa": 0.164,
-            "off_rush_epa": 0.11,
-            "def_epa_per_play": -0.011,
-            "def_pass_epa": -0.091,
-            "def_rush_epa": 0.085,
-            "pace": 63.316
-        },
-        "LA": {
-            "plays": 0,
-            "off_epa_per_play": 0.145,
-            "off_pass_epa": 0.221,
-            "off_rush_epa": 0.035,
-            "def_epa_per_play": -0.047,
-            "def_pass_epa": -0.047,
-            "def_rush_epa": -0.046,
-            "pace": 63.0
-        },
-        "PIT": {
-            "plays": 0,
-            "off_epa_per_play": -0.005,
-            "off_pass_epa": -0.012,
-            "off_rush_epa": 0.006,
-            "def_epa_per_play": 0.022,
-            "def_pass_epa": 0.028,
-            "def_rush_epa": 0.013,
-            "pace": 57.278
-        },
-        "DEN": {
-            "plays": 0,
-            "off_epa_per_play": 0.031,
-            "off_pass_epa": 0.057,
-            "off_rush_epa": -0.008,
-            "def_epa_per_play": -0.079,
-            "def_pass_epa": -0.113,
-            "def_rush_epa": -0.028,
-            "pace": 63.316
-        },
-        "GB": {
-            "plays": 0,
-            "off_epa_per_play": 0.122,
-            "off_pass_epa": 0.242,
-            "off_rush_epa": -0.015,
-            "def_epa_per_play": 0.039,
-            "def_pass_epa": 0.091,
-            "def_rush_epa": -0.026,
-            "pace": 59.056
-        },
-        "MIA": {
-            "plays": 0,
-            "off_epa_per_play": -0.017,
-            "off_pass_epa": -0.009,
-            "off_rush_epa": -0.026,
-            "def_epa_per_play": 0.088,
-            "def_pass_epa": 0.126,
-            "def_rush_epa": 0.043,
-            "pace": 55.412
-        },
-        "DET": {
-            "plays": 0,
-            "off_epa_per_play": 0.082,
-            "off_pass_epa": 0.168,
-            "off_rush_epa": -0.041,
-            "def_epa_per_play": -0.01,
-            "def_pass_epa": -0.006,
-            "def_rush_epa": -0.015,
-            "pace": 61.824
-        },
-        "CHI": {
-            "plays": 0,
-            "off_epa_per_play": 0.074,
-            "off_pass_epa": 0.089,
-            "off_rush_epa": 0.054,
-            "def_epa_per_play": 0.031,
-            "def_pass_epa": 0.056,
-            "def_rush_epa": -0.001,
-            "pace": 66.053
-        },
-        "CLE": {
-            "plays": 0,
-            "off_epa_per_play": -0.19,
-            "off_pass_epa": -0.288,
-            "off_rush_epa": -0.048,
-            "def_epa_per_play": -0.096,
-            "def_pass_epa": -0.132,
-            "def_rush_epa": -0.053,
-            "pace": 60.471
-        },
-        "LV": {
-            "plays": 0,
-            "off_epa_per_play": -0.215,
-            "off_pass_epa": -0.187,
-            "off_rush_epa": -0.26,
-            "def_epa_per_play": 0.024,
-            "def_pass_epa": 0.077,
-            "def_rush_epa": -0.036,
-            "pace": 55.412
-        },
-        "CIN": {
-            "plays": 0,
-            "off_epa_per_play": -0.008,
-            "off_pass_epa": -0.027,
-            "off_rush_epa": 0.025,
-            "def_epa_per_play": 0.13,
-            "def_pass_epa": 0.165,
-            "def_rush_epa": 0.087,
-            "pace": 61.706
         },
         "KC": {
             "plays": 0,
@@ -302,15 +172,35 @@
             "def_rush_epa": -0.043,
             "pace": 61.647
         },
-        "NE": {
+        "ATL": {
             "plays": 0,
-            "off_epa_per_play": 0.09,
-            "off_pass_epa": 0.167,
-            "off_rush_epa": -0.003,
-            "def_epa_per_play": -0.091,
-            "def_pass_epa": -0.116,
-            "def_rush_epa": -0.055,
-            "pace": 60.381
+            "off_epa_per_play": -0.021,
+            "off_pass_epa": -0.013,
+            "off_rush_epa": -0.031,
+            "def_epa_per_play": -0.004,
+            "def_pass_epa": -0.029,
+            "def_rush_epa": 0.028,
+            "pace": 60.941
+        },
+        "DEN": {
+            "plays": 0,
+            "off_epa_per_play": 0.031,
+            "off_pass_epa": 0.057,
+            "off_rush_epa": -0.008,
+            "def_epa_per_play": -0.079,
+            "def_pass_epa": -0.113,
+            "def_rush_epa": -0.028,
+            "pace": 63.316
+        },
+        "LAC": {
+            "plays": 0,
+            "off_epa_per_play": -0.035,
+            "off_pass_epa": -0.071,
+            "off_rush_epa": 0.014,
+            "def_epa_per_play": -0.079,
+            "def_pass_epa": -0.089,
+            "def_rush_epa": -0.065,
+            "pace": 63.278
         },
         "PHI": {
             "plays": 0,
@@ -321,79 +211,119 @@
             "def_pass_epa": -0.105,
             "def_rush_epa": -0.028,
             "pace": 59.278
+        },
+        "ARI": {
+            "plays": 0,
+            "off_epa_per_play": -0.019,
+            "off_pass_epa": 0.002,
+            "off_rush_epa": -0.059,
+            "def_epa_per_play": 0.088,
+            "def_pass_epa": 0.15,
+            "def_rush_epa": 0.008,
+            "pace": 63.176
+        },
+        "CLE": {
+            "plays": 0,
+            "off_epa_per_play": -0.19,
+            "off_pass_epa": -0.288,
+            "off_rush_epa": -0.048,
+            "def_epa_per_play": -0.096,
+            "def_pass_epa": -0.132,
+            "def_rush_epa": -0.053,
+            "pace": 60.471
+        },
+        "NO": {
+            "plays": 0,
+            "off_epa_per_play": -0.088,
+            "off_pass_epa": -0.079,
+            "off_rush_epa": -0.101,
+            "def_epa_per_play": -0.059,
+            "def_pass_epa": -0.046,
+            "def_rush_epa": -0.073,
+            "pace": 62.588
+        },
+        "MIN": {
+            "plays": 0,
+            "off_epa_per_play": -0.115,
+            "off_pass_epa": -0.188,
+            "off_rush_epa": -0.015,
+            "def_epa_per_play": -0.099,
+            "def_pass_epa": -0.148,
+            "def_rush_epa": -0.053,
+            "pace": 55.471
+        },
+        "HOU": {
+            "plays": 0,
+            "off_epa_per_play": -0.031,
+            "off_pass_epa": -0.001,
+            "off_rush_epa": -0.071,
+            "def_epa_per_play": -0.161,
+            "def_pass_epa": -0.217,
+            "def_rush_epa": -0.077,
+            "pace": 64.0
+        },
+        "GB": {
+            "plays": 0,
+            "off_epa_per_play": 0.122,
+            "off_pass_epa": 0.242,
+            "off_rush_epa": -0.015,
+            "def_epa_per_play": 0.039,
+            "def_pass_epa": 0.091,
+            "def_rush_epa": -0.026,
+            "pace": 59.056
+        },
+        "CHI": {
+            "plays": 0,
+            "off_epa_per_play": 0.074,
+            "off_pass_epa": 0.089,
+            "off_rush_epa": 0.054,
+            "def_epa_per_play": 0.031,
+            "def_pass_epa": 0.056,
+            "def_rush_epa": -0.001,
+            "pace": 66.053
+        },
+        "MIA": {
+            "plays": 0,
+            "off_epa_per_play": -0.017,
+            "off_pass_epa": -0.009,
+            "off_rush_epa": -0.026,
+            "def_epa_per_play": 0.088,
+            "def_pass_epa": 0.126,
+            "def_rush_epa": 0.043,
+            "pace": 55.412
+        },
+        "TEN": {
+            "plays": 0,
+            "off_epa_per_play": -0.16,
+            "off_pass_epa": -0.221,
+            "off_rush_epa": -0.057,
+            "def_epa_per_play": 0.101,
+            "def_pass_epa": 0.167,
+            "def_rush_epa": 0.017,
+            "pace": 58.529
+        },
+        "LV": {
+            "plays": 0,
+            "off_epa_per_play": -0.215,
+            "off_pass_epa": -0.187,
+            "off_rush_epa": -0.26,
+            "def_epa_per_play": 0.024,
+            "def_pass_epa": 0.077,
+            "def_rush_epa": -0.036,
+            "pace": 55.412
+        },
+        "DAL": {
+            "plays": 0,
+            "off_epa_per_play": 0.098,
+            "off_pass_epa": 0.161,
+            "off_rush_epa": 0.005,
+            "def_epa_per_play": 0.167,
+            "def_pass_epa": 0.221,
+            "def_rush_epa": 0.095,
+            "pace": 64.941
         }
     },
     "todays_games": [
-        {
-            "away_team": "NE",
-            "home_team": "SEA",
-            "away_offense": {
-                "plays": 0,
-                "off_epa_per_play": 0.09,
-                "off_pass_epa": 0.167,
-                "off_rush_epa": -0.003,
-                "def_epa_per_play": -0.091,
-                "def_pass_epa": -0.116,
-                "def_rush_epa": -0.055,
-                "pace": 60.381
-            },
-            "home_offense": {
-                "plays": 0,
-                "off_epa_per_play": 0.045,
-                "off_pass_epa": 0.133,
-                "off_rush_epa": -0.047,
-                "def_epa_per_play": -0.123,
-                "def_pass_epa": -0.115,
-                "def_rush_epa": -0.135,
-                "pace": 59.25
-            },
-            "simulation": {
-                "away_win_prob": 44.6,
-                "home_win_prob": 52.6,
-                "away_proj": 20.2,
-                "home_proj": 21.4,
-                "total_proj": 41.6,
-                "spread_probs": {
-                    "away": 0.5229,
-                    "home": 0.4295,
-                    "push": 0.0476
-                },
-                "ou_probs": {
-                    "over": 0.4148,
-                    "under": 0.5852,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": 151,
-                    "home": -169
-                },
-                "spreads": {
-                    "away": 103,
-                    "away_line": 3.0,
-                    "home": -114,
-                    "home_line": -3.0
-                },
-                "totals": {
-                    "over": 102,
-                    "point": 44.5,
-                    "under": -114
-                },
-                "away_ml_ev": 11.9,
-                "away_ml_units": 1.98,
-                "home_ml_ev": -16.3,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 10.9,
-                "away_sp_units": 1.49,
-                "home_sp_ev": -14.6,
-                "home_sp_units": 0.0,
-                "over_ev": -16.2,
-                "over_units": 0.0,
-                "under_ev": 9.9,
-                "under_units": 2.0
-            }
-        },
         {
             "away_team": "SF",
             "home_team": "LA",
@@ -419,48 +349,48 @@
             },
             "simulation": {
                 "away_win_prob": 25.4,
-                "home_win_prob": 72.1,
-                "away_proj": 22.0,
+                "home_win_prob": 72.2,
+                "away_proj": 21.9,
                 "home_proj": 30.4,
-                "total_proj": 52.4,
+                "total_proj": 52.3,
                 "spread_probs": {
-                    "away": 0.3642,
-                    "home": 0.6358,
+                    "away": 0.3667,
+                    "home": 0.6333,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.6202,
-                    "under": 0.351,
-                    "push": 0.0288
+                    "over": 0.6049,
+                    "under": 0.3662,
+                    "push": 0.0289
                 }
             },
             "market_data": {
                 "h2h": {
-                    "home": -201,
-                    "away": 175
+                    "home": -185,
+                    "away": 165
                 },
                 "spreads": {
-                    "home": -110,
+                    "home": -102,
                     "home_line": -3.5,
-                    "away": -102,
+                    "away": -108,
                     "away_line": 3.5
                 },
                 "totals": {
-                    "over": -111,
+                    "over": -104,
                     "point": 48.0,
-                    "under": -106
+                    "under": -108
                 },
-                "away_ml_ev": -30.1,
+                "away_ml_ev": -32.7,
                 "away_ml_units": 0.0,
-                "home_ml_ev": 8.0,
+                "home_ml_ev": 11.2,
                 "home_ml_units": 2.0,
-                "away_sp_ev": -27.9,
+                "away_sp_ev": -29.4,
                 "away_sp_units": 0.0,
-                "home_sp_ev": 21.4,
+                "home_sp_ev": 25.4,
                 "home_sp_units": 2.0,
-                "over_ev": 20.8,
+                "over_ev": 21.5,
                 "over_units": 2.0,
-                "under_ev": -28.9,
+                "under_ev": -26.6,
                 "under_units": 0.0
             }
         },
@@ -488,49 +418,49 @@
                 "pace": 57.278
             },
             "simulation": {
-                "away_win_prob": 45.7,
-                "home_win_prob": 51.4,
+                "away_win_prob": 46.1,
+                "home_win_prob": 51.0,
                 "away_proj": 21.6,
-                "home_proj": 22.6,
+                "home_proj": 22.5,
                 "total_proj": 44.2,
                 "spread_probs": {
-                    "away": 0.582,
-                    "home": 0.418,
+                    "away": 0.5857,
+                    "home": 0.4143,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.5519,
-                    "under": 0.4481,
+                    "over": 0.5475,
+                    "under": 0.4525,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": 158,
-                    "home": -181
+                    "away": 162,
+                    "home": -186
                 },
                 "spreads": {
-                    "away": -114,
+                    "away": -110,
                     "away_line": 3.5,
-                    "home": 101,
+                    "home": -102,
                     "home_line": -3.5
                 },
                 "totals": {
-                    "over": -102,
+                    "over": 100,
                     "point": 42.5,
-                    "under": -114
+                    "under": -116
                 },
-                "away_ml_ev": 17.9,
+                "away_ml_ev": 20.8,
                 "away_ml_units": 2.0,
-                "home_ml_ev": -20.2,
+                "home_ml_ev": -21.6,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 9.3,
+                "away_sp_ev": 11.8,
                 "away_sp_units": 2.0,
-                "home_sp_ev": -16.0,
+                "home_sp_ev": -18.0,
                 "home_sp_units": 0.0,
-                "over_ev": 9.3,
+                "over_ev": 9.5,
                 "over_units": 2.0,
-                "under_ev": -15.9,
+                "under_ev": -15.7,
                 "under_units": 0.0
             }
         },
@@ -558,31 +488,31 @@
                 "pace": 59.471
             },
             "simulation": {
-                "away_win_prob": 37.8,
-                "home_win_prob": 59.3,
-                "away_proj": 22.7,
-                "home_proj": 26.2,
-                "total_proj": 48.9,
+                "away_win_prob": 38.5,
+                "home_win_prob": 58.5,
+                "away_proj": 22.6,
+                "home_proj": 26.1,
+                "total_proj": 48.7,
                 "spread_probs": {
-                    "away": 0.2898,
-                    "home": 0.7102,
+                    "away": 0.2947,
+                    "home": 0.7053,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.5375,
-                    "under": 0.4625,
+                    "over": 0.5428,
+                    "under": 0.4572,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": -177,
-                    "home": 155
+                    "away": -174,
+                    "home": 152
                 },
                 "spreads": {
-                    "away": 102,
+                    "away": 104,
                     "away_line": -3.5,
-                    "home": -115,
+                    "home": -117,
                     "home_line": 3.5
                 },
                 "totals": {
@@ -590,17 +520,17 @@
                     "point": 47.5,
                     "under": 100
                 },
-                "away_ml_ev": -40.8,
+                "away_ml_ev": -39.4,
                 "away_ml_units": 0.0,
-                "home_ml_ev": 51.2,
+                "home_ml_ev": 47.4,
                 "home_ml_units": 2.0,
-                "away_sp_ev": -41.5,
+                "away_sp_ev": -39.9,
                 "away_sp_units": 0.0,
-                "home_sp_ev": 32.8,
+                "home_sp_ev": 30.8,
                 "home_sp_units": 2.0,
-                "over_ev": -0.3,
-                "over_units": 0.0,
-                "under_ev": -7.5,
+                "over_ev": 0.7,
+                "over_units": 0.2,
+                "under_ev": -8.6,
                 "under_units": 0.0
             }
         },
@@ -628,49 +558,49 @@
                 "pace": 64.0
             },
             "simulation": {
-                "away_win_prob": 45.1,
-                "home_win_prob": 51.9,
-                "away_proj": 20.6,
-                "home_proj": 21.5,
-                "total_proj": 42.1,
+                "away_win_prob": 45.9,
+                "home_win_prob": 51.1,
+                "away_proj": 20.7,
+                "home_proj": 21.6,
+                "total_proj": 42.4,
                 "spread_probs": {
-                    "away": 0.4204,
-                    "home": 0.5488,
-                    "push": 0.0308
+                    "away": 0.4299,
+                    "home": 0.5415,
+                    "push": 0.0286
                 },
                 "ou_probs": {
-                    "over": 0.3978,
-                    "under": 0.5719,
-                    "push": 0.0303
+                    "over": 0.4042,
+                    "under": 0.5658,
+                    "push": 0.03
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": -113,
-                    "home": 101
+                    "away": -120,
+                    "home": 107
                 },
                 "spreads": {
-                    "away": -106,
+                    "away": -113,
                     "away_line": -1.0,
-                    "home": -106,
+                    "home": 100,
                     "home_line": 1.0
                 },
                 "totals": {
-                    "over": -106,
+                    "over": -105,
                     "point": 45.0,
-                    "under": -110
+                    "under": -111
                 },
-                "away_ml_ev": -15.0,
+                "away_ml_ev": -15.8,
                 "away_ml_units": 0.0,
-                "home_ml_ev": 4.3,
-                "home_ml_units": 1.07,
-                "away_sp_ev": -15.2,
+                "home_ml_ev": 5.8,
+                "home_ml_units": 1.35,
+                "away_sp_ev": -16.1,
                 "away_sp_units": 0.0,
-                "home_sp_ev": 9.7,
-                "home_sp_units": 1.76,
-                "over_ev": -19.7,
+                "home_sp_ev": 11.2,
+                "home_sp_units": 2.0,
+                "over_ev": -18.1,
                 "over_units": 0.0,
-                "under_ev": 12.2,
+                "under_ev": 10.6,
                 "under_units": 2.0
             }
         },
@@ -698,49 +628,49 @@
                 "pace": 58.833
             },
             "simulation": {
-                "away_win_prob": 58.7,
-                "home_win_prob": 38.5,
+                "away_win_prob": 59.2,
+                "home_win_prob": 38.0,
                 "away_proj": 26.3,
-                "home_proj": 22.8,
-                "total_proj": 49.1,
+                "home_proj": 22.7,
+                "total_proj": 49.0,
                 "spread_probs": {
-                    "away": 0.538,
-                    "home": 0.462,
+                    "away": 0.5415,
+                    "home": 0.4585,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.5506,
-                    "under": 0.4494,
+                    "over": 0.5456,
+                    "under": 0.4544,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "home": 144,
-                    "away": -163
+                    "home": 145,
+                    "away": -165
                 },
                 "spreads": {
-                    "home": 114,
+                    "home": 115,
                     "home_line": 2.5,
-                    "away": -128,
+                    "away": -130,
                     "away_line": -2.5
                 },
                 "totals": {
-                    "over": 103,
+                    "over": 100,
                     "point": 47.5,
-                    "under": -120
+                    "under": -116
                 },
-                "away_ml_ev": -5.3,
+                "away_ml_ev": -4.9,
                 "away_ml_units": 0.0,
-                "home_ml_ev": -6.1,
+                "home_ml_ev": -6.9,
                 "home_ml_units": 0.0,
                 "away_sp_ev": -4.2,
                 "away_sp_units": 0.0,
-                "home_sp_ev": -1.1,
+                "home_sp_ev": -1.4,
                 "home_sp_units": 0.0,
-                "over_ev": 11.8,
+                "over_ev": 9.1,
                 "over_units": 2.0,
-                "under_ev": -17.6,
+                "under_ev": -15.4,
                 "under_units": 0.0
             }
         },
@@ -768,20 +698,20 @@
                 "pace": 61.706
             },
             "simulation": {
-                "away_win_prob": 56.2,
-                "home_win_prob": 40.9,
+                "away_win_prob": 56.8,
+                "home_win_prob": 40.3,
                 "away_proj": 25.8,
-                "home_proj": 23.3,
-                "total_proj": 49.1,
+                "home_proj": 23.1,
+                "total_proj": 48.9,
                 "spread_probs": {
-                    "away": 0.6809,
-                    "home": 0.2983,
-                    "push": 0.0208
+                    "away": 0.6857,
+                    "home": 0.2978,
+                    "push": 0.0165
                 },
                 "ou_probs": {
-                    "over": 0.457,
-                    "under": 0.5139,
-                    "push": 0.0291
+                    "over": 0.4495,
+                    "under": 0.5174,
+                    "push": 0.0331
                 }
             },
             "market_data": {
@@ -800,18 +730,18 @@
                     "point": 50.0,
                     "under": -105
                 },
-                "away_ml_ev": 54.0,
+                "away_ml_ev": 55.6,
                 "away_ml_units": 2.0,
-                "home_ml_ev": -38.8,
+                "home_ml_ev": -39.7,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 32.1,
+                "away_sp_ev": 32.6,
                 "away_sp_units": 2.0,
-                "home_sp_ev": -38.8,
+                "home_sp_ev": -39.4,
                 "home_sp_units": 0.0,
-                "over_ev": -10.2,
+                "over_ev": -11.2,
                 "over_units": 0.0,
-                "under_ev": 3.2,
-                "under_units": 0.09
+                "under_ev": 4.3,
+                "under_units": 0.27
             }
         },
         {
@@ -838,26 +768,26 @@
                 "pace": 62.667
             },
             "simulation": {
-                "away_win_prob": 26.4,
-                "home_win_prob": 71.0,
-                "away_proj": 13.0,
-                "home_proj": 20.8,
+                "away_win_prob": 27.2,
+                "home_win_prob": 70.4,
+                "away_proj": 13.1,
+                "home_proj": 20.7,
                 "total_proj": 33.8,
                 "spread_probs": {
-                    "away": 0.544,
-                    "home": 0.456,
+                    "away": 0.5497,
+                    "home": 0.4503,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.3099,
-                    "under": 0.6901,
+                    "over": 0.3102,
+                    "under": 0.6898,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": 319,
-                    "home": -395
+                    "away": 320,
+                    "home": -397
                 },
                 "spreads": {
                     "away": -114,
@@ -866,21 +796,21 @@
                     "home_line": -9.5
                 },
                 "totals": {
-                    "over": -111,
+                    "over": -109,
                     "point": 40.5,
-                    "under": -105
+                    "under": -107
                 },
-                "away_ml_ev": 10.6,
-                "away_ml_units": 0.83,
-                "home_ml_ev": -11.0,
+                "away_ml_ev": 14.2,
+                "away_ml_units": 1.11,
+                "home_ml_ev": -11.9,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 2.1,
-                "away_sp_units": 0.6,
-                "home_sp_ev": -8.3,
+                "away_sp_ev": 3.2,
+                "away_sp_units": 0.91,
+                "home_sp_ev": -9.5,
                 "home_sp_units": 0.0,
-                "over_ev": -41.1,
+                "over_ev": -40.5,
                 "over_units": 0.0,
-                "under_ev": 34.7,
+                "under_ev": 33.4,
                 "under_units": 2.0
             }
         },
@@ -908,25 +838,25 @@
                 "pace": 61.824
             },
             "simulation": {
-                "away_win_prob": 33.1,
-                "home_win_prob": 64.1,
-                "away_proj": 18.2,
-                "home_proj": 23.7,
-                "total_proj": 41.9,
+                "away_win_prob": 32.4,
+                "home_win_prob": 64.8,
+                "away_proj": 18.1,
+                "home_proj": 23.6,
+                "total_proj": 41.7,
                 "spread_probs": {
-                    "away": 0.5224,
-                    "home": 0.4349,
-                    "push": 0.0427
+                    "away": 0.5157,
+                    "home": 0.44,
+                    "push": 0.0443
                 },
                 "ou_probs": {
-                    "over": 0.286,
-                    "under": 0.714,
+                    "over": 0.2843,
+                    "under": 0.7157,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "home": -320,
+                    "home": -321,
                     "away": 266
                 },
                 "spreads": {
@@ -936,21 +866,21 @@
                     "away_line": 7.0
                 },
                 "totals": {
-                    "over": -111,
+                    "over": -116,
                     "point": 49.5,
-                    "under": -105
+                    "under": 100
                 },
-                "away_ml_ev": 21.1,
-                "away_ml_units": 1.99,
-                "home_ml_ev": -15.9,
+                "away_ml_ev": 18.6,
+                "away_ml_units": 1.75,
+                "home_ml_ev": -15.0,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 4.9,
-                "away_sp_units": 0.16,
-                "home_sp_ev": -10.4,
+                "away_sp_ev": 3.8,
+                "away_sp_units": 0.0,
+                "home_sp_ev": -9.3,
                 "home_sp_units": 0.0,
-                "over_ev": -45.6,
+                "over_ev": -47.1,
                 "over_units": 0.0,
-                "under_ev": 39.4,
+                "under_ev": 43.1,
                 "under_units": 2.0
             }
         },
@@ -978,49 +908,49 @@
                 "pace": 58.529
             },
             "simulation": {
-                "away_win_prob": 42.6,
-                "home_win_prob": 54.5,
+                "away_win_prob": 43.5,
+                "home_win_prob": 53.8,
                 "away_proj": 20.7,
-                "home_proj": 22.7,
-                "total_proj": 43.3,
+                "home_proj": 22.4,
+                "total_proj": 43.1,
                 "spread_probs": {
-                    "away": 0.455,
-                    "home": 0.5136,
-                    "push": 0.0314
+                    "away": 0.4623,
+                    "home": 0.5088,
+                    "push": 0.0289
                 },
                 "ou_probs": {
-                    "over": 0.6401,
-                    "under": 0.3599,
+                    "over": 0.6319,
+                    "under": 0.3681,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": 101,
-                    "home": -113
+                    "away": 103,
+                    "home": -116
                 },
                 "spreads": {
-                    "away": -105,
+                    "away": -103,
                     "away_line": 1.0,
-                    "home": -107,
+                    "home": -109,
                     "home_line": -1.0
                 },
                 "totals": {
-                    "over": -106,
+                    "over": -107,
                     "point": 38.5,
-                    "under": -110
+                    "under": -109
                 },
-                "away_ml_ev": -14.4,
+                "away_ml_ev": -11.7,
                 "away_ml_units": 0.0,
-                "home_ml_ev": 2.7,
-                "home_ml_units": 0.77,
-                "away_sp_ev": -8.0,
+                "home_ml_ev": 0.2,
+                "home_ml_units": 0.05,
+                "away_sp_ev": -6.0,
                 "away_sp_units": 0.0,
-                "home_sp_ev": 2.5,
+                "home_sp_ev": 0.4,
                 "home_sp_units": 0.0,
-                "over_ev": 24.4,
+                "over_ev": 22.2,
                 "over_units": 2.0,
-                "under_ev": -31.3,
+                "under_ev": -29.4,
                 "under_units": 0.0
             }
         },
@@ -1048,11 +978,11 @@
                 "pace": 63.278
             },
             "simulation": {
-                "away_win_prob": 29.6,
-                "home_win_prob": 68.1,
-                "away_proj": 18.0,
-                "home_proj": 24.8,
-                "total_proj": 42.9,
+                "away_win_prob": 29.1,
+                "home_win_prob": 68.6,
+                "away_proj": 18.1,
+                "home_proj": 25.0,
+                "total_proj": 43.0,
                 "spread_probs": {
                     "away": 0.6144,
                     "home": 0.3856,
@@ -1060,37 +990,37 @@
                 },
                 "ou_probs": {
                     "over": 0.3661,
-                    "under": 0.6044,
-                    "push": 0.0295
+                    "under": 0.6057,
+                    "push": 0.0282
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": 372,
-                    "home": -475
+                    "away": 376,
+                    "home": -481
                 },
                 "spreads": {
-                    "away": -133,
+                    "away": -132,
                     "away_line": 10.5,
-                    "home": 118,
+                    "home": 117,
                     "home_line": -10.5
                 },
                 "totals": {
-                    "over": -112,
+                    "over": -108,
                     "point": 47.0,
-                    "under": -105
+                    "under": -108
                 },
-                "away_ml_ev": 39.7,
+                "away_ml_ev": 38.5,
                 "away_ml_units": 2.0,
-                "home_ml_ev": -17.6,
+                "home_ml_ev": -17.1,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 7.6,
+                "away_sp_ev": 8.0,
                 "away_sp_units": 2.0,
-                "home_sp_ev": -15.9,
+                "home_sp_ev": -16.3,
                 "home_sp_units": 0.0,
-                "over_ev": -27.8,
+                "over_ev": -26.7,
                 "over_units": 0.0,
-                "under_ev": 21.0,
+                "under_ev": 19.5,
                 "under_units": 2.0
             }
         },
@@ -1118,49 +1048,49 @@
                 "pace": 55.471
             },
             "simulation": {
-                "away_win_prob": 53.9,
-                "home_win_prob": 43.0,
-                "away_proj": 22.3,
-                "home_proj": 20.6,
-                "total_proj": 42.9,
+                "away_win_prob": 52.1,
+                "home_win_prob": 44.8,
+                "away_proj": 22.1,
+                "home_proj": 20.8,
+                "total_proj": 42.8,
                 "spread_probs": {
-                    "away": 0.5703,
-                    "home": 0.4022,
-                    "push": 0.0275
+                    "away": 0.5523,
+                    "home": 0.4148,
+                    "push": 0.0329
                 },
                 "ou_probs": {
-                    "over": 0.3947,
-                    "under": 0.576,
+                    "over": 0.395,
+                    "under": 0.5757,
                     "push": 0.0293
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": 107,
-                    "home": -120
+                    "away": 109,
+                    "home": -123
                 },
                 "spreads": {
-                    "away": 101,
+                    "away": 103,
                     "away_line": 1.0,
-                    "home": -114,
+                    "home": -116,
                     "home_line": -1.0
                 },
                 "totals": {
-                    "over": -111,
+                    "over": -110,
                     "point": 46.0,
-                    "under": -105
+                    "under": -106
                 },
-                "away_ml_ev": 11.6,
+                "away_ml_ev": 8.9,
                 "away_ml_units": 2.0,
-                "home_ml_ev": -21.2,
+                "home_ml_ev": -18.8,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 17.4,
+                "away_sp_ev": 15.4,
                 "away_sp_units": 2.0,
-                "home_sp_ev": -21.7,
+                "home_sp_ev": -19.5,
                 "home_sp_units": 0.0,
-                "over_ev": -22.0,
+                "over_ev": -21.7,
                 "over_units": 0.0,
-                "under_ev": 15.4,
+                "under_ev": 14.8,
                 "under_units": 2.0
             }
         },
@@ -1188,49 +1118,49 @@
                 "pace": 55.412
             },
             "simulation": {
-                "away_win_prob": 56.5,
-                "home_win_prob": 40.4,
-                "away_proj": 21.7,
-                "home_proj": 19.0,
-                "total_proj": 40.7,
+                "away_win_prob": 55.9,
+                "home_win_prob": 41.3,
+                "away_proj": 21.8,
+                "home_proj": 19.2,
+                "total_proj": 41.0,
                 "spread_probs": {
-                    "away": 0.6892,
-                    "home": 0.3108,
-                    "push": 0.0
+                    "away": 0.6352,
+                    "home": 0.3169,
+                    "push": 0.0479
                 },
                 "ou_probs": {
-                    "over": 0.5064,
-                    "under": 0.4936,
+                    "over": 0.5126,
+                    "under": 0.4874,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "home": -187,
-                    "away": 163
+                    "home": -169,
+                    "away": 149
                 },
                 "spreads": {
-                    "home": -104,
-                    "home_line": -3.5,
-                    "away": -108,
-                    "away_line": 3.5
+                    "home": -111,
+                    "home_line": -3.0,
+                    "away": -101,
+                    "away_line": 3.0
                 },
                 "totals": {
-                    "over": -113,
+                    "over": -103,
                     "point": 40.5,
-                    "under": -103
+                    "under": -113
                 },
-                "away_ml_ev": 48.6,
+                "away_ml_ev": 39.2,
                 "away_ml_units": 2.0,
-                "home_ml_ev": -38.0,
+                "home_ml_ev": -34.3,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 32.7,
+                "away_sp_ev": 31.2,
                 "away_sp_units": 2.0,
-                "home_sp_ev": -39.0,
+                "home_sp_ev": -35.0,
                 "home_sp_units": 0.0,
-                "over_ev": -4.5,
-                "over_units": 0.0,
-                "under_ev": -2.7,
+                "over_ev": 1.0,
+                "over_units": 0.26,
+                "under_ev": -8.1,
                 "under_units": 0.0
             }
         },
@@ -1258,31 +1188,31 @@
                 "pace": 59.278
             },
             "simulation": {
-                "away_win_prob": 24.9,
-                "home_win_prob": 72.5,
+                "away_win_prob": 24.3,
+                "home_win_prob": 73.3,
                 "away_proj": 19.5,
-                "home_proj": 28.1,
-                "total_proj": 47.6,
+                "home_proj": 28.3,
+                "total_proj": 47.8,
                 "spread_probs": {
-                    "away": 0.3779,
-                    "home": 0.6221,
+                    "away": 0.3747,
+                    "home": 0.6253,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.5879,
-                    "under": 0.4121,
+                    "over": 0.5951,
+                    "under": 0.4049,
                     "push": 0.0
                 }
             },
             "market_data": {
                 "h2h": {
-                    "home": -223,
-                    "away": 192
+                    "home": -243,
+                    "away": 208
                 },
                 "spreads": {
-                    "home": -106,
+                    "home": -118,
                     "home_line": -4.5,
-                    "away": -106,
+                    "away": 105,
                     "away_line": 4.5
                 },
                 "totals": {
@@ -1290,17 +1220,17 @@
                     "point": 44.5,
                     "under": -114
                 },
-                "away_ml_ev": -27.3,
+                "away_ml_ev": -25.2,
                 "away_ml_units": 0.0,
-                "home_ml_ev": 5.0,
+                "home_ml_ev": 3.5,
                 "home_ml_units": 2.0,
-                "away_sp_ev": -26.6,
+                "away_sp_ev": -23.2,
                 "away_sp_units": 0.0,
-                "home_sp_ev": 20.9,
+                "home_sp_ev": 15.5,
                 "home_sp_units": 2.0,
-                "over_ev": 16.4,
+                "over_ev": 17.9,
                 "over_units": 2.0,
-                "under_ev": -22.6,
+                "under_ev": -24.0,
                 "under_units": 0.0
             }
         },
@@ -1328,19 +1258,19 @@
                 "pace": 63.471
             },
             "simulation": {
-                "away_win_prob": 44.9,
-                "home_win_prob": 52.5,
+                "away_win_prob": 45.3,
+                "home_win_prob": 51.8,
                 "away_proj": 28.2,
-                "home_proj": 29.4,
-                "total_proj": 57.6,
+                "home_proj": 29.2,
+                "total_proj": 57.4,
                 "spread_probs": {
-                    "away": 0.4007,
-                    "home": 0.5993,
+                    "away": 0.4051,
+                    "home": 0.5949,
                     "push": 0.0
                 },
                 "ou_probs": {
-                    "over": 0.7745,
-                    "under": 0.2255,
+                    "over": 0.7688,
+                    "under": 0.2312,
                     "push": 0.0
                 }
             },
@@ -1360,17 +1290,17 @@
                     "point": 47.5,
                     "under": -101
                 },
-                "away_ml_ev": -26.5,
+                "away_ml_ev": -25.8,
                 "away_ml_units": 0.0,
-                "home_ml_ev": 25.5,
+                "home_ml_ev": 23.8,
                 "home_ml_units": 2.0,
-                "away_sp_ev": -27.4,
+                "away_sp_ev": -26.6,
                 "away_sp_units": 0.0,
-                "home_sp_ev": 25.3,
+                "home_sp_ev": 24.3,
                 "home_sp_units": 2.0,
-                "over_ev": 44.2,
+                "over_ev": 43.2,
                 "over_units": 2.0,
-                "under_ev": -55.1,
+                "under_ev": -54.0,
                 "under_units": 0.0
             }
         },
@@ -1398,49 +1328,49 @@
                 "pace": 61.647
             },
             "simulation": {
-                "away_win_prob": 49.1,
-                "home_win_prob": 47.8,
-                "away_proj": 21.7,
+                "away_win_prob": 49.8,
+                "home_win_prob": 47.4,
+                "away_proj": 21.9,
                 "home_proj": 21.5,
-                "total_proj": 43.3,
+                "total_proj": 43.5,
                 "spread_probs": {
-                    "away": 0.5664,
-                    "home": 0.3833,
-                    "push": 0.0503
+                    "away": 0.5772,
+                    "home": 0.3753,
+                    "push": 0.0475
                 },
                 "ou_probs": {
-                    "over": 0.4591,
-                    "under": 0.5112,
-                    "push": 0.0297
+                    "over": 0.4713,
+                    "under": 0.5014,
+                    "push": 0.0273
                 }
             },
             "market_data": {
                 "h2h": {
-                    "away": 130,
-                    "home": -147
+                    "away": 126,
+                    "home": -142
                 },
                 "spreads": {
-                    "away": -121,
+                    "away": -125,
                     "away_line": 3.0,
-                    "home": 107,
+                    "home": 111,
                     "home_line": -3.0
                 },
                 "totals": {
-                    "over": -105,
+                    "over": -104,
                     "point": 44.0,
-                    "under": -111
+                    "under": -113
                 },
-                "away_ml_ev": 12.9,
+                "away_ml_ev": 12.5,
                 "away_ml_units": 2.0,
-                "home_ml_ev": -19.7,
+                "home_ml_ev": -19.2,
                 "home_ml_units": 0.0,
-                "away_sp_ev": 8.5,
-                "away_sp_units": 1.04,
-                "home_sp_ev": -15.6,
+                "away_sp_ev": 8.6,
+                "away_sp_units": 1.22,
+                "home_sp_ev": -16.1,
                 "home_sp_units": 0.0,
-                "over_ev": -7.4,
+                "over_ev": -4.8,
                 "over_units": 0.0,
-                "under_ev": 0.1,
+                "under_ev": -2.8,
                 "under_units": 0.0
             }
         }
