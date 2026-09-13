@@ -1,6 +1,7 @@
 import os
 import requests
 import json
+import csv
 import numpy as np
 import nfl_data_py as nfl
 from datetime import datetime, timedelta
@@ -20,7 +21,6 @@ TEAM_MAPPING = {
 }
 
 def load_season_pbp(season):
-    """Safely fetch play-by-play data for a single season."""
     try:
         pbp = nfl.import_pbp_data([season])
         if pbp is not None and not pbp.empty:
@@ -31,7 +31,6 @@ def load_season_pbp(season):
     return None
 
 def compute_raw_stats(pbp):
-    """Calculates offensive/defensive EPA and pace from a play-by-play DataFrame."""
     if pbp is None or pbp.empty:
         return {}
 
@@ -70,7 +69,6 @@ def compute_raw_stats(pbp):
     return stats
 
 def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0):
-    """Blends prior season baselines with current season metrics using play-count weighting."""
     print(f"Loading {prior_season} baseline data...")
     pbp_prior = load_season_pbp(prior_season)
     prior_stats = compute_raw_stats(pbp_prior)
@@ -87,15 +85,10 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_thresho
         c_team = current_stats.get(team, {})
 
         current_plays = c_team.get("plays", 0)
-
-        # Scale weight from 0.0 to 1.0 based on offensive snap volume
         w_current = min(1.0, current_plays / sample_threshold)
         w_prior = 1.0 - w_current
 
-        metrics = [
-            "off_epa_per_play", "off_pass_epa", "off_rush_epa",
-            "def_epa_per_play", "def_pass_epa", "def_rush_epa", "pace"
-        ]
+        metrics = ["off_epa_per_play", "off_pass_epa", "off_rush_epa", "def_epa_per_play", "def_pass_epa", "def_rush_epa", "pace"]
 
         blended_stats[team] = {"plays": current_plays}
         for m in metrics:
@@ -106,13 +99,8 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_thresho
     return blended_stats
 
 def get_pinnacle_odds(api_key):
-    if not api_key:
-        return {}
-        
-    # Calculate a strict 7-day cutoff window to isolate the current NFL week
+    if not api_key: return {}
     cutoff = (datetime.utcnow() + timedelta(days=7)).strftime('%Y-%m-%dT%H:%M:%SZ')
-    
-    # Append commenceTimeTo to the API URL
     url = f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={api_key}&bookmakers=pinnacle&markets=h2h,spreads,totals&oddsFormat=american&commenceTimeTo={cutoff}"
     
     try:
@@ -157,53 +145,36 @@ def american_to_decimal(am_odds):
     return (am_odds / 100.0) + 1.0 if am_odds > 0 else (100.0 / abs(am_odds)) + 1.0
 
 def calculate_ev(prob_pct, am_odds, push_pct=0.0):
-    if not am_odds or prob_pct == 0:
-        return None
+    if not am_odds or prob_pct == 0: return None
     prob, p_push, dec = prob_pct / 100.0, push_pct / 100.0, american_to_decimal(am_odds)
     return round(((prob * dec) - 1.0 + p_push) * 100, 1)
 
 def calc_kelly_units(prob_pct, am_odds, push_pct=0.0, multiplier=0.25):
-    if not am_odds or prob_pct == 0:
-        return 0.0
-    
+    if not am_odds or prob_pct == 0: return 0.0
     prob = prob_pct / 100.0
     b = american_to_decimal(am_odds) - 1.0
     q = 1.0 - prob
     k = ((b * prob) - q) / b
-    
     if k > 0:
         units = round((k * 100) * multiplier, 2)
-        # Enforce a strict 2.0 unit ceiling to protect the bankroll
         return min(units, 2.0)
-        
     return 0.0
 
 def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, iterations=10000):
-    # Dynamic Pace Engine
     expected_plays = (away_epa.get("pace", 63.0) + home_epa.get("pace", 63.0)) / 2.0
-    
-    # 1. Correct Sign: Def EPA is points allowed, so ADD it (good defense has negative EPA)
-    # 2. Scale Factor: Regress net EPA by 0.55 to account for game-to-game regression to the mean
     scale_factor = 0.55
     away_net_epa = (away_epa["off_epa_per_play"] + home_epa["def_epa_per_play"]) * scale_factor
     home_net_epa = (home_epa["off_epa_per_play"] + away_epa["def_epa_per_play"]) * scale_factor
     
-    # Base NFL expectation: ~21.5 away, ~23.0 home (incorporates ~1.5 HFA)
-    away_exp = 21.5 + (away_net_epa * expected_plays)
-    home_exp = 23.0 + (home_net_epa * expected_plays)
+    away_exp = max(13.0, min(34.0, 21.5 + (away_net_epa * expected_plays)))
+    home_exp = max(13.0, min(34.0, 23.0 + (home_net_epa * expected_plays)))
     
-    # Realistic guardrails: keep average expectations between 13 and 34 points
-    away_exp = max(13.0, min(34.0, away_exp))
-    home_exp = max(13.0, min(34.0, home_exp))
-    
-    # NFL single-team score standard deviation is historically ~9.5 - 10.0
     away_sims = np.random.normal(away_exp, 9.5, iterations)
     home_sims = np.random.normal(home_exp, 9.5, iterations)
     
     margin_sims = np.round(home_sims - away_sims)
     total_sims = np.round(away_sims + home_sims)
     
-    # Key Number Clustering (3, 7, 10 margins)
     for i in range(iterations):
         if margin_sims[i] in [2, 4] and np.random.random() < 0.35: margin_sims[i] = 3
         elif margin_sims[i] in [-2, -4] and np.random.random() < 0.35: margin_sims[i] = -3
@@ -247,6 +218,65 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
         
     return results
 
+def update_history_csv(todays_games, date_str):
+    file_name = 'history.csv'
+    headers = [
+        'Date', 'Away_Team', 'Home_Team', 'Away_Win_Prob', 'Home_Win_Prob',
+        'Away_Proj_Score', 'Home_Proj_Score', 'Proj_Total',
+        'Pinnacle_Away_ML', 'Pinnacle_Home_ML', 'Pinnacle_Away_Spread', 'Pinnacle_Home_Spread', 'Pinnacle_Total_Line',
+        'Away_ML_EV', 'Home_ML_EV', 'Away_Sp_EV', 'Home_Sp_EV', 'Over_EV', 'Under_EV',
+        'Actual_Away_Score', 'Actual_Home_Score', 'Actual_Total'
+    ]
+    
+    existing_data = {}
+    if os.path.exists(file_name):
+        with open(file_name, mode='r', newline='', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                key = f"{row['Date']}_{row['Away_Team']}_{row['Home_Team']}"
+                existing_data[key] = row
+                
+    for game in todays_games:
+        sim = game['simulation']
+        mkt = game['market_data']
+        key = f"{date_str}_{game['away_team']}_{game['home_team']}"
+        
+        # Preserve actual scores if they were already written, otherwise default to N/A
+        actual_away = existing_data.get(key, {}).get('Actual_Away_Score', 'N/A')
+        actual_home = existing_data.get(key, {}).get('Actual_Home_Score', 'N/A')
+        actual_total = existing_data.get(key, {}).get('Actual_Total', 'N/A')
+
+        existing_data[key] = {
+            'Date': date_str,
+            'Away_Team': game['away_team'],
+            'Home_Team': game['home_team'],
+            'Away_Win_Prob': sim.get('away_win_prob', 'N/A'),
+            'Home_Win_Prob': sim.get('home_win_prob', 'N/A'),
+            'Away_Proj_Score': sim.get('away_proj', 'N/A'),
+            'Home_Proj_Score': sim.get('home_proj', 'N/A'),
+            'Proj_Total': sim.get('total_proj', 'N/A'),
+            'Pinnacle_Away_ML': mkt.get('h2h', {}).get('away', 'N/A'),
+            'Pinnacle_Home_ML': mkt.get('h2h', {}).get('home', 'N/A'),
+            'Pinnacle_Away_Spread': mkt.get('spreads', {}).get('away_line', 'N/A'),
+            'Pinnacle_Home_Spread': mkt.get('spreads', {}).get('home_line', 'N/A'),
+            'Pinnacle_Total_Line': mkt.get('totals', {}).get('point', 'N/A'),
+            'Away_ML_EV': mkt.get('away_ml_ev', 'N/A'),
+            'Home_ML_EV': mkt.get('home_ml_ev', 'N/A'),
+            'Away_Sp_EV': mkt.get('away_sp_ev', 'N/A'),
+            'Home_Sp_EV': mkt.get('home_sp_ev', 'N/A'),
+            'Over_EV': mkt.get('over_ev', 'N/A'),
+            'Under_EV': mkt.get('under_ev', 'N/A'),
+            'Actual_Away_Score': actual_away,
+            'Actual_Home_Score': actual_home,
+            'Actual_Total': actual_total
+        }
+        
+    with open(file_name, mode='w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=headers)
+        writer.writeheader()
+        for row in existing_data.values():
+            writer.writerow(row)
+
 def generate_nfl_json():
     print("Executing dynamic 2025/2026 Bayesian EPA blend...")
     epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0)
@@ -266,20 +296,17 @@ def generate_nfl_json():
             )
             
             if mkt:
-                # Moneyline EV & Units
                 mkt["away_ml_ev"] = calculate_ev(sim_res["away_win_prob"], mkt.get('h2h', {}).get('away'))
                 mkt["away_ml_units"] = calc_kelly_units(sim_res["away_win_prob"], mkt.get('h2h', {}).get('away'))
                 mkt["home_ml_ev"] = calculate_ev(sim_res["home_win_prob"], mkt.get('h2h', {}).get('home'))
                 mkt["home_ml_units"] = calc_kelly_units(sim_res["home_win_prob"], mkt.get('h2h', {}).get('home'))
                 
-                # Spread EV & Units
                 if spread_line is not None:
                     mkt["away_sp_ev"] = calculate_ev(sim_res["spread_probs"]["away"] * 100, mkt.get('spreads', {}).get('away'), sim_res["spread_probs"]["push"] * 100)
                     mkt["away_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["away"] * 100, mkt.get('spreads', {}).get('away'), sim_res["spread_probs"]["push"] * 100)
                     mkt["home_sp_ev"] = calculate_ev(sim_res["spread_probs"]["home"] * 100, mkt.get('spreads', {}).get('home'), sim_res["spread_probs"]["push"] * 100)
                     mkt["home_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["home"] * 100, mkt.get('spreads', {}).get('home'), sim_res["spread_probs"]["push"] * 100)
                 
-                # Totals EV & Units
                 if total_line is not None:
                     over_odds = mkt.get('totals', {}).get('over')
                     under_odds = mkt.get('totals', {}).get('under')
@@ -294,14 +321,20 @@ def generate_nfl_json():
                 "simulation": sim_res, "market_data": mkt
             })
 
+    date_str = datetime.now().strftime('%Y-%m-%d')
     output_data = {
-        "date": datetime.now().strftime('%Y-%m-%d'),
+        "date": date_str,
         "last_updated": datetime.utcnow().isoformat() + "Z",
         "teams": epa_stats,
         "todays_games": todays_games
     }
+    
     with open('data.json', 'w') as f:
         json.dump(output_data, f, indent=4)
+        
+    # Trigger the CSV update
+    update_history_csv(todays_games, date_str)
+    
     print(f"NFL Engine successfully updated for {len(todays_games)} matchups.")
 
 if __name__ == "__main__":
