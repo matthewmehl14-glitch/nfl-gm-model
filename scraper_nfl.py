@@ -218,7 +218,7 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
         
     return results
 
-def update_history_csv(todays_games, date_str):
+def update_history_csv(todays_games, date_str, season=2026):
     file_name = 'history.csv'
     headers = [
         'Date', 'Away_Team', 'Home_Team', 'Away_Win_Prob', 'Home_Win_Prob',
@@ -236,12 +236,12 @@ def update_history_csv(todays_games, date_str):
                 key = f"{row['Date']}_{row['Away_Team']}_{row['Home_Team']}"
                 existing_data[key] = row
                 
+    # Append the newest games from the current run
     for game in todays_games:
         sim = game['simulation']
         mkt = game['market_data']
         key = f"{date_str}_{game['away_team']}_{game['home_team']}"
         
-        # Preserve actual scores if they were already written, otherwise default to N/A
         actual_away = existing_data.get(key, {}).get('Actual_Away_Score', 'N/A')
         actual_home = existing_data.get(key, {}).get('Actual_Home_Score', 'N/A')
         actual_total = existing_data.get(key, {}).get('Actual_Total', 'N/A')
@@ -270,6 +270,37 @@ def update_history_csv(todays_games, date_str):
             'Actual_Home_Score': actual_home,
             'Actual_Total': actual_total
         }
+        
+    # Retroactively scan the CSV and fetch actual scores for any un-graded games
+    try:
+        schedule = nfl.import_schedules([season])
+        for key, row in existing_data.items():
+            if row.get('Actual_Away_Score') in ['N/A', '', None]:
+                away = row['Away_Team']
+                home = row['Home_Team']
+                logged_date = datetime.strptime(row['Date'], '%Y-%m-%d')
+                
+                # Filter for matching teams
+                matches = schedule[(schedule['away_team'] == away) & (schedule['home_team'] == home)]
+                for _, match in matches.iterrows():
+                    game_date_str = match['game_date']
+                    if not isinstance(game_date_str, str):
+                        continue
+                        
+                    game_date = datetime.strptime(game_date_str, '%Y-%m-%d')
+                    
+                    # Ensure the completed game happened within 8 days of the CSV log date
+                    if abs((game_date - logged_date).days) <= 8:
+                        away_s = match['away_score']
+                        home_s = match['home_score']
+                        if not np.isnan(away_s) and not np.isnan(home_s):
+                            row['Actual_Away_Score'] = int(away_s)
+                            row['Actual_Home_Score'] = int(home_s)
+                            row['Actual_Total'] = int(away_s + home_s)
+                            print(f"Auto-filled final score for {away} @ {home}: {row['Actual_Away_Score']} - {row['Actual_Home_Score']}")
+                        break
+    except Exception as e:
+        print(f"Could not auto-fetch final scores: {e}")
         
     with open(file_name, mode='w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=headers)
@@ -332,9 +363,7 @@ def generate_nfl_json():
     with open('data.json', 'w') as f:
         json.dump(output_data, f, indent=4)
         
-    # Trigger the CSV update
     update_history_csv(todays_games, date_str)
-    
     print(f"NFL Engine successfully updated for {len(todays_games)} matchups.")
 
 if __name__ == "__main__":
