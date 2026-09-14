@@ -28,7 +28,7 @@ jobs:
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
-          python backtest.py
+          python scraper_nfl.py
 
       - name: Commit and Push Data and History
         run: |
