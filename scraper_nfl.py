@@ -21,51 +21,80 @@ TEAM_MAPPING = {
 }
 
 def load_season_pbp(season):
+    """Safely fetch play-by-play data, filtering out garbage time (WP < 5% or > 95%)."""
     try:
         pbp = nfl.import_pbp_data([season])
         if pbp is not None and not pbp.empty:
             pbp = pbp[(pbp['play_type'].isin(['pass', 'run'])) & (pbp['epa'].notna())]
+            # Garbage time filter
+            if 'wp' in pbp.columns:
+                pbp = pbp[(pbp['wp'] >= 0.05) & (pbp['wp'] <= 0.95)]
             return pbp
     except Exception as e:
         print(f"Notice: No data available for {season} ({e}).")
     return None
 
 def compute_raw_stats(pbp):
+    """Blends EPA (60%) and Success Rate (40%) across a 75/25 Pass/Rush split."""
     if pbp is None or pbp.empty:
         return {}
 
-    off_epa = pbp.groupby('posteam').agg(
-        off_epa_per_play=('epa', 'mean'),
-        off_pass_epa=('epa', lambda x: x[pbp['play_type'] == 'pass'].mean()),
-        off_rush_epa=('epa', lambda x: x[pbp['play_type'] == 'run'].mean()),
-        plays=('play_id', 'count'),
-        games=('game_id', 'nunique')
-    ).reset_index()
+    pbp = pbp.copy()
+    pbp['success'] = (pbp['epa'] > 0).astype(int)
 
-    def_epa = pbp.groupby('defteam').agg(
-        def_epa_per_play=('epa', 'mean'),
-        def_pass_epa=('epa', lambda x: x[pbp['play_type'] == 'pass'].mean()),
-        def_rush_epa=('epa', lambda x: x[pbp['play_type'] == 'run'].mean())
-    ).reset_index()
+    off_stats = pbp.groupby(['posteam', 'play_type']).agg(epa=('epa', 'mean'), sr=('success', 'mean')).reset_index()
+    def_stats = pbp.groupby(['defteam', 'play_type']).agg(epa=('epa', 'mean'), sr=('success', 'mean')).reset_index()
+    
+    vol = pbp.groupby('posteam').agg(plays=('play_id', 'count'), games=('game_id', 'nunique')).reset_index()
 
     stats = {}
-    for _, row in off_epa.iterrows():
-        stats[row['posteam']] = {
-            "off_epa_per_play": float(row['off_epa_per_play']),
-            "off_pass_epa": float(row['off_pass_epa']),
-            "off_rush_epa": float(row['off_rush_epa']),
+    for _, row in vol.iterrows():
+        team = row['posteam']
+        t_off = off_stats[off_stats['posteam'] == team]
+        pass_off = t_off[t_off['play_type'] == 'pass']
+        run_off = t_off[t_off['play_type'] == 'run']
+        
+        off_pass_epa = pass_off['epa'].values[0] if len(pass_off) > 0 else 0.0
+        off_rush_epa = run_off['epa'].values[0] if len(run_off) > 0 else 0.0
+        off_pass_sr = pass_off['sr'].values[0] if len(pass_off) > 0 else 0.0
+        off_rush_sr = run_off['sr'].values[0] if len(run_off) > 0 else 0.0
+        
+        # 75/25 Pass/Rush Split
+        comp_off_epa = (0.75 * off_pass_epa) + (0.25 * off_rush_epa)
+        comp_off_sr = (0.75 * off_pass_sr) + (0.25 * off_rush_sr)
+        
+        # Drive Quality (60% EPA, 40% SR relative to NFL avg of 0.44)
+        off_dq = (0.60 * comp_off_epa) + (0.40 * (comp_off_sr - 0.44))
+
+        stats[team] = {
+            "off_epa_per_play": float(off_dq),
+            "off_pass_epa": float(off_pass_epa),
+            "off_rush_epa": float(off_rush_epa),
             "plays": int(row['plays']),
             "pace": float(row['plays'] / row['games']) if row['games'] > 0 else 63.0
         }
 
-    for _, row in def_epa.iterrows():
-        team = row['defteam']
-        if team in stats:
-            stats[team].update({
-                "def_epa_per_play": float(row['def_epa_per_play']),
-                "def_pass_epa": float(row['def_pass_epa']),
-                "def_rush_epa": float(row['def_rush_epa'])
-            })
+    for team in stats.keys():
+        t_def = def_stats[def_stats['defteam'] == team]
+        pass_def = t_def[t_def['play_type'] == 'pass']
+        run_def = t_def[t_def['play_type'] == 'run']
+        
+        def_pass_epa = pass_def['epa'].values[0] if len(pass_def) > 0 else 0.0
+        def_rush_epa = run_def['epa'].values[0] if len(run_def) > 0 else 0.0
+        def_pass_sr = pass_def['sr'].values[0] if len(pass_def) > 0 else 0.0
+        def_rush_sr = run_def['sr'].values[0] if len(run_def) > 0 else 0.0
+        
+        comp_def_epa = (0.75 * def_pass_epa) + (0.25 * def_rush_epa)
+        comp_def_sr = (0.75 * def_pass_sr) + (0.25 * def_rush_sr)
+        
+        def_dq = (0.60 * comp_def_epa) + (0.40 * (comp_def_sr - 0.44))
+        
+        stats[team].update({
+            "def_epa_per_play": float(def_dq),
+            "def_pass_epa": float(def_pass_epa),
+            "def_rush_epa": float(def_rush_epa)
+        })
+
     return stats
 
 def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0):
@@ -144,6 +173,17 @@ def get_pinnacle_odds(api_key):
 def american_to_decimal(am_odds):
     return (am_odds / 100.0) + 1.0 if am_odds > 0 else (100.0 / abs(am_odds)) + 1.0
 
+def proportional_devig(odds_a, odds_b):
+    if not odds_a or not odds_b:
+        return 0.5, 0.5
+    dec_a = american_to_decimal(odds_a)
+    dec_b = american_to_decimal(odds_b)
+    imp_a = 1.0 / dec_a
+    imp_b = 1.0 / dec_b
+    total_imp = imp_a + imp_b
+    if total_imp == 0: return 0.5, 0.5
+    return imp_a / total_imp, imp_b / total_imp
+
 def calculate_ev(prob_pct, am_odds, push_pct=0.0):
     if not am_odds or prob_pct == 0: return None
     prob, p_push, dec = prob_pct / 100.0, push_pct / 100.0, american_to_decimal(am_odds)
@@ -187,8 +227,8 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
     away_win = np.sum(margin_sims < 0)
     
     results = {
-        "away_win_prob": round(float(away_win / iterations) * 100, 1),
-        "home_win_prob": round(float(home_win / iterations) * 100, 1),
+        "away_win_prob": float(away_win / iterations) * 100,
+        "home_win_prob": float(home_win / iterations) * 100,
         "away_proj": round(float(np.mean(away_sims)), 1),
         "home_proj": round(float(np.mean(home_sims)), 1),
         "total_proj": round(float(np.mean(total_sims)), 1),
@@ -236,7 +276,6 @@ def update_history_csv(todays_games, date_str):
                 key = f"{row['Date']}_{row['Away_Team']}_{row['Home_Team']}"
                 existing_data[key] = row
                 
-    # Append the newest games from the current run
     for game in todays_games:
         sim = game['simulation']
         mkt = game['market_data']
@@ -271,7 +310,6 @@ def update_history_csv(todays_games, date_str):
             'Actual_Total': actual_total
         }
         
-    # Retroactively scan the CSV and fetch actual scores using ESPN's hidden live API
     try:
         unique_dates = set([row['Date'].replace("-", "") for row in existing_data.values() if row.get('Actual_Away_Score') in ['N/A', '', None]])
         
@@ -290,12 +328,9 @@ def update_history_csv(todays_games, date_str):
                         
                         t1_abbr = team1['team']['abbreviation']
                         t2_abbr = team2['team']['abbreviation']
-                        
-                        # Match ESPN abbreviations (e.g. LAR -> LA, WSH -> WAS)
                         t1_abbr = "LA" if t1_abbr == "LAR" else ("WAS" if t1_abbr == "WSH" else t1_abbr)
                         t2_abbr = "LA" if t2_abbr == "LAR" else ("WAS" if t2_abbr == "WSH" else t2_abbr)
                         
-                        # Find matching row in our data
                         for row in existing_data.values():
                             if row['Date'].replace("-", "") == u_date and row.get('Actual_Away_Score') in ['N/A', '', None]:
                                 if (row['Away_Team'] == t1_abbr and row['Home_Team'] == t2_abbr) or (row['Away_Team'] == t2_abbr and row['Home_Team'] == t1_abbr):
@@ -309,7 +344,6 @@ def update_history_csv(todays_games, date_str):
                                     row['Actual_Away_Score'] = away_s
                                     row['Actual_Home_Score'] = home_s
                                     row['Actual_Total'] = away_s + home_s
-                                    print(f"ESPN Auto-filled final score for {row['Away_Team']} @ {row['Home_Team']}: {away_s} - {home_s}")
     except Exception as e:
         print(f"Could not auto-fetch ESPN final scores: {e}")
         
@@ -338,24 +372,57 @@ def generate_nfl_json():
             )
             
             if mkt:
-                mkt["away_ml_ev"] = calculate_ev(sim_res["away_win_prob"], mkt.get('h2h', {}).get('away'))
-                mkt["away_ml_units"] = calc_kelly_units(sim_res["away_win_prob"], mkt.get('h2h', {}).get('away'))
-                mkt["home_ml_ev"] = calculate_ev(sim_res["home_win_prob"], mkt.get('h2h', {}).get('home'))
-                mkt["home_ml_units"] = calc_kelly_units(sim_res["home_win_prob"], mkt.get('h2h', {}).get('home'))
+                model_weight = 0.50
+                
+                # Shrink Moneyline Probabilities using Proportional De-vigging
+                away_odds = mkt.get('h2h', {}).get('away')
+                home_odds = mkt.get('h2h', {}).get('home')
+                t_away, t_home = proportional_devig(away_odds, home_odds)
+                
+                if t_away != 0.5:
+                    sim_res["away_win_prob"] = (model_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - model_weight) * t_away)
+                    sim_res["home_win_prob"] = (model_weight * (sim_res["home_win_prob"] / 100.0)) + ((1.0 - model_weight) * t_home)
+                else:
+                    sim_res["away_win_prob"] = sim_res["away_win_prob"] / 100.0
+                    sim_res["home_win_prob"] = sim_res["home_win_prob"] / 100.0
+                    
+                # Shrink Spread Probabilities
+                sp_away_odds = mkt.get('spreads', {}).get('away')
+                sp_home_odds = mkt.get('spreads', {}).get('home')
+                t_sp_away, t_sp_home = proportional_devig(sp_away_odds, sp_home_odds)
+                if t_sp_away != 0.5:
+                    sim_res["spread_probs"]["away"] = (model_weight * sim_res["spread_probs"]["away"]) + ((1.0 - model_weight) * t_sp_away)
+                    sim_res["spread_probs"]["home"] = (model_weight * sim_res["spread_probs"]["home"]) + ((1.0 - model_weight) * t_sp_home)
+
+                # Shrink Totals Probabilities
+                ou_over_odds = mkt.get('totals', {}).get('over')
+                ou_under_odds = mkt.get('totals', {}).get('under')
+                t_over, t_under = proportional_devig(ou_over_odds, ou_under_odds)
+                if t_over != 0.5:
+                    sim_res["ou_probs"]["over"] = (model_weight * sim_res["ou_probs"]["over"]) + ((1.0 - model_weight) * t_over)
+                    sim_res["ou_probs"]["under"] = (model_weight * sim_res["ou_probs"]["under"]) + ((1.0 - model_weight) * t_under)
+
+                # Calculate EV & Units
+                mkt["away_ml_ev"] = calculate_ev(sim_res["away_win_prob"] * 100, away_odds)
+                mkt["away_ml_units"] = calc_kelly_units(sim_res["away_win_prob"] * 100, away_odds)
+                mkt["home_ml_ev"] = calculate_ev(sim_res["home_win_prob"] * 100, home_odds)
+                mkt["home_ml_units"] = calc_kelly_units(sim_res["home_win_prob"] * 100, home_odds)
+                
+                # Format final win prob display
+                sim_res["away_win_prob"] = round(sim_res["away_win_prob"] * 100, 1)
+                sim_res["home_win_prob"] = round(sim_res["home_win_prob"] * 100, 1)
                 
                 if spread_line is not None:
-                    mkt["away_sp_ev"] = calculate_ev(sim_res["spread_probs"]["away"] * 100, mkt.get('spreads', {}).get('away'), sim_res["spread_probs"]["push"] * 100)
-                    mkt["away_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["away"] * 100, mkt.get('spreads', {}).get('away'), sim_res["spread_probs"]["push"] * 100)
-                    mkt["home_sp_ev"] = calculate_ev(sim_res["spread_probs"]["home"] * 100, mkt.get('spreads', {}).get('home'), sim_res["spread_probs"]["push"] * 100)
-                    mkt["home_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["home"] * 100, mkt.get('spreads', {}).get('home'), sim_res["spread_probs"]["push"] * 100)
+                    mkt["away_sp_ev"] = calculate_ev(sim_res["spread_probs"]["away"] * 100, sp_away_odds, sim_res["spread_probs"]["push"] * 100)
+                    mkt["away_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["away"] * 100, sp_away_odds, sim_res["spread_probs"]["push"] * 100)
+                    mkt["home_sp_ev"] = calculate_ev(sim_res["spread_probs"]["home"] * 100, sp_home_odds, sim_res["spread_probs"]["push"] * 100)
+                    mkt["home_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["home"] * 100, sp_home_odds, sim_res["spread_probs"]["push"] * 100)
                 
                 if total_line is not None:
-                    over_odds = mkt.get('totals', {}).get('over')
-                    under_odds = mkt.get('totals', {}).get('under')
-                    mkt["over_ev"] = calculate_ev(sim_res["ou_probs"]["over"] * 100, over_odds, sim_res["ou_probs"]["push"] * 100)
-                    mkt["over_units"] = calc_kelly_units(sim_res["ou_probs"]["over"] * 100, over_odds, sim_res["ou_probs"]["push"] * 100)
-                    mkt["under_ev"] = calculate_ev(sim_res["ou_probs"]["under"] * 100, under_odds, sim_res["ou_probs"]["push"] * 100)
-                    mkt["under_units"] = calc_kelly_units(sim_res["ou_probs"]["under"] * 100, under_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["over_ev"] = calculate_ev(sim_res["ou_probs"]["over"] * 100, ou_over_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["over_units"] = calc_kelly_units(sim_res["ou_probs"]["over"] * 100, ou_over_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["under_ev"] = calculate_ev(sim_res["ou_probs"]["under"] * 100, ou_under_odds, sim_res["ou_probs"]["push"] * 100)
+                    mkt["under_units"] = calc_kelly_units(sim_res["ou_probs"]["under"] * 100, ou_under_odds, sim_res["ou_probs"]["push"] * 100)
 
             todays_games.append({
                 "away_team": away_abbr, "home_team": home_abbr,
