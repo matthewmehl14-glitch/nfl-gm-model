@@ -39,7 +39,7 @@ def evaluate_bet(market_type, pick, row, bet_size=25.0):
         profit = bet_size * (100 / 110) if won else -bet_size
         return profit, ('win' if won else 'loss')
 
-def run_backtest(target_date='2026-09-13', bet_size=25.0):
+def run_backtest(target_date='2026-09-13', bet_size=25.0, min_ev_hurdle=3.0):
     print("Loading statistical baselines...")
     epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026)
 
@@ -51,7 +51,7 @@ def run_backtest(target_date='2026-09-13', bet_size=25.0):
     with open('history.csv', mode='r', encoding='utf-8') as f:
         reader = list(csv.DictReader(f))
 
-    print(f"\n--- REPLAYING SLATE FOR {target_date} WITH NEW CALIBRATION ---\n")
+    print(f"\n--- REPLAYING SLATE FOR {target_date} WITH {min_ev_hurdle}% EV HURDLE ---\n")
 
     for row in reader:
         if row['Date'] != target_date or row.get('Actual_Away_Score') in ['N/A', '', None]:
@@ -66,10 +66,10 @@ def run_backtest(target_date='2026-09-13', bet_size=25.0):
         total_line = float(row['Pinnacle_Total_Line']) if row['Pinnacle_Total_Line'] != 'N/A' else None
         spread_line = float(row['Pinnacle_Home_Spread']) if row['Pinnacle_Home_Spread'] != 'N/A' else None
 
-        # 1. Run simulation with new net EPA weighting & pace logic
+        # 1. Run simulation
         sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, spread_line)
 
-        # 2. Apply the new 50/50 Bayesian shrinkage toward Pinnacle
+        # 2. Apply the 50/50 Bayesian shrinkage toward Pinnacle
         model_weight = 0.50
         away_ml = float(row['Pinnacle_Away_ML']) if row['Pinnacle_Away_ML'] != 'N/A' else None
         home_ml = float(row['Pinnacle_Home_ML']) if row['Pinnacle_Home_ML'] != 'N/A' else None
@@ -82,17 +82,18 @@ def run_backtest(target_date='2026-09-13', bet_size=25.0):
             away_ml_ev = calculate_ev(sim_res["away_win_prob"] * 100, away_ml)
             home_ml_ev = calculate_ev(sim_res["home_win_prob"] * 100, home_ml)
 
-            # Check Moneyline +EV bet
-            if away_ml_ev and away_ml_ev > 0:
+            if away_ml_ev and away_ml_ev >= min_ev_hurdle:
                 p, res = evaluate_bet('ML', 'away', row, bet_size)
                 total_staked += bet_size
                 total_profit += p
                 results_summary['ML'][res[0].upper()] += 1
-            elif home_ml_ev and home_ml_ev > 0:
+                print(f"Betted ML: {away} ({res.upper()}) | EV: {away_ml_ev}% | Profit: ${p:.2f}")
+            elif home_ml_ev and home_ml_ev >= min_ev_hurdle:
                 p, res = evaluate_bet('ML', 'home', row, bet_size)
                 total_staked += bet_size
                 total_profit += p
                 results_summary['ML'][res[0].upper()] += 1
+                print(f"Betted ML: {home} ({res.upper()}) | EV: {home_ml_ev}% | Profit: ${p:.2f}")
 
         # Check Spread +EV bet
         if spread_line is not None and row['Pinnacle_Away_Spread'] != 'N/A':
@@ -103,16 +104,18 @@ def run_backtest(target_date='2026-09-13', bet_size=25.0):
             away_sp_ev = calculate_ev(sim_res["spread_probs"]["away"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
             home_sp_ev = calculate_ev(sim_res["spread_probs"]["home"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
 
-            if away_sp_ev and away_sp_ev > 0:
+            if away_sp_ev and away_sp_ev >= min_ev_hurdle:
                 p, res = evaluate_bet('SPREAD', 'away', row, bet_size)
                 total_staked += bet_size
                 total_profit += p
                 results_summary['SPREAD'][res[0].upper()] += 1
-            elif home_sp_ev and home_sp_ev > 0:
+                print(f"Betted SPREAD: {away} ({res.upper()}) | EV: {away_sp_ev}% | Profit: ${p:.2f}")
+            elif home_sp_ev and home_sp_ev >= min_ev_hurdle:
                 p, res = evaluate_bet('SPREAD', 'home', row, bet_size)
                 total_staked += bet_size
                 total_profit += p
                 results_summary['SPREAD'][res[0].upper()] += 1
+                print(f"Betted SPREAD: {home} ({res.upper()}) | EV: {home_sp_ev}% | Profit: ${p:.2f}")
 
         # Check Totals +EV bet
         if total_line is not None:
@@ -123,22 +126,27 @@ def run_backtest(target_date='2026-09-13', bet_size=25.0):
             over_ev = calculate_ev(sim_res["ou_probs"]["over"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
             under_ev = calculate_ev(sim_res["ou_probs"]["under"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
 
-            if over_ev and over_ev > 0:
+            if over_ev and over_ev >= min_ev_hurdle:
                 p, res = evaluate_bet('TOTAL', 'over', row, bet_size)
                 total_staked += bet_size
                 total_profit += p
                 results_summary['TOTAL'][res[0].upper()] += 1
-            elif under_ev and under_ev > 0:
+                print(f"Betted TOTAL: OVER {total_line} in {away}@{home} ({res.upper()}) | EV: {over_ev}% | Profit: ${p:.2f}")
+            elif under_ev and under_ev >= min_ev_hurdle:
                 p, res = evaluate_bet('TOTAL', 'under', row, bet_size)
                 total_staked += bet_size
                 total_profit += p
                 results_summary['TOTAL'][res[0].upper()] += 1
+                print(f"Betted TOTAL: UNDER {total_line} in {away}@{home} ({res.upper()}) | EV: {under_ev}% | Profit: ${p:.2f}")
 
     roi = (total_profit / total_staked * 100) if total_staked > 0 else 0.0
-    print(f"Games Evaluated: {games_evaluated}")
-    print(f"Moneyline Record: {results_summary['ML']['W']}-{results_summary['ML']['L']}")
-    print(f"Spread Record:    {results_summary['SPREAD']['W']}-{results_summary['SPREAD']['L']}")
-    print(f"Totals Record:    {results_summary['TOTAL']['W']}-{results_summary['TOTAL']['L']}")
+    
+    print("\n--- FINAL BACKTEST RESULTS ---")
+    print(f"Games Evaluated:  {games_evaluated}")
+    print(f"Total Bets Placed: {sum(results_summary['ML'].values()) + sum(results_summary['SPREAD'].values()) + sum(results_summary['TOTAL'].values())}")
+    print(f"Moneyline Record: {results_summary['ML']['W']}-{results_summary['ML']['L']}-{results_summary['ML']['P']}")
+    print(f"Spread Record:    {results_summary['SPREAD']['W']}-{results_summary['SPREAD']['L']}-{results_summary['SPREAD']['P']}")
+    print(f"Totals Record:    {results_summary['TOTAL']['W']}-{results_summary['TOTAL']['L']}-{results_summary['TOTAL']['P']}")
     print(f"Total Staked:     ${total_staked:.2f}")
     print(f"Net Profit:       ${total_profit:.2f}")
     print(f"Recalibrated ROI: {roi:.2f}%")
