@@ -218,7 +218,7 @@ def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, ite
         
     return results
 
-def update_history_csv(todays_games, date_str, season=2026):
+def update_history_csv(todays_games, date_str):
     file_name = 'history.csv'
     headers = [
         'Date', 'Away_Team', 'Home_Team', 'Away_Win_Prob', 'Home_Win_Prob',
@@ -271,36 +271,47 @@ def update_history_csv(todays_games, date_str, season=2026):
             'Actual_Total': actual_total
         }
         
-    # Retroactively scan the CSV and fetch actual scores for any un-graded games
+    # Retroactively scan the CSV and fetch actual scores using ESPN's hidden live API
     try:
-        schedule = nfl.import_schedules([season])
-        for key, row in existing_data.items():
-            if row.get('Actual_Away_Score') in ['N/A', '', None]:
-                away = row['Away_Team']
-                home = row['Home_Team']
-                logged_date = datetime.strptime(row['Date'], '%Y-%m-%d')
-                
-                # Filter for matching teams
-                matches = schedule[(schedule['away_team'] == away) & (schedule['home_team'] == home)]
-                for _, match in matches.iterrows():
-                    game_date_str = match['game_date']
-                    if not isinstance(game_date_str, str):
-                        continue
+        unique_dates = set([row['Date'].replace("-", "") for row in existing_data.values() if row.get('Actual_Away_Score') in ['N/A', '', None]])
+        
+        for u_date in unique_dates:
+            espn_url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={u_date}"
+            res = requests.get(espn_url)
+            if res.status_code == 200:
+                espn_data = res.json()
+                for event in espn_data.get('events', []):
+                    competition = event['competitions'][0]
+                    status = competition['status']['type']
+                    if status['completed']:
+                        competitors = competition['competitors']
+                        team1 = competitors[0]
+                        team2 = competitors[1]
                         
-                    game_date = datetime.strptime(game_date_str, '%Y-%m-%d')
-                    
-                    # Ensure the completed game happened within 8 days of the CSV log date
-                    if abs((game_date - logged_date).days) <= 8:
-                        away_s = match['away_score']
-                        home_s = match['home_score']
-                        if not np.isnan(away_s) and not np.isnan(home_s):
-                            row['Actual_Away_Score'] = int(away_s)
-                            row['Actual_Home_Score'] = int(home_s)
-                            row['Actual_Total'] = int(away_s + home_s)
-                            print(f"Auto-filled final score for {away} @ {home}: {row['Actual_Away_Score']} - {row['Actual_Home_Score']}")
-                        break
+                        t1_abbr = team1['team']['abbreviation']
+                        t2_abbr = team2['team']['abbreviation']
+                        
+                        # Match ESPN abbreviations (e.g. LAR -> LA, WSH -> WAS)
+                        t1_abbr = "LA" if t1_abbr == "LAR" else ("WAS" if t1_abbr == "WSH" else t1_abbr)
+                        t2_abbr = "LA" if t2_abbr == "LAR" else ("WAS" if t2_abbr == "WSH" else t2_abbr)
+                        
+                        # Find matching row in our data
+                        for row in existing_data.values():
+                            if row['Date'].replace("-", "") == u_date and row.get('Actual_Away_Score') in ['N/A', '', None]:
+                                if (row['Away_Team'] == t1_abbr and row['Home_Team'] == t2_abbr) or (row['Away_Team'] == t2_abbr and row['Home_Team'] == t1_abbr):
+                                    if team1['homeAway'] == 'home':
+                                        home_s = int(team1['score'])
+                                        away_s = int(team2['score'])
+                                    else:
+                                        away_s = int(team1['score'])
+                                        home_s = int(team2['score'])
+                                        
+                                    row['Actual_Away_Score'] = away_s
+                                    row['Actual_Home_Score'] = home_s
+                                    row['Actual_Total'] = away_s + home_s
+                                    print(f"ESPN Auto-filled final score for {row['Away_Team']} @ {row['Home_Team']}: {away_s} - {home_s}")
     except Exception as e:
-        print(f"Could not auto-fetch final scores: {e}")
+        print(f"Could not auto-fetch ESPN final scores: {e}")
         
     with open(file_name, mode='w', newline='', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=headers)
