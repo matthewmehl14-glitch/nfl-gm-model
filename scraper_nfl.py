@@ -8,10 +8,9 @@ import scipy.stats as stats
 import nfl_data_py as nfl
 from datetime import datetime
 
-# Set seed to lock in Monte Carlo variance
+# Set seed for reproducible Monte Carlo draws
 np.random.seed(42)
 
-# --- CONFIGURATION & MAPPINGS ---
 ODDS_API_KEY = os.environ.get('ODDS_API_KEY', '')
 SPORT = 'americanfootball_nfl'
 REGIONS = 'us'
@@ -43,26 +42,25 @@ ESPN_TEAM_MAPPING = {
     'Seahawks': 'SEA', 'Buccaneers': 'TB', 'Titans': 'TEN', 'Commanders': 'WAS'
 }
 
-# --- STATISTICAL ENGINE ---
 def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     print("Loading statistical baselines...")
     pbp_prior = nfl.import_pbp_data([prior_season])
     try:
         pbp_curr = nfl.import_pbp_data([current_season])
-    except:
+    except Exception:
         pbp_curr = pd.DataFrame()
 
     def agg_epa(df):
         if df.empty: return {}
         df = df[(df['play_type'].isin(['pass', 'run'])) & (df['epa'].notna())]
-        team_epa = df.groupby('posteam')['epa'].mean().to_dict()
-        def_epa = df.groupby('defteam')['epa'].mean().to_dict()
+        team_off_epa = df.groupby('posteam')['epa'].mean().to_dict()
+        team_def_epa = df.groupby('defteam')['epa'].mean().to_dict()
         
         stats_dict = {}
-        for t in team_epa.keys():
+        for t in team_off_epa.keys():
             stats_dict[t] = {
-                'off_epa': team_epa.get(t, 0),
-                'def_epa': def_epa.get(t, 0)
+                'off_epa': team_off_epa.get(t, 0.0),
+                'def_epa': team_def_epa.get(t, 0.0)  # Positive = allows EPA (bad), Negative = stifles EPA (good)
             }
         return stats_dict
 
@@ -81,79 +79,81 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     return blended
 
 def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0, num_sims=10000):
-    away_adv = away_stats['off_epa'] - home_stats['def_epa']
-    home_adv = home_stats['off_epa'] - away_stats['def_epa']
+    # Standard NFL game: ~63 offensive plays per team
+    PLAYS_PER_GAME = 63.0
+    LEAGUE_AVG_POINTS = 21.5
+    HFA_POINTS = 1.8  # Home field advantage
 
-    away_proj = 21.0 + (away_adv * 10) 
-    home_proj = 21.0 + (home_adv * 10) + 1.5 
+    # Correct sign: Positive def_epa means defense allows more points
+    away_epa_net = away_stats['off_epa'] + home_stats['def_epa']
+    home_epa_net = home_stats['off_epa'] + away_stats['def_epa']
 
-    # Rounding to integers to mimic true NFL scoring distributions
-    away_sims = np.round(np.random.normal(away_proj, 10, num_sims)).astype(int)
-    home_sims = np.round(np.random.normal(home_proj, 10, num_sims)).astype(int)
+    away_proj = max(7.0, LEAGUE_AVG_POINTS + (away_epa_net * PLAYS_PER_GAME) - (HFA_POINTS / 2.0))
+    home_proj = max(7.0, LEAGUE_AVG_POINTS + (home_epa_net * PLAYS_PER_GAME) + (HFA_POINTS / 2.0))
 
-    # Splitting ties for moneyline probabilities
+    away_sims = np.round(np.random.normal(away_proj, 9.5, num_sims)).astype(int)
+    home_sims = np.round(np.random.normal(home_proj, 9.5, num_sims)).astype(int)
+
     ties = np.sum(away_sims == home_sims)
-    away_wins = np.sum(away_sims > home_sims) + (ties / 2)
-    home_wins = np.sum(home_sims > away_sims) + (ties / 2)
+    away_wins = np.sum(away_sims > home_sims) + (ties / 2.0)
+    home_wins = np.sum(home_sims > away_sims) + (ties / 2.0)
     
     total_sims = away_sims + home_sims
     margin_sims = home_sims - away_sims 
 
-    spread_home = spread_line if spread_line is not None else 0
+    spread_home = spread_line if spread_line is not None else 0.0
     
     over_win = np.sum(total_sims > total_line) if total_line else 0
     under_win = np.sum(total_sims < total_line) if total_line else 0
     ou_push = np.sum(total_sims == total_line) if total_line else 0
 
-    away_cover = np.sum(margin_sims < -spread_home) if spread_home else 0
-    home_cover = np.sum(margin_sims > -spread_home) if spread_home else 0
-    spread_push = np.sum(margin_sims == -spread_home) if spread_home else 0
+    away_cover = np.sum(margin_sims < -spread_home) if spread_home is not None else 0
+    home_cover = np.sum(margin_sims > -spread_home) if spread_home is not None else 0
+    spread_push = np.sum(margin_sims == -spread_home) if spread_home is not None else 0
 
     return {
-        "away_win_prob": away_wins / num_sims * 100,
-        "home_win_prob": home_wins / num_sims * 100,
+        "away_win_prob": (away_wins / num_sims) * 100.0,
+        "home_win_prob": (home_wins / num_sims) * 100.0,
         "ou_probs": {
-            "over": over_win / num_sims if total_line else 0,
-            "under": under_win / num_sims if total_line else 0,
-            "push": ou_push / num_sims if total_line else 0
+            "over": over_win / num_sims if total_line else 0.0,
+            "under": under_win / num_sims if total_line else 0.0,
+            "push": ou_push / num_sims if total_line else 0.0
         },
         "spread_probs": {
-            "away": away_cover / num_sims if spread_home else 0,
-            "home": home_cover / num_sims if spread_home else 0,
-            "push": spread_push / num_sims if spread_home else 0
+            "away": away_cover / num_sims if spread_home is not None else 0.0,
+            "home": home_cover / num_sims if spread_home is not None else 0.0,
+            "push": spread_push / num_sims if spread_home is not None else 0.0
         }
     }
 
-# --- MATH & BETTING HELPERS ---
 def american_to_decimal(odds):
-    if odds > 0: return 1 + (odds / 100.0)
-    else: return 1 + (100.0 / abs(odds))
+    if odds > 0: return 1.0 + (odds / 100.0)
+    else: return 1.0 + (100.0 / abs(odds))
 
 def proportional_devig(odds1, odds2):
-    p1 = 1 / american_to_decimal(odds1)
-    p2 = 1 / american_to_decimal(odds2)
+    p1 = 1.0 / american_to_decimal(odds1)
+    p2 = 1.0 / american_to_decimal(odds2)
     total = p1 + p2
     return p1 / total, p2 / total
 
-def calculate_ev(win_prob, odds, push_prob=0):
+def calculate_ev(win_prob, odds, push_prob=0.0):
     dec_odds = american_to_decimal(odds)
     win_p = win_prob / 100.0
     push_p = push_prob / 100.0
-    loss_p = 1.0 - win_p - push_p
+    loss_p = max(0.0, 1.0 - win_p - push_p)
     profit_on_win = dec_odds - 1.0
-    return ((win_p * profit_on_win) - loss_p) * 100
+    return ((win_p * profit_on_win) - loss_p) * 100.0
 
-def calc_kelly_units(win_prob, odds, push_prob=0, fraction=0.25, max_unit=2.0):
+def calc_kelly_units(win_prob, odds, push_prob=0.0, fraction=0.25, max_unit=2.0):
     dec_odds = american_to_decimal(odds)
     win_p = win_prob / 100.0
     b = dec_odds - 1.0
     if b <= 0: return 0.0
     kelly_f = (win_p * b - (1.0 - win_p)) / b
     if kelly_f <= 0: return 0.0
-    adj_kelly = kelly_f * fraction * 100 
+    adj_kelly = kelly_f * fraction * 100.0 
     return round(min(adj_kelly, max_unit), 2)
 
-# --- GRADING / SCORE RETRIEVAL ---
 def grade_historical_scores():
     if not os.path.exists('history.csv'): return
     print("Checking for ungraded games in history.csv...")
@@ -168,12 +168,15 @@ def grade_historical_scores():
         return
 
     for target_date in ungraded_dates:
-        dt_str = target_date.replace('-', '')
+        dt_str = str(target_date).replace('-', '')
         url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={dt_str}"
         
-        resp = requests.get(url)
-        if resp.status_code != 200: continue
-        data = resp.json()
+        try:
+            resp = requests.get(url, timeout=10)
+            if resp.status_code != 200: continue
+            data = resp.json()
+        except Exception:
+            continue
         
         scores = {}
         for event in data.get('events', []):
@@ -201,7 +204,6 @@ def grade_historical_scores():
         df.to_csv('history.csv', index=False)
         print("history.csv updated successfully.")
 
-# --- LIVE ODDS SCRAPING ---
 def run_live_scraper():
     print("Running Live Odds Scraper...")
     if not ODDS_API_KEY:
