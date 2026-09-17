@@ -311,6 +311,37 @@ def american_to_decimal(odds):
         return 1.0 + (100.0 / abs(odds))
 
 
+def implied_prob(odds):
+    """Raw vig-included implied probability from American odds."""
+    return 1.0 / american_to_decimal(odds)
+
+
+def proportional_devig(odds_a, odds_b):
+    """Two-way proportional devig: normalize both sides' implied
+    probabilities so they sum to 1. For a two-outcome market this is
+    identical to multiplicative devig."""
+    p_a = implied_prob(odds_a)
+    p_b = implied_prob(odds_b)
+    total = p_a + p_b
+    if total <= 0:
+        return 0.5, 0.5
+    return p_a / total, p_b / total
+
+
+def calculate_ev(win_prob_pct, odds, push_prob_pct=0.0):
+    """Expected value (%) of a bet given a win probability (0-100), American
+    odds, and an optional push probability (0-100) that's excluded from the
+    loss side."""
+    if win_prob_pct is None or odds is None:
+        return None
+    win_prob = win_prob_pct / 100.0
+    push_prob = (push_prob_pct or 0.0) / 100.0
+    lose_prob = max(0.0, 1.0 - win_prob - push_prob)
+    decimal_odds = american_to_decimal(odds)
+    ev = (win_prob * (decimal_odds - 1.0)) - lose_prob
+    return ev * 100.0
+
+
 def grade_historical_scores():
     if not os.path.exists('history.csv'):
         return
