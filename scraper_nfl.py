@@ -309,11 +309,11 @@ def run_live_scraper():
                 writer = csv.writer(f)
                 writer.writerow([date_str, away, home, away_ml, home_ml, away_sp, home_sp, total_line, 'N/A', 'N/A'])
 
-        # --- GENERATE DASHBOARD DATA (ALLOWS MISSING LINES) ---
+        # --- GENERATE DASHBOARD DATA ---
         sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, home_sp)
         
         # Moneyline Recs
-        away_ml_ev, home_ml_ev, away_ml_rec, home_ml_rec = None, None, None, None
+        away_ml_ev, home_ml_ev, away_ml_units, home_ml_units = None, None, None, None
         if away_ml != 'N/A' and home_ml != 'N/A':
             t_away, t_home = proportional_devig(away_ml, home_ml)
             b_away = (ml_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_away)
@@ -322,13 +322,13 @@ def run_live_scraper():
             ev_h = calculate_ev(b_home * 100, home_ml)
             if ml_min <= ev_a <= ml_max: 
                 away_ml_ev = ev_a
-                away_ml_rec = calc_kelly_units(b_away * 100, away_ml)
+                away_ml_units = calc_kelly_units(b_away * 100, away_ml)
             if ml_min <= ev_h <= ml_max: 
                 home_ml_ev = ev_h
-                home_ml_rec = calc_kelly_units(b_home * 100, home_ml)
+                home_ml_units = calc_kelly_units(b_home * 100, home_ml)
 
         # Spread Recs
-        away_sp_ev, home_sp_ev, away_sp_rec, home_sp_rec = None, None, None, None
+        away_sp_ev, home_sp_ev, away_sp_units, home_sp_units = None, None, None, None
         if away_sp_odds != 'N/A' and home_sp_odds != 'N/A':
             t_sp_a, t_sp_h = proportional_devig(away_sp_odds, home_sp_odds)
             b_sp_a = (sp_weight * sim_res["spread_probs"]["away"]) + ((1.0 - sp_weight) * t_sp_a)
@@ -338,13 +338,13 @@ def run_live_scraper():
             ev_sp_h = calculate_ev(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
             if sp_min <= ev_sp_a <= sp_max:
                 away_sp_ev = ev_sp_a
-                away_sp_rec = calc_kelly_units(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
+                away_sp_units = calc_kelly_units(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
             if sp_min <= ev_sp_h <= sp_max:
                 home_sp_ev = ev_sp_h
-                home_sp_rec = calc_kelly_units(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
+                home_sp_units = calc_kelly_units(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
 
         # Total Recs
-        over_ev, under_ev, over_rec, under_rec = None, None, None, None
+        over_ev, under_ev, over_units, under_units = None, None, None, None
         if over_odds != 'N/A' and under_odds != 'N/A':
             t_ou_o, t_ou_u = proportional_devig(over_odds, under_odds)
             b_ou_o = (tot_weight * sim_res["ou_probs"]["over"]) + ((1.0 - tot_weight) * t_ou_o)
@@ -354,58 +354,47 @@ def run_live_scraper():
             ev_u = calculate_ev(b_ou_u * 100, under_odds, b_ou_push * 100)
             if tot_min <= ev_o <= tot_max:
                 over_ev = ev_o
-                over_rec = calc_kelly_units(b_ou_o * 100, over_odds, b_ou_push * 100)
+                over_units = calc_kelly_units(b_ou_o * 100, over_odds, b_ou_push * 100)
             if tot_min <= ev_u <= tot_max:
                 under_ev = ev_u
-                under_rec = calc_kelly_units(b_ou_u * 100, under_odds, b_ou_push * 100)
+                under_units = calc_kelly_units(b_ou_u * 100, under_odds, b_ou_push * 100)
 
+        # PERFECTLY MATCHED NESTED DICTIONARY
         dashboard_games.append({
-            "id": f"{away}_{home}",
-            "matchup": f"{away} @ {home}",
-            "Date": date_str,
-            "date": date_str,
-            "Away_Team": away,
-            "Home_Team": home,
-            "AwayTeam": away,
-            "HomeTeam": home,
             "away_team": away,
             "home_team": home,
-            "away_team_full": game['away_team'],
-            "home_team_full": game['home_team'],
+            "date": date_str,
             "commence_time": game['commence_time'],
-            
-            "away_prob": round(sim_res["away_win_prob"], 1),
-            "home_prob": round(sim_res["home_win_prob"], 1),
-            "proj_away_score": sim_res["away_proj_score"],
-            "proj_home_score": sim_res["home_proj_score"],
-            "proj_total": sim_res["proj_total"],
-            "fair_spread": sim_res["fair_spread"],
-            "fair_away_ml": prob_to_american(sim_res["away_win_prob"]),
-            "fair_home_ml": prob_to_american(sim_res["home_win_prob"]),
-            
-            "away_ml": away_ml,
-            "home_ml": home_ml,
-            "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev is not None else None,
-            "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev is not None else None,
-            "away_ml_rec": away_ml_rec if away_ml_rec is not None else None,
-            "home_ml_rec": home_ml_rec if home_ml_rec is not None else None,
-            
-            "away_spread": away_sp,
-            "home_spread": home_sp,
-            "away_spread_odds": away_sp_odds,
-            "home_spread_odds": home_sp_odds,
-            "away_spread_ev": round(away_sp_ev, 1) if away_sp_ev is not None else None,
-            "home_spread_ev": round(home_sp_ev, 1) if home_sp_ev is not None else None,
-            "away_spread_rec": away_sp_rec if away_sp_rec is not None else None,
-            "home_spread_rec": home_sp_rec if home_sp_rec is not None else None,
-            
-            "total_line": total_line,
-            "over_odds": over_odds,
-            "under_odds": under_odds,
-            "over_ev": round(over_ev, 1) if over_ev is not None else None,
-            "under_ev": round(under_ev, 1) if under_ev is not None else None,
-            "over_rec": over_rec if over_rec is not None else None,
-            "under_rec": under_rec if under_rec is not None else None
+            "simulation": {
+                "away_win_prob": round(sim_res["away_win_prob"], 1),
+                "home_win_prob": round(sim_res["home_win_prob"], 1),
+                "away_proj": sim_res["away_proj_score"],
+                "home_proj": sim_res["home_proj_score"],
+                "total_proj": sim_res["proj_total"],
+                "fair_spread": sim_res["fair_spread"],
+                "fair_away_ml": prob_to_american(sim_res["away_win_prob"]),
+                "fair_home_ml": prob_to_american(sim_res["home_win_prob"])
+            },
+            "market_data": {
+                "h2h": {"away": away_ml, "home": home_ml},
+                "spreads": {"away": away_sp_odds, "home": home_sp_odds, "away_line": away_sp, "home_line": home_sp},
+                "totals": {"over": over_odds, "under": under_odds, "total": total_line},
+                
+                "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev is not None else None,
+                "away_ml_units": away_ml_units if away_ml_units is not None else None,
+                "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev is not None else None,
+                "home_ml_units": home_ml_units if home_ml_units is not None else None,
+                
+                "away_sp_ev": round(away_sp_ev, 1) if away_sp_ev is not None else None,
+                "away_sp_units": away_sp_units if away_sp_units is not None else None,
+                "home_sp_ev": round(home_sp_ev, 1) if home_sp_ev is not None else None,
+                "home_sp_units": home_sp_units if home_sp_units is not None else None,
+                
+                "over_ev": round(over_ev, 1) if over_ev is not None else None,
+                "over_units": over_units if over_units is not None else None,
+                "under_ev": round(under_ev, 1) if under_ev is not None else None,
+                "under_units": under_units if under_units is not None else None
+            }
         })
 
     primary_date = dashboard_games[0]['date'] if dashboard_games else (datetime.utcnow() - timedelta(hours=5)).strftime('%Y-%m-%d')
@@ -413,12 +402,9 @@ def run_live_scraper():
     output_json = {
         "last_updated": datetime.utcnow().isoformat() + "Z", 
         "slate": primary_date,
-        "slate_date": primary_date,
-        "date": primary_date,
-        "games": dashboard_games,
-        "matches": dashboard_games,
-        "matchups": dashboard_games
+        "games": dashboard_games
     }
+    
     with open('data.json', 'w') as f:
         json.dump(output_json, f, indent=4)
 
