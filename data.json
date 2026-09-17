@@ -1,5 +1,5 @@
 {
-    "last_updated": "2026-09-17T14:55:45.003754Z",
+    "last_updated": "2026-09-17T15:20:17.183023Z",
     "slate": "2026-09-17",
     "target_date": "2026-09-17",
     "team_stats": {
@@ -363,12 +363,12 @@
             },
             "market_data": {
                 "h2h": {
-                    "away": 212,
-                    "home": -242
+                    "away": 207,
+                    "home": -236
                 },
                 "spreads": {
-                    "away": 100,
-                    "home": -110,
+                    "away": -104,
+                    "home": -106,
                     "away_line": 5.5,
                     "home_line": -5.5
                 },
@@ -377,13 +377,13 @@
                     "under": -105,
                     "total": 55.0
                 },
-                "away_ml_ev": -5.5,
+                "away_ml_ev": -5.7,
                 "away_ml_units": 0,
-                "home_ml_ev": -1.5,
+                "home_ml_ev": -1.4,
                 "home_ml_units": 0,
-                "away_sp_ev": -10.1,
+                "away_sp_ev": -10.7,
                 "away_sp_units": 0,
-                "home_sp_ev": 5.1,
+                "home_sp_ev": 5.9,
                 "home_sp_units": 0,
                 "over_ev": 7.0,
                 "over_units": 0,
@@ -1355,12 +1355,12 @@
             },
             "market_data": {
                 "h2h": {
-                    "away": 212,
-                    "home": -242
+                    "away": 207,
+                    "home": -236
                 },
                 "spreads": {
-                    "away": 100,
-                    "home": -110,
+                    "away": -104,
+                    "home": -106,
                     "away_line": 5.5,
                     "home_line": -5.5
                 },
@@ -1369,13 +1369,13 @@
                     "under": -105,
                     "total": 55.0
                 },
-                "away_ml_ev": -5.5,
+                "away_ml_ev": -5.7,
                 "away_ml_units": 0,
-                "home_ml_ev": -1.5,
+                "home_ml_ev": -1.4,
                 "home_ml_units": 0,
-                "away_sp_ev": -10.1,
+                "away_sp_ev": -10.7,
                 "away_sp_units": 0,
-                "home_sp_ev": 5.1,
+                "home_sp_ev": 5.9,
                 "home_sp_units": 0,
                 "over_ev": 7.0,
                 "over_units": 0,
