@@ -5,22 +5,15 @@ from scraper_nfl import (
     simulate_nfl_game,
     proportional_devig,
     calculate_ev,
-    american_to_decimal
+    american_to_decimal,
+    safe_float,
+    ML_MARKET_WEIGHT,
+    SPREAD_MARKET_WEIGHT,
+    TOTAL_MARKET_WEIGHT
 )
 
 # Seed for consistent simulations
 np.random.seed(42)
-
-def safe_float(val):
-    if val is None:
-        return None
-    val_str = str(val).strip()
-    if val_str in ['', 'N/A', 'nan', 'None']:
-        return None
-    try:
-        return float(val_str)
-    except ValueError:
-        return None
 
 def evaluate_bet(market_type, pick, row, bet_amount=25.0):
     away_score = safe_float(row.get('Actual_Away_Score'))
@@ -53,18 +46,13 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         return profit, ('win' if won else 'loss')
 
 def run_backtest(target_date=None, flat_bet=25.0):
-    # Decoupled Model Weights
-    ml_weight = 0.15 
-    spread_weight = 0.40
-    totals_weight = 0.35
-    
     # Tiered EV Hurdles
     ml_min, ml_max = 3.0, 10.0
     sp_min, sp_max = 1.5, 7.0
     tot_min, tot_max = 1.5, 7.0
     
-    print("Loading statistical baselines...")
-    epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026)
+    # Properly unpack the 4 variables from the new engine
+    epa_stats, league_points, league_epa, diagnostics = get_blended_nfl_stats(2025, 2026)
 
     games_evaluated = 0
     total_staked = 0.0
@@ -98,23 +86,37 @@ def run_backtest(target_date=None, flat_bet=25.0):
 
         games_evaluated += 1
         
-        # Safely convert all betting lines
         total_line = safe_float(row.get('Pinnacle_Total_Line'))
         spread_line = safe_float(row.get('Pinnacle_Home_Spread'))
         away_ml = safe_float(row.get('Pinnacle_Away_ML'))
         home_ml = safe_float(row.get('Pinnacle_Home_ML'))
 
-        # Fallback values if the specific line was blank
-        sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line if total_line is not None else 45.0, spread_line if spread_line is not None else -3.0)
+        # Explicitly assign kwargs to map to the new dynamic calibrations
+        sim_res = simulate_nfl_game(
+            epa_stats[away], 
+            epa_stats[home], 
+            league_points=league_points,
+            league_epa=league_epa,
+            hfa_points=diagnostics["calibration"]["hfa_points"],
+            epa_to_points=diagnostics["calibration"]["epa_to_points_per_play"],
+            total_line=total_line, 
+            spread_line=spread_line
+        )
 
         # --- Moneyline Check ---
         if away_ml is not None and home_ml is not None:
             t_away, t_home = proportional_devig(away_ml, home_ml)
-            sim_res["away_win_prob"] = (ml_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_away)
-            sim_res["home_win_prob"] = (ml_weight * (sim_res["home_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_home)
+            
+            # Extract 0-1 percentage from the 0-100 return format
+            model_away = sim_res["away_win_prob"] / 100.0
+            model_home = sim_res["home_win_prob"] / 100.0
 
-            away_ml_ev = calculate_ev(sim_res["away_win_prob"] * 100, away_ml)
-            home_ml_ev = calculate_ev(sim_res["home_win_prob"] * 100, home_ml)
+            # New Engine weighting equation: (1 - Market_Wt) * Model + (Market_Wt * Market)
+            b_away = ((1.0 - ML_MARKET_WEIGHT) * model_away) + (ML_MARKET_WEIGHT * t_away)
+            b_home = ((1.0 - ML_MARKET_WEIGHT) * model_home) + (ML_MARKET_WEIGHT * t_home)
+
+            away_ml_ev = calculate_ev(b_away * 100.0, away_ml)
+            home_ml_ev = calculate_ev(b_home * 100.0, home_ml)
 
             if away_ml_ev and ml_min <= away_ml_ev <= ml_max:
                 p, res = evaluate_bet('ML', 'away', row, flat_bet)
@@ -133,11 +135,16 @@ def run_backtest(target_date=None, flat_bet=25.0):
         # --- Spread Check ---
         if spread_line is not None and safe_float(row.get('Pinnacle_Away_Spread')) is not None:
             t_sp_a, t_sp_h = proportional_devig(-110, -110)
-            sim_res["spread_probs"]["away"] = (spread_weight * sim_res["spread_probs"]["away"]) + ((1.0 - spread_weight) * t_sp_a)
-            sim_res["spread_probs"]["home"] = (spread_weight * sim_res["spread_probs"]["home"]) + ((1.0 - spread_weight) * t_sp_h)
+            
+            model_away_sp = sim_res["spread_probs"]["away"]
+            model_home_sp = sim_res["spread_probs"]["home"]
 
-            away_sp_ev = calculate_ev(sim_res["spread_probs"]["away"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
-            home_sp_ev = calculate_ev(sim_res["spread_probs"]["home"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
+            b_sp_a = ((1.0 - SPREAD_MARKET_WEIGHT) * model_away_sp) + (SPREAD_MARKET_WEIGHT * t_sp_a)
+            b_sp_h = ((1.0 - SPREAD_MARKET_WEIGHT) * model_home_sp) + (SPREAD_MARKET_WEIGHT * t_sp_h)
+            b_sp_push = sim_res["spread_probs"]["push"]
+
+            away_sp_ev = calculate_ev(b_sp_a * 100.0, -110, b_sp_push * 100.0)
+            home_sp_ev = calculate_ev(b_sp_h * 100.0, -110, b_sp_push * 100.0)
 
             if away_sp_ev and sp_min <= away_sp_ev <= sp_max:
                 p, res = evaluate_bet('SPREAD', 'away', row, flat_bet)
@@ -156,11 +163,16 @@ def run_backtest(target_date=None, flat_bet=25.0):
         # --- Totals Check ---
         if total_line is not None:
             t_ou_o, t_ou_u = proportional_devig(-110, -110)
-            sim_res["ou_probs"]["over"] = (totals_weight * sim_res["ou_probs"]["over"]) + ((1.0 - totals_weight) * t_ou_o)
-            sim_res["ou_probs"]["under"] = (totals_weight * sim_res["ou_probs"]["under"]) + ((1.0 - totals_weight) * t_ou_u)
+            
+            model_over = sim_res["ou_probs"]["over"]
+            model_under = sim_res["ou_probs"]["under"]
 
-            over_ev = calculate_ev(sim_res["ou_probs"]["over"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
-            under_ev = calculate_ev(sim_res["ou_probs"]["under"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
+            b_ou_o = ((1.0 - TOTAL_MARKET_WEIGHT) * model_over) + (TOTAL_MARKET_WEIGHT * t_ou_o)
+            b_ou_u = ((1.0 - TOTAL_MARKET_WEIGHT) * model_under) + (TOTAL_MARKET_WEIGHT * t_ou_u)
+            b_ou_push = sim_res["ou_probs"]["push"]
+
+            over_ev = calculate_ev(b_ou_o * 100.0, -110, b_ou_push * 100.0)
+            under_ev = calculate_ev(b_ou_u * 100.0, -110, b_ou_push * 100.0)
 
             if over_ev and tot_min <= over_ev <= tot_max:
                 p, res = evaluate_bet('TOTAL', 'over', row, flat_bet)
