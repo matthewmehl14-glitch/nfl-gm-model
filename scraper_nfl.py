@@ -110,6 +110,10 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
     spread_push = np.sum(margin_sims == -spread_home) if spread_home is not None else 0
 
     return {
+        "away_proj_score": round(away_proj, 1),
+        "home_proj_score": round(home_proj, 1),
+        "proj_total": round(away_proj + home_proj, 1),
+        "fair_spread": round(home_proj - away_proj, 1),
         "away_win_prob": (away_wins / num_sims) * 100.0,
         "home_win_prob": (home_wins / num_sims) * 100.0,
         "ou_probs": {
@@ -124,7 +128,12 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
         }
     }
 
-# --- RESTORED MATH HELPERS ---
+def prob_to_american(p):
+    if p <= 0: return "+0"
+    if p >= 100: return "-99999"
+    dec = 100.0 / p
+    if dec >= 2.0: return f"+{int(round((dec - 1) * 100))}"
+    else: return f"{int(round(-100 / (dec - 1)))}"
 
 def american_to_decimal(odds):
     if odds > 0: return 1.0 + (odds / 100.0)
@@ -153,8 +162,6 @@ def calc_kelly_units(win_prob, odds, push_prob=0.0, fraction=0.25, max_unit=2.0)
     if kelly_f <= 0: return 0.0
     adj_kelly = kelly_f * fraction * 100.0 
     return round(min(adj_kelly, max_unit), 2)
-
-# --- GRADING & SCRAPING ---
 
 def grade_historical_scores():
     if not os.path.exists('history.csv'): return
@@ -219,7 +226,7 @@ def grade_historical_scores():
         print("history.csv updated successfully.")
 
 def run_live_scraper():
-    print("Running Live Odds Scraper...")
+    print("Running Live Odds Scraper & Building Dashboard JSON...")
     if not ODDS_API_KEY:
         print("Missing ODDS_API_KEY environment variable.")
         return
@@ -243,6 +250,12 @@ def run_live_scraper():
             writer.writerow(history_fields)
             
     existing_history = pd.read_csv(history_file)
+    dashboard_games = []
+    
+    ml_weight, sp_weight, tot_weight = 0.15, 0.40, 0.35
+    ml_min, ml_max = 3.0, 10.0
+    sp_min, sp_max = 1.5, 7.0
+    tot_min, tot_max = 1.5, 7.0
     
     for game in games:
         away = ODDS_API_TO_ABBR.get(game['away_team'])
@@ -258,30 +271,38 @@ def run_live_scraper():
         if not bookmaker: continue
         markets = bookmaker[0].get('markets', [])
         
-        h2h_market = next((m for m in markets if m['key'] == 'h2h'), None)
-        spread_market = next((m for m in markets if m['key'] == 'spreads'), None)
-        totals_market = next((m for m in markets if m['key'] == 'totals'), None)
-        
+        # Parse ML
         away_ml, home_ml = 'N/A', 'N/A'
+        h2h_market = next((m for m in markets if m['key'] == 'h2h'), None)
         if h2h_market:
             for out in h2h_market['outcomes']:
                 if out['name'] == game['away_team']: away_ml = out['price']
                 elif out['name'] == game['home_team']: home_ml = out['price']
                 
-        away_sp, home_sp = 'N/A', 'N/A'
+        # Parse Spread
+        away_sp, home_sp, away_sp_odds, home_sp_odds = 'N/A', 'N/A', 'N/A', 'N/A'
+        spread_market = next((m for m in markets if m['key'] == 'spreads'), None)
         if spread_market:
             for out in spread_market['outcomes']:
-                if out['name'] == game['away_team']: away_sp = out['point']
-                elif out['name'] == game['home_team']: home_sp = out['point']
+                if out['name'] == game['away_team']: 
+                    away_sp, away_sp_odds = out['point'], out['price']
+                elif out['name'] == game['home_team']: 
+                    home_sp, home_sp_odds = out['point'], out['price']
                     
-        total_line = 'N/A'
+        # Parse Totals
+        total_line, over_odds, under_odds = 'N/A', 'N/A', 'N/A'
+        totals_market = next((m for m in markets if m['key'] == 'totals'), None)
         if totals_market:
             for out in totals_market['outcomes']:
-                total_line = out['point']
+                if out['name'] == 'Over':
+                    total_line, over_odds = out['point'], out['price']
+                elif out['name'] == 'Under':
+                    under_odds = out['price']
 
         if away_ml == 'N/A' or away_sp == 'N/A' or total_line == 'N/A':
             continue
             
+        # CSV Deduplication Logic
         is_ungraded = existing_history['Actual_Away_Score'].isna() | (existing_history['Actual_Away_Score'] == 'N/A')
         match_exists = not existing_history[(existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home) & is_ungraded].empty
         
@@ -290,7 +311,103 @@ def run_live_scraper():
                 writer = csv.writer(f)
                 writer.writerow([date, away, home, away_ml, home_ml, away_sp, home_sp, total_line, 'N/A', 'N/A'])
 
-    print("Scraping and line updates complete.")
+        # --- GENERATE DASHBOARD DATA ---
+        sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, home_sp)
+        
+        # Moneyline Recs
+        away_ml_ev, home_ml_ev, away_ml_rec, home_ml_rec = 0.0, 0.0, 0.0, 0.0
+        if away_ml != 'N/A' and home_ml != 'N/A':
+            t_away, t_home = proportional_devig(away_ml, home_ml)
+            b_away = (ml_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_away)
+            b_home = (ml_weight * (sim_res["home_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_home)
+            ev_a = calculate_ev(b_away * 100, away_ml)
+            ev_h = calculate_ev(b_home * 100, home_ml)
+            if ml_min <= ev_a <= ml_max: 
+                away_ml_ev = ev_a
+                away_ml_rec = calc_kelly_units(b_away * 100, away_ml)
+            if ml_min <= ev_h <= ml_max: 
+                home_ml_ev = ev_h
+                home_ml_rec = calc_kelly_units(b_home * 100, home_ml)
+
+        # Spread Recs
+        away_sp_ev, home_sp_ev, away_sp_rec, home_sp_rec = 0.0, 0.0, 0.0, 0.0
+        if away_sp_odds != 'N/A' and home_sp_odds != 'N/A':
+            t_sp_a, t_sp_h = proportional_devig(away_sp_odds, home_sp_odds)
+            b_sp_a = (sp_weight * sim_res["spread_probs"]["away"]) + ((1.0 - sp_weight) * t_sp_a)
+            b_sp_h = (sp_weight * sim_res["spread_probs"]["home"]) + ((1.0 - sp_weight) * t_sp_h)
+            b_sp_push = sim_res["spread_probs"]["push"]
+            ev_sp_a = calculate_ev(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
+            ev_sp_h = calculate_ev(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
+            if sp_min <= ev_sp_a <= sp_max:
+                away_sp_ev = ev_sp_a
+                away_sp_rec = calc_kelly_units(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
+            if sp_min <= ev_sp_h <= sp_max:
+                home_sp_ev = ev_sp_h
+                home_sp_rec = calc_kelly_units(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
+
+        # Total Recs
+        over_ev, under_ev, over_rec, under_rec = 0.0, 0.0, 0.0, 0.0
+        if over_odds != 'N/A' and under_odds != 'N/A':
+            t_ou_o, t_ou_u = proportional_devig(over_odds, under_odds)
+            b_ou_o = (tot_weight * sim_res["ou_probs"]["over"]) + ((1.0 - tot_weight) * t_ou_o)
+            b_ou_u = (tot_weight * sim_res["ou_probs"]["under"]) + ((1.0 - tot_weight) * t_ou_u)
+            b_ou_push = sim_res["ou_probs"]["push"]
+            ev_o = calculate_ev(b_ou_o * 100, over_odds, b_ou_push * 100)
+            ev_u = calculate_ev(b_ou_u * 100, under_odds, b_ou_push * 100)
+            if tot_min <= ev_o <= tot_max:
+                over_ev = ev_o
+                over_rec = calc_kelly_units(b_ou_o * 100, over_odds, b_ou_push * 100)
+            if tot_min <= ev_u <= tot_max:
+                under_ev = ev_u
+                under_rec = calc_kelly_units(b_ou_u * 100, under_odds, b_ou_push * 100)
+
+        dashboard_games.append({
+            "away_team": away,
+            "home_team": home,
+            "commence_time": game['commence_time'],
+            "away_prob": round(sim_res["away_win_prob"], 1),
+            "home_prob": round(sim_res["home_win_prob"], 1),
+            "proj_away_score": sim_res["away_proj_score"],
+            "proj_home_score": sim_res["home_proj_score"],
+            "proj_total": sim_res["proj_total"],
+            "fair_spread": sim_res["fair_spread"],
+            "fair_away_ml": prob_to_american(sim_res["away_win_prob"]),
+            "fair_home_ml": prob_to_american(sim_res["home_win_prob"]),
+            
+            "away_ml": away_ml,
+            "home_ml": home_ml,
+            "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev else 0,
+            "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev else 0,
+            "away_ml_rec": away_ml_rec,
+            "home_ml_rec": home_ml_rec,
+            
+            "away_spread": away_sp,
+            "home_spread": home_sp,
+            "away_spread_odds": away_sp_odds,
+            "home_spread_odds": home_sp_odds,
+            "away_spread_ev": round(away_sp_ev, 1) if away_sp_ev else 0,
+            "home_spread_ev": round(home_sp_ev, 1) if home_sp_ev else 0,
+            "away_spread_rec": away_sp_rec,
+            "home_spread_rec": home_sp_rec,
+            
+            "total_line": total_line,
+            "over_odds": over_odds,
+            "under_odds": under_odds,
+            "over_ev": round(over_ev, 1) if over_ev else 0,
+            "under_ev": round(under_ev, 1) if under_ev else 0,
+            "over_rec": over_rec,
+            "under_rec": under_rec
+        })
+
+    # Export to data.json
+    output_json = {
+        "last_updated": (datetime.utcnow() - timedelta(hours=5)).strftime("%B %d, %Y at %I:%M %p Central"),
+        "games": dashboard_games
+    }
+    with open('data.json', 'w') as f:
+        json.dump(output_json, f, indent=4)
+
+    print("Scraping, JSON export, and line updates complete.")
 
 if __name__ == '__main__':
     grade_historical_scores()
