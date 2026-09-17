@@ -1,11 +1,13 @@
 {
-    "last_updated": "2026-09-17T14:21:53.283406Z",
+    "last_updated": "2026-09-17T14:33:05.023437Z",
     "slate": "2026-09-17",
-    "games": [
+    "target_date": "2026-09-17",
+    "todays_games": [
         {
             "away_team": "DET",
             "home_team": "BUF",
             "date": "2026-09-17",
+            "target_date": "2026-09-17",
             "commence_time": "2026-09-18T00:15:00Z",
             "simulation": {
                 "away_win_prob": 25.3,
@@ -51,6 +53,7 @@
             "away_team": "CAR",
             "home_team": "ATL",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 15.1,
@@ -96,6 +99,7 @@
             "away_team": "NO",
             "home_team": "BAL",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 1.0,
@@ -141,6 +145,7 @@
             "away_team": "MIN",
             "home_team": "CHI",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 32.4,
@@ -186,6 +191,7 @@
             "away_team": "CIN",
             "home_team": "HOU",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 82.1,
@@ -231,6 +237,7 @@
             "away_team": "CLE",
             "home_team": "TB",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 7.0,
@@ -276,6 +283,7 @@
             "away_team": "GB",
             "home_team": "NYJ",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 7.0,
@@ -321,6 +329,7 @@
             "away_team": "PIT",
             "home_team": "NE",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 51.5,
@@ -366,6 +375,7 @@
             "away_team": "PHI",
             "home_team": "TEN",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "simulation": {
                 "away_win_prob": 90.6,
@@ -411,6 +421,7 @@
             "away_team": "JAX",
             "home_team": "DEN",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:05:00Z",
             "simulation": {
                 "away_win_prob": 99.7,
@@ -456,6 +467,7 @@
             "away_team": "LV",
             "home_team": "LAC",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:05:00Z",
             "simulation": {
                 "away_win_prob": 86.8,
@@ -501,6 +513,7 @@
             "away_team": "SEA",
             "home_team": "ARI",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "simulation": {
                 "away_win_prob": 25.3,
@@ -546,6 +559,7 @@
             "away_team": "WAS",
             "home_team": "DAL",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "simulation": {
                 "away_win_prob": 61.6,
@@ -591,6 +605,7 @@
             "away_team": "MIA",
             "home_team": "SF",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "simulation": {
                 "away_win_prob": 3.4,
@@ -636,6 +651,699 @@
             "away_team": "IND",
             "home_team": "KC",
             "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-21T00:20:00Z",
+            "simulation": {
+                "away_win_prob": 0.1,
+                "home_win_prob": 99.9,
+                "away_proj": 7.0,
+                "home_proj": 47.4,
+                "total_proj": 54.4,
+                "fair_spread": 40.4,
+                "fair_away_ml": "+99900",
+                "fair_home_ml": "-99900"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 242,
+                    "home": -288
+                },
+                "spreads": {
+                    "away": -122,
+                    "home": 109,
+                    "away_line": 7.0,
+                    "home_line": -7.0
+                },
+                "totals": {
+                    "over": 102,
+                    "under": -119,
+                    "total": 47.0
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        }
+    ],
+    "games": [
+        {
+            "away_team": "DET",
+            "home_team": "BUF",
+            "date": "2026-09-17",
+            "target_date": "2026-09-17",
+            "commence_time": "2026-09-18T00:15:00Z",
+            "simulation": {
+                "away_win_prob": 25.3,
+                "home_win_prob": 74.7,
+                "away_proj": 25.0,
+                "home_proj": 34.0,
+                "total_proj": 59.0,
+                "fair_spread": 9.0,
+                "fair_away_ml": "+295",
+                "fair_home_ml": "-295"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 206,
+                    "home": -235
+                },
+                "spreads": {
+                    "away": -104,
+                    "home": -106,
+                    "away_line": 5.5,
+                    "home_line": -5.5
+                },
+                "totals": {
+                    "over": -115,
+                    "under": 102,
+                    "total": 54.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": 5.9,
+                "home_sp_units": 1.57,
+                "over_ev": 4.6,
+                "over_units": 1.32,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "CAR",
+            "home_team": "ATL",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 15.1,
+                "home_win_prob": 84.9,
+                "away_proj": 13.9,
+                "home_proj": 27.5,
+                "total_proj": 41.4,
+                "fair_spread": 13.6,
+                "fair_away_ml": "+560",
+                "fair_home_ml": "-560"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": -145,
+                    "home": 128
+                },
+                "spreads": {
+                    "away": -114,
+                    "home": 102,
+                    "away_line": -2.5,
+                    "home_line": 2.5
+                },
+                "totals": {
+                    "over": -108,
+                    "under": -108,
+                    "total": 44.0
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": 3.5,
+                "under_units": 0.19
+            }
+        },
+        {
+            "away_team": "NO",
+            "home_team": "BAL",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 1.0,
+                "home_win_prob": 99.0,
+                "away_proj": 7.0,
+                "home_proj": 38.3,
+                "total_proj": 45.3,
+                "fair_spread": 31.3,
+                "fair_away_ml": "+9656",
+                "fair_home_ml": "-9656"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 322,
+                    "home": -400
+                },
+                "spreads": {
+                    "away": -120,
+                    "home": 107,
+                    "away_line": 9.0,
+                    "home_line": -9.0
+                },
+                "totals": {
+                    "over": 101,
+                    "under": -118,
+                    "total": 47.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "MIN",
+            "home_team": "CHI",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 32.4,
+                "home_win_prob": 67.6,
+                "away_proj": 27.7,
+                "home_proj": 33.9,
+                "total_proj": 61.6,
+                "fair_spread": 6.2,
+                "fair_away_ml": "+208",
+                "fair_home_ml": "-208"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 186,
+                    "home": -215
+                },
+                "spreads": {
+                    "away": -123,
+                    "home": 109,
+                    "away_line": 5.5,
+                    "home_line": -5.5
+                },
+                "totals": {
+                    "over": -101,
+                    "under": -116,
+                    "total": 48.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "CIN",
+            "home_team": "HOU",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 82.1,
+                "home_win_prob": 17.9,
+                "away_proj": 29.9,
+                "home_proj": 17.8,
+                "total_proj": 47.7,
+                "fair_spread": -12.2,
+                "fair_away_ml": "-458",
+                "fair_home_ml": "+458"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 133,
+                    "home": -151
+                },
+                "spreads": {
+                    "away": -122,
+                    "home": 109,
+                    "away_line": 3.0,
+                    "home_line": -3.0
+                },
+                "totals": {
+                    "over": 100,
+                    "under": -117,
+                    "total": 46.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "CLE",
+            "home_team": "TB",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 7.0,
+                "home_win_prob": 93.0,
+                "away_proj": 9.0,
+                "home_proj": 28.8,
+                "total_proj": 37.8,
+                "fair_spread": 19.8,
+                "fair_away_ml": "+1335",
+                "fair_home_ml": "-1335"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 327,
+                    "home": -407
+                },
+                "spreads": {
+                    "away": -118,
+                    "home": 105,
+                    "away_line": 9.0,
+                    "home_line": -9.0
+                },
+                "totals": {
+                    "over": 101,
+                    "under": -118,
+                    "total": 42.0
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": 4.0,
+                "under_units": 0.39
+            }
+        },
+        {
+            "away_team": "GB",
+            "home_team": "NYJ",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 7.0,
+                "home_win_prob": 93.0,
+                "away_proj": 9.2,
+                "home_proj": 28.8,
+                "total_proj": 38.0,
+                "fair_spread": 19.6,
+                "fair_away_ml": "+1323",
+                "fair_home_ml": "-1323"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": -168,
+                    "home": 147
+                },
+                "spreads": {
+                    "away": -111,
+                    "home": -101,
+                    "away_line": -3.0,
+                    "home_line": 3.0
+                },
+                "totals": {
+                    "over": -102,
+                    "under": -114,
+                    "total": 45.0
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "PIT",
+            "home_team": "NE",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 51.5,
+                "home_win_prob": 48.5,
+                "away_proj": 7.4,
+                "home_proj": 7.0,
+                "total_proj": 14.4,
+                "fair_spread": -0.4,
+                "fair_away_ml": "-106",
+                "fair_home_ml": "+106"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 203,
+                    "home": -237
+                },
+                "spreads": {
+                    "away": -110,
+                    "home": -102,
+                    "away_line": 5.5,
+                    "home_line": -5.5
+                },
+                "totals": {
+                    "over": 101,
+                    "under": -118,
+                    "total": 42.0
+                },
+                "away_ml_ev": 5.7,
+                "away_ml_units": 0.7,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "PHI",
+            "home_team": "TEN",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T17:00:00Z",
+            "simulation": {
+                "away_win_prob": 90.6,
+                "home_win_prob": 9.4,
+                "away_proj": 34.2,
+                "home_proj": 16.5,
+                "total_proj": 50.8,
+                "fair_spread": -17.7,
+                "fair_away_ml": "-966",
+                "fair_home_ml": "+966"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": -331,
+                    "home": 274
+                },
+                "spreads": {
+                    "away": 107,
+                    "home": -120,
+                    "away_line": -7.5,
+                    "home_line": 7.5
+                },
+                "totals": {
+                    "over": -104,
+                    "under": -113,
+                    "total": 40.0
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "JAX",
+            "home_team": "DEN",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T20:05:00Z",
+            "simulation": {
+                "away_win_prob": 99.7,
+                "home_win_prob": 0.3,
+                "away_proj": 45.3,
+                "home_proj": 7.0,
+                "total_proj": 52.3,
+                "fair_spread": -38.3,
+                "fair_away_ml": "-34988",
+                "fair_home_ml": "+34988"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 136,
+                    "home": -154
+                },
+                "spreads": {
+                    "away": 107,
+                    "home": -120,
+                    "away_line": 2.5,
+                    "home_line": -2.5
+                },
+                "totals": {
+                    "over": -104,
+                    "under": -112,
+                    "total": 45.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "LV",
+            "home_team": "LAC",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T20:05:00Z",
+            "simulation": {
+                "away_win_prob": 86.8,
+                "home_win_prob": 13.2,
+                "away_proj": 22.2,
+                "home_proj": 7.0,
+                "total_proj": 29.2,
+                "fair_spread": -15.2,
+                "fair_away_ml": "-657",
+                "fair_home_ml": "+657"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 246,
+                    "home": -293
+                },
+                "spreads": {
+                    "away": -105,
+                    "home": -107,
+                    "away_line": 6.5,
+                    "home_line": -6.5
+                },
+                "totals": {
+                    "over": 103,
+                    "under": -120,
+                    "total": 44.0
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "SEA",
+            "home_team": "ARI",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T20:25:00Z",
+            "simulation": {
+                "away_win_prob": 25.3,
+                "home_win_prob": 74.7,
+                "away_proj": 13.3,
+                "home_proj": 22.4,
+                "total_proj": 35.6,
+                "fair_spread": 9.1,
+                "fair_away_ml": "+296",
+                "fair_home_ml": "-296"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": -198,
+                    "home": 172
+                },
+                "spreads": {
+                    "away": -102,
+                    "home": -111,
+                    "away_line": -4.0,
+                    "home_line": 4.0
+                },
+                "totals": {
+                    "over": 101,
+                    "under": -118,
+                    "total": 41.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": 5.5,
+                "under_units": 1.63
+            }
+        },
+        {
+            "away_team": "WAS",
+            "home_team": "DAL",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T20:25:00Z",
+            "simulation": {
+                "away_win_prob": 61.6,
+                "home_win_prob": 38.4,
+                "away_proj": 44.4,
+                "home_proj": 40.1,
+                "total_proj": 84.5,
+                "fair_spread": -4.3,
+                "fair_away_ml": "-161",
+                "fair_home_ml": "+161"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 176,
+                    "home": -202
+                },
+                "spreads": {
+                    "away": -106,
+                    "home": -106,
+                    "away_line": 4.0,
+                    "home_line": -4.0
+                },
+                "totals": {
+                    "over": -113,
+                    "under": -103,
+                    "total": 50.0
+                },
+                "away_ml_ev": 7.9,
+                "away_ml_units": 1.13,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "MIA",
+            "home_team": "SF",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
+            "commence_time": "2026-09-20T20:25:00Z",
+            "simulation": {
+                "away_win_prob": 3.4,
+                "home_win_prob": 96.6,
+                "away_proj": 7.0,
+                "home_proj": 31.3,
+                "total_proj": 38.3,
+                "fair_spread": 24.3,
+                "fair_away_ml": "+2854",
+                "fair_home_ml": "-2854"
+            },
+            "market_data": {
+                "h2h": {
+                    "away": 690,
+                    "home": -1025
+                },
+                "spreads": {
+                    "away": -111,
+                    "home": -101,
+                    "away_line": 13.5,
+                    "home_line": -13.5
+                },
+                "totals": {
+                    "over": 102,
+                    "under": -119,
+                    "total": 45.5
+                },
+                "away_ml_ev": null,
+                "away_ml_units": null,
+                "home_ml_ev": null,
+                "home_ml_units": null,
+                "away_sp_ev": null,
+                "away_sp_units": null,
+                "home_sp_ev": null,
+                "home_sp_units": null,
+                "over_ev": null,
+                "over_units": null,
+                "under_ev": null,
+                "under_units": null
+            }
+        },
+        {
+            "away_team": "IND",
+            "home_team": "KC",
+            "date": "2026-09-20",
+            "target_date": "2026-09-20",
             "commence_time": "2026-09-21T00:20:00Z",
             "simulation": {
                 "away_win_prob": 0.1,
