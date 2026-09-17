@@ -6,7 +6,6 @@ from scraper_nfl import (
     proportional_devig,
     calculate_ev,
     american_to_decimal,
-    safe_float,
     ML_MARKET_WEIGHT,
     SPREAD_MARKET_WEIGHT,
     TOTAL_MARKET_WEIGHT
@@ -15,13 +14,26 @@ from scraper_nfl import (
 # Seed for consistent simulations
 np.random.seed(42)
 
+def backtest_safe_float(val):
+    if val is None: return None
+    val_str = str(val).strip().lower()
+    if val_str in ['', 'n/a', 'nan', 'none']: return None
+    try:
+        return float(val_str)
+    except ValueError:
+        return None
+
 def evaluate_bet(market_type, pick, row, bet_amount=25.0):
-    away_score = safe_float(row.get('Actual_Away_Score'))
-    home_score = safe_float(row.get('Actual_Home_Score'))
+    away_score = backtest_safe_float(row.get('Actual_Away_Score'))
+    home_score = backtest_safe_float(row.get('Actual_Home_Score'))
+    
+    if away_score is None or home_score is None:
+        return 0.0, 'push'
+        
     actual_total = away_score + home_score
 
     if market_type == 'ML':
-        odds = safe_float(row.get('Pinnacle_Away_ML') if pick == 'away' else row.get('Pinnacle_Home_ML'))
+        odds = backtest_safe_float(row.get('Pinnacle_Away_ML') if pick == 'away' else row.get('Pinnacle_Home_ML'))
         won = (away_score > home_score) if pick == 'away' else (home_score > away_score)
         if away_score == home_score:
             return 0.0, 'push'
@@ -29,7 +41,7 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         return profit, ('win' if won else 'loss')
 
     elif market_type == 'SPREAD':
-        line = safe_float(row.get('Pinnacle_Away_Spread') if pick == 'away' else row.get('Pinnacle_Home_Spread'))
+        line = backtest_safe_float(row.get('Pinnacle_Away_Spread') if pick == 'away' else row.get('Pinnacle_Home_Spread'))
         margin = (away_score - home_score) if pick == 'away' else (home_score - away_score)
         if margin + line == 0:
             return 0.0, 'push'
@@ -38,7 +50,9 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         return profit, ('win' if won else 'loss')
 
     elif market_type == 'TOTAL':
-        total_line = safe_float(row.get('Pinnacle_Total_Line'))
+        total_line = backtest_safe_float(row.get('Pinnacle_Total_Line'))
+        if total_line is None:
+            return 0.0, 'push'
         if actual_total == total_line:
             return 0.0, 'push'
         won = (actual_total > total_line) if pick == 'over' else (actual_total < total_line)
@@ -46,12 +60,10 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         return profit, ('win' if won else 'loss')
 
 def run_backtest(target_date=None, flat_bet=25.0):
-    # Tiered EV Hurdles
     ml_min, ml_max = 3.0, 10.0
     sp_min, sp_max = 1.5, 7.0
     tot_min, tot_max = 1.5, 7.0
     
-    # Properly unpack the 4 variables from the new engine
     epa_stats, league_points, league_epa, diagnostics = get_blended_nfl_stats(2025, 2026)
 
     games_evaluated = 0
@@ -72,10 +84,9 @@ def run_backtest(target_date=None, flat_bet=25.0):
         if target_date and row['Date'] != target_date:
             continue
             
-        away_score = safe_float(row.get('Actual_Away_Score'))
-        home_score = safe_float(row.get('Actual_Home_Score'))
+        away_score = backtest_safe_float(row.get('Actual_Away_Score'))
+        home_score = backtest_safe_float(row.get('Actual_Home_Score'))
         
-        # Skip if the game isn't finished yet
         if away_score is None or home_score is None:
             continue
 
@@ -86,12 +97,11 @@ def run_backtest(target_date=None, flat_bet=25.0):
 
         games_evaluated += 1
         
-        total_line = safe_float(row.get('Pinnacle_Total_Line'))
-        spread_line = safe_float(row.get('Pinnacle_Home_Spread'))
-        away_ml = safe_float(row.get('Pinnacle_Away_ML'))
-        home_ml = safe_float(row.get('Pinnacle_Home_ML'))
+        total_line = backtest_safe_float(row.get('Pinnacle_Total_Line'))
+        spread_line = backtest_safe_float(row.get('Pinnacle_Home_Spread'))
+        away_ml = backtest_safe_float(row.get('Pinnacle_Away_ML'))
+        home_ml = backtest_safe_float(row.get('Pinnacle_Home_ML'))
 
-        # Explicitly assign kwargs to map to the new dynamic calibrations
         sim_res = simulate_nfl_game(
             epa_stats[away], 
             epa_stats[home], 
@@ -99,19 +109,14 @@ def run_backtest(target_date=None, flat_bet=25.0):
             league_epa=league_epa,
             hfa_points=diagnostics["calibration"]["hfa_points"],
             epa_to_points=diagnostics["calibration"]["epa_to_points_per_play"],
-            total_line=total_line, 
-            spread_line=spread_line
+            total_line=total_line if total_line is not None else 45.0, 
+            spread_line=spread_line if spread_line is not None else -3.0
         )
 
-        # --- Moneyline Check ---
         if away_ml is not None and home_ml is not None:
             t_away, t_home = proportional_devig(away_ml, home_ml)
-            
-            # Extract 0-1 percentage from the 0-100 return format
             model_away = sim_res["away_win_prob"] / 100.0
             model_home = sim_res["home_win_prob"] / 100.0
-
-            # New Engine weighting equation: (1 - Market_Wt) * Model + (Market_Wt * Market)
             b_away = ((1.0 - ML_MARKET_WEIGHT) * model_away) + (ML_MARKET_WEIGHT * t_away)
             b_home = ((1.0 - ML_MARKET_WEIGHT) * model_home) + (ML_MARKET_WEIGHT * t_home)
 
@@ -120,22 +125,22 @@ def run_backtest(target_date=None, flat_bet=25.0):
 
             if away_ml_ev and ml_min <= away_ml_ev <= ml_max:
                 p, res = evaluate_bet('ML', 'away', row, flat_bet)
-                total_staked += flat_bet
-                total_profit += p
-                results_summary['ML'][res[0].upper()] += 1
-                print(f"Betted ML: {away} ({res.upper()}) | EV: {away_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
+                if res != 'push':
+                    total_staked += flat_bet
+                    total_profit += p
+                    results_summary['ML'][res[0].upper()] += 1
+                    print(f"Betted ML: {away} ({res.upper()}) | EV: {away_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
             elif home_ml_ev and ml_min <= home_ml_ev <= ml_max:
                 p, res = evaluate_bet('ML', 'home', row, flat_bet)
-                total_staked += flat_bet
-                total_profit += p
-                results_summary['ML'][res[0].upper()] += 1
-                print(f"Betted ML: {home} ({res.upper()}) | EV: {home_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
+                if res != 'push':
+                    total_staked += flat_bet
+                    total_profit += p
+                    results_summary['ML'][res[0].upper()] += 1
+                    print(f"Betted ML: {home} ({res.upper()}) | EV: {home_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
-        # --- Spread Check ---
-        if spread_line is not None and safe_float(row.get('Pinnacle_Away_Spread')) is not None:
+        if spread_line is not None and backtest_safe_float(row.get('Pinnacle_Away_Spread')) is not None:
             t_sp_a, t_sp_h = proportional_devig(-110, -110)
-            
             model_away_sp = sim_res["spread_probs"]["away"]
             model_home_sp = sim_res["spread_probs"]["home"]
 
@@ -148,22 +153,22 @@ def run_backtest(target_date=None, flat_bet=25.0):
 
             if away_sp_ev and sp_min <= away_sp_ev <= sp_max:
                 p, res = evaluate_bet('SPREAD', 'away', row, flat_bet)
-                total_staked += flat_bet
-                total_profit += p
-                results_summary['SPREAD'][res[0].upper()] += 1
-                print(f"Betted SPREAD: {away} ({res.upper()}) | EV: {away_sp_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
+                if res != 'push':
+                    total_staked += flat_bet
+                    total_profit += p
+                    results_summary['SPREAD'][res[0].upper()] += 1
+                    print(f"Betted SPREAD: {away} ({res.upper()}) | EV: {away_sp_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
             elif home_sp_ev and sp_min <= home_sp_ev <= sp_max:
                 p, res = evaluate_bet('SPREAD', 'home', row, flat_bet)
-                total_staked += flat_bet
-                total_profit += p
-                results_summary['SPREAD'][res[0].upper()] += 1
-                print(f"Betted SPREAD: {home} ({res.upper()}) | EV: {home_sp_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
+                if res != 'push':
+                    total_staked += flat_bet
+                    total_profit += p
+                    results_summary['SPREAD'][res[0].upper()] += 1
+                    print(f"Betted SPREAD: {home} ({res.upper()}) | EV: {home_sp_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
-        # --- Totals Check ---
         if total_line is not None:
             t_ou_o, t_ou_u = proportional_devig(-110, -110)
-            
             model_over = sim_res["ou_probs"]["over"]
             model_under = sim_res["ou_probs"]["under"]
 
@@ -176,17 +181,19 @@ def run_backtest(target_date=None, flat_bet=25.0):
 
             if over_ev and tot_min <= over_ev <= tot_max:
                 p, res = evaluate_bet('TOTAL', 'over', row, flat_bet)
-                total_staked += flat_bet
-                total_profit += p
-                results_summary['TOTAL'][res[0].upper()] += 1
-                print(f"Betted TOTAL: OVER {total_line} in {away}@{home} ({res.upper()}) | EV: {over_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
+                if res != 'push':
+                    total_staked += flat_bet
+                    total_profit += p
+                    results_summary['TOTAL'][res[0].upper()] += 1
+                    print(f"Betted TOTAL: OVER {total_line} in {away}@{home} ({res.upper()}) | EV: {over_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
             elif under_ev and tot_min <= under_ev <= tot_max:
                 p, res = evaluate_bet('TOTAL', 'under', row, flat_bet)
-                total_staked += flat_bet
-                total_profit += p
-                results_summary['TOTAL'][res[0].upper()] += 1
-                print(f"Betted TOTAL: UNDER {total_line} in {away}@{home} ({res.upper()}) | EV: {under_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
+                if res != 'push':
+                    total_staked += flat_bet
+                    total_profit += p
+                    results_summary['TOTAL'][res[0].upper()] += 1
+                    print(f"Betted TOTAL: UNDER {total_line} in {away}@{home} ({res.upper()}) | EV: {under_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
     roi = (total_profit / total_staked * 100) if total_staked > 0 else 0.0
     
