@@ -1,6 +1,6 @@
 {
     "model_version": "2026.09-v2",
-    "last_updated": "2026-09-17T16:11:22.804850+00:00",
+    "last_updated": "2026-09-17T16:14:07.655078+00:00",
     "slate": "2026-09-17",
     "target_date": "2026-09-17",
     "team_stats": {
@@ -369,7 +369,7 @@
         "epa_prior_effective_plays": 400.0,
         "calibration": {
             "epa_to_points_per_play": 0.25,
-            "hfa_points": 1.0237719905419373,
+            "hfa_points": 1.023771990541938,
             "games_used": 285,
             "method": "2025 game-level least-squares calibration"
         }
