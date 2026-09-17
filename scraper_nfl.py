@@ -364,6 +364,7 @@ def run_live_scraper():
             "away_team": away,
             "home_team": home,
             "date": date_str,
+            "target_date": date_str,
             "commence_time": game['commence_time'],
             "simulation": {
                 "away_win_prob": round(sim_res["away_win_prob"], 1),
@@ -399,9 +400,12 @@ def run_live_scraper():
 
     primary_date = dashboard_games[0]['date'] if dashboard_games else (datetime.utcnow() - timedelta(hours=5)).strftime('%Y-%m-%d')
     
+    # ADDED 'todays_games' and 'target_date' explicitly to root to fix frontend parsing
     output_json = {
         "last_updated": datetime.utcnow().isoformat() + "Z", 
         "slate": primary_date,
+        "target_date": primary_date,
+        "todays_games": dashboard_games,
         "games": dashboard_games
     }
     
