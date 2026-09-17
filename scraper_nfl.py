@@ -124,9 +124,37 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
         }
     }
 
+# --- RESTORED MATH HELPERS ---
+
 def american_to_decimal(odds):
     if odds > 0: return 1.0 + (odds / 100.0)
     else: return 1.0 + (100.0 / abs(odds))
+
+def proportional_devig(odds1, odds2):
+    p1 = 1.0 / american_to_decimal(odds1)
+    p2 = 1.0 / american_to_decimal(odds2)
+    total = p1 + p2
+    return p1 / total, p2 / total
+
+def calculate_ev(win_prob, odds, push_prob=0.0):
+    dec_odds = american_to_decimal(odds)
+    win_p = win_prob / 100.0
+    push_p = push_prob / 100.0
+    loss_p = max(0.0, 1.0 - win_p - push_p)
+    profit_on_win = dec_odds - 1.0
+    return ((win_p * profit_on_win) - loss_p) * 100.0
+
+def calc_kelly_units(win_prob, odds, push_prob=0.0, fraction=0.25, max_unit=2.0):
+    dec_odds = american_to_decimal(odds)
+    win_p = win_prob / 100.0
+    b = dec_odds - 1.0
+    if b <= 0: return 0.0
+    kelly_f = (win_p * b - (1.0 - win_p)) / b
+    if kelly_f <= 0: return 0.0
+    adj_kelly = kelly_f * fraction * 100.0 
+    return round(min(adj_kelly, max_unit), 2)
+
+# --- GRADING & SCRAPING ---
 
 def grade_historical_scores():
     if not os.path.exists('history.csv'): return
@@ -148,7 +176,6 @@ def grade_historical_scores():
         except ValueError:
             continue
             
-        # Search window: Target day, day before, day after to catch timezone bleeding
         check_dates = [
             dt.strftime("%Y%m%d"),
             (dt + timedelta(days=1)).strftime("%Y%m%d"),
@@ -176,7 +203,6 @@ def grade_historical_scores():
             except Exception:
                 continue
         
-        # Apply matched scores to ANY ungraded row with the correct matchup
         for idx, row in df.iterrows():
             if pd.isna(row['Actual_Away_Score']) or row['Actual_Away_Score'] == 'N/A':
                 away = row['Away_Team']
@@ -224,7 +250,6 @@ def run_live_scraper():
         if not away or not home or away not in epa_stats or home not in epa_stats:
             continue
             
-        # Convert UTC to Central Time for local scheduling
         utc_time = datetime.strptime(game['commence_time'], "%Y-%m-%dT%H:%M:%SZ")
         local_time = utc_time - timedelta(hours=5) 
         date = local_time.strftime('%Y-%m-%d')
@@ -257,7 +282,6 @@ def run_live_scraper():
         if away_ml == 'N/A' or away_sp == 'N/A' or total_line == 'N/A':
             continue
             
-        # Deduplication Check: Prevent logging upcoming games multiple times
         is_ungraded = existing_history['Actual_Away_Score'].isna() | (existing_history['Actual_Away_Score'] == 'N/A')
         match_exists = not existing_history[(existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home) & is_ungraded].empty
         
