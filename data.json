@@ -1,1448 +1,515 @@
 {
-    "date": "2026-09-17",
-    "last_updated": "2026-09-17T04:27:13.293369Z",
-    "teams": {
-        "DET": {
-            "plays": 71,
-            "off_epa_per_play": 0.055,
-            "off_pass_epa": 0.122,
-            "off_rush_epa": -0.053,
-            "def_epa_per_play": -0.025,
-            "def_pass_epa": -0.037,
-            "def_rush_epa": -0.011,
-            "pace": 56.776
-        },
-        "DAL": {
-            "plays": 44,
-            "off_epa_per_play": 0.113,
-            "off_pass_epa": 0.206,
-            "off_rush_epa": 0.043,
-            "def_epa_per_play": 0.19,
-            "def_pass_epa": 0.322,
-            "def_rush_epa": 0.099,
-            "pace": 55.099
-        },
-        "MIA": {
-            "plays": 38,
-            "off_epa_per_play": -0.002,
-            "off_pass_epa": 0.008,
-            "off_rush_epa": -0.024,
-            "def_epa_per_play": 0.08,
-            "def_pass_epa": 0.112,
-            "def_rush_epa": 0.037,
-            "pace": 42.365
-        },
-        "TEN": {
-            "plays": 31,
-            "off_epa_per_play": -0.144,
-            "off_pass_epa": -0.219,
-            "off_rush_epa": -0.107,
-            "def_epa_per_play": 0.127,
-            "def_pass_epa": 0.218,
-            "def_rush_epa": 0.068,
-            "pace": 43.264
-        },
-        "BAL": {
-            "plays": 40,
-            "off_epa_per_play": 0.052,
-            "off_pass_epa": 0.05,
-            "off_rush_epa": 0.131,
-            "def_epa_per_play": 0.002,
-            "def_pass_epa": 0.014,
-            "def_rush_epa": -0.018,
-            "pace": 47.624
-        },
-        "CIN": {
-            "plays": 51,
-            "off_epa_per_play": -0.005,
-            "off_pass_epa": -0.058,
-            "off_rush_epa": 0.089,
-            "def_epa_per_play": 0.077,
-            "def_pass_epa": 0.106,
-            "def_rush_epa": 0.074,
-            "pace": 51.0
-        },
-        "BUF": {
-            "plays": 52,
-            "off_epa_per_play": 0.1,
-            "off_pass_epa": 0.17,
-            "off_rush_epa": 0.087,
-            "def_epa_per_play": -0.033,
-            "def_pass_epa": -0.1,
-            "def_rush_epa": 0.118,
-            "pace": 54.518
-        },
-        "KC": {
-            "plays": 48,
-            "off_epa_per_play": -0.001,
-            "off_pass_epa": -0.038,
-            "off_rush_epa": 0.109,
-            "def_epa_per_play": -0.009,
-            "def_pass_epa": -0.012,
-            "def_rush_epa": -0.039,
-            "pace": 54.419
-        },
-        "SEA": {
-            "plays": 47,
-            "off_epa_per_play": 0.074,
-            "off_pass_epa": 0.137,
-            "off_rush_epa": -0.02,
-            "def_epa_per_play": -0.08,
-            "def_pass_epa": -0.095,
-            "def_rush_epa": -0.165,
-            "pace": 47.177
-        },
-        "IND": {
-            "plays": 37,
-            "off_epa_per_play": 0.017,
-            "off_pass_epa": 0.017,
-            "off_rush_epa": 0.051,
-            "def_epa_per_play": 0.07,
-            "def_pass_epa": 0.124,
-            "def_rush_epa": 0.009,
-            "pace": 49.598
-        },
-        "ARI": {
-            "plays": 64,
-            "off_epa_per_play": 0.02,
-            "off_pass_epa": 0.048,
-            "off_rush_epa": -0.04,
-            "def_epa_per_play": 0.051,
-            "def_pass_epa": 0.094,
-            "def_rush_epa": -0.045,
-            "pace": 51.005
-        },
-        "HOU": {
-            "plays": 73,
-            "off_epa_per_play": -0.016,
-            "off_pass_epa": -0.009,
-            "off_rush_epa": -0.053,
-            "def_epa_per_play": -0.072,
-            "def_pass_epa": -0.074,
-            "def_rush_epa": -0.088,
-            "pace": 59.49
-        },
-        "CHI": {
-            "plays": 54,
-            "off_epa_per_play": 0.083,
-            "off_pass_epa": 0.124,
-            "off_rush_epa": 0.114,
-            "def_epa_per_play": 0.029,
-            "def_pass_epa": 0.049,
-            "def_rush_epa": 0.006,
-            "pace": 60.283
-        },
-        "JAX": {
-            "plays": 30,
-            "off_epa_per_play": 0.069,
-            "off_pass_epa": 0.105,
-            "off_rush_epa": 0.037,
-            "def_epa_per_play": -0.091,
-            "def_pass_epa": -0.167,
-            "def_rush_epa": -0.066,
-            "pace": 50.144
-        },
-        "PHI": {
-            "plays": 51,
-            "off_epa_per_play": -0.004,
-            "off_pass_epa": 0.001,
-            "off_rush_epa": 0.034,
-            "def_epa_per_play": -0.062,
-            "def_pass_epa": -0.099,
-            "def_rush_epa": -0.032,
-            "pace": 53.036
-        },
-        "NE": {
-            "plays": 67,
-            "off_epa_per_play": 0.06,
-            "off_pass_epa": 0.099,
-            "off_rush_epa": 0.002,
-            "def_epa_per_play": -0.033,
-            "def_pass_epa": -0.046,
-            "def_rush_epa": -0.063,
-            "pace": 53.323
-        },
-        "WAS": {
-            "plays": 68,
-            "off_epa_per_play": 0.012,
-            "off_pass_epa": 0.017,
-            "off_rush_epa": 0.02,
-            "def_epa_per_play": 0.091,
-            "def_pass_epa": 0.153,
-            "def_rush_epa": 0.096,
-            "pace": 49.935
-        },
-        "CAR": {
-            "plays": 45,
-            "off_epa_per_play": -0.042,
-            "off_pass_epa": -0.078,
-            "off_rush_epa": 0.0,
-            "def_epa_per_play": 0.077,
-            "def_pass_epa": 0.122,
-            "def_rush_epa": 0.071,
-            "pace": 49.832
-        },
-        "MIN": {
-            "plays": 55,
-            "off_epa_per_play": -0.103,
-            "off_pass_epa": -0.193,
-            "off_rush_epa": -0.024,
-            "def_epa_per_play": -0.079,
-            "def_pass_epa": -0.108,
-            "def_rush_epa": -0.086,
-            "pace": 46.882
-        },
-        "LA": {
-            "plays": 36,
-            "off_epa_per_play": 0.12,
-            "off_pass_epa": 0.197,
-            "off_rush_epa": 0.032,
-            "def_epa_per_play": 0.014,
-            "def_pass_epa": 0.021,
-            "def_rush_epa": -0.026,
-            "pace": 53.017
-        },
-        "GB": {
-            "plays": 56,
-            "off_epa_per_play": 0.113,
-            "off_pass_epa": 0.238,
-            "off_rush_epa": -0.066,
-            "def_epa_per_play": 0.031,
-            "def_pass_epa": 0.085,
-            "def_rush_epa": -0.021,
-            "pace": 54.949
-        },
-        "CLE": {
-            "plays": 13,
-            "off_epa_per_play": -0.193,
-            "off_pass_epa": -0.311,
-            "off_rush_epa": -0.07,
-            "def_epa_per_play": -0.062,
-            "def_pass_epa": -0.115,
-            "def_rush_epa": -0.018,
-            "pace": 49.253
-        },
-        "LAC": {
-            "plays": 45,
-            "off_epa_per_play": -0.027,
-            "off_pass_epa": -0.045,
-            "off_rush_epa": -0.03,
-            "def_epa_per_play": -0.034,
-            "def_pass_epa": -0.055,
-            "def_rush_epa": -0.015,
-            "pace": 52.987
-        },
-        "TB": {
-            "plays": 50,
-            "off_epa_per_play": -0.017,
-            "off_pass_epa": -0.044,
-            "off_rush_epa": 0.028,
-            "def_epa_per_play": 0.045,
-            "def_pass_epa": 0.078,
-            "def_rush_epa": -0.021,
-            "pace": 55.456
-        },
-        "DEN": {
-            "plays": 37,
-            "off_epa_per_play": -0.005,
-            "off_pass_epa": 0.003,
-            "off_rush_epa": -0.007,
-            "def_epa_per_play": -0.077,
-            "def_pass_epa": -0.113,
-            "def_rush_epa": 0.004,
-            "pace": 53.956
-        },
-        "NO": {
-            "plays": 84,
-            "off_epa_per_play": -0.061,
-            "off_pass_epa": -0.086,
-            "off_rush_epa": -0.105,
-            "def_epa_per_play": -0.018,
-            "def_pass_epa": -0.025,
-            "def_rush_epa": -0.042,
-            "pace": 59.464
-        },
-        "PIT": {
-            "plays": 59,
-            "off_epa_per_play": -0.034,
-            "off_pass_epa": -0.054,
-            "off_rush_epa": -0.001,
-            "def_epa_per_play": -0.041,
-            "def_pass_epa": -0.076,
-            "def_rush_epa": -0.003,
-            "pace": 52.464
-        },
-        "ATL": {
-            "plays": 57,
-            "off_epa_per_play": -0.029,
-            "off_pass_epa": -0.056,
-            "off_rush_epa": -0.021,
-            "def_epa_per_play": -0.06,
-            "def_pass_epa": -0.107,
-            "def_rush_epa": -0.026,
-            "pace": 54.528
-        },
-        "NYG": {
-            "plays": 58,
-            "off_epa_per_play": 0.051,
-            "off_pass_epa": 0.11,
-            "off_rush_epa": -0.001,
-            "def_epa_per_play": 0.057,
-            "def_pass_epa": 0.052,
-            "def_rush_epa": 0.166,
-            "pace": 55.485
-        },
-        "SF": {
-            "plays": 55,
-            "off_epa_per_play": 0.117,
-            "off_pass_epa": 0.181,
-            "off_rush_epa": 0.027,
-            "def_epa_per_play": 0.054,
-            "def_pass_epa": 0.089,
-            "def_rush_epa": 0.004,
-            "pace": 55.136
-        },
-        "NYJ": {
-            "plays": 48,
-            "off_epa_per_play": -0.087,
-            "off_pass_epa": -0.145,
-            "off_rush_epa": -0.054,
-            "def_epa_per_play": 0.097,
-            "def_pass_epa": 0.174,
-            "def_rush_epa": 0.067,
-            "pace": 44.894
-        },
-        "LV": {
-            "plays": 50,
-            "off_epa_per_play": -0.12,
-            "off_pass_epa": -0.166,
-            "off_rush_epa": -0.167,
-            "def_epa_per_play": 0.003,
-            "def_pass_epa": 0.017,
-            "def_rush_epa": -0.021,
-            "pace": 45.007
-        }
-    },
-    "todays_games": [
+    "last_updated": "September 17, 2026 at 08:36 AM Central",
+    "games": [
         {
             "away_team": "DET",
             "home_team": "BUF",
-            "away_offense": {
-                "plays": 71,
-                "off_epa_per_play": 0.055,
-                "off_pass_epa": 0.122,
-                "off_rush_epa": -0.053,
-                "def_epa_per_play": -0.025,
-                "def_pass_epa": -0.037,
-                "def_rush_epa": -0.011,
-                "pace": 56.776
-            },
-            "home_offense": {
-                "plays": 52,
-                "off_epa_per_play": 0.1,
-                "off_pass_epa": 0.17,
-                "off_rush_epa": 0.087,
-                "def_epa_per_play": -0.033,
-                "def_pass_epa": -0.1,
-                "def_rush_epa": 0.118,
-                "pace": 54.518
-            },
-            "simulation": {
-                "away_win_prob": 36.0,
-                "home_win_prob": 62.6,
-                "away_proj": 22.2,
-                "home_proj": 25.3,
-                "total_proj": 47.5,
-                "spread_probs": {
-                    "away": 0.5143968109339407,
-                    "home": 0.47020318906605924,
-                    "push": 0.0308
-                },
-                "ou_probs": {
-                    "over": 0.41095727191612763,
-                    "under": 0.5890427280838724,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -230,
-                    "away": 198
-                },
-                "spreads": {
-                    "home": -113,
-                    "home_line": -5.0,
-                    "away": 100,
-                    "away_line": 5.0
-                },
-                "totals": {
-                    "over": -115,
-                    "point": 54.5,
-                    "under": -101
-                },
-                "away_ml_ev": 7.4,
-                "away_ml_units": 0.93,
-                "home_ml_ev": -10.1,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 6.0,
-                "away_sp_units": 0.72,
-                "home_sp_ev": -8.3,
-                "home_sp_units": 0.0,
-                "over_ev": -23.2,
-                "over_units": 0.0,
-                "under_ev": 17.2,
-                "under_units": 2.0
-            }
+            "commence_time": "2026-09-18T00:15:00Z",
+            "away_prob": 25.3,
+            "home_prob": 74.7,
+            "proj_away_score": 25.0,
+            "proj_home_score": 34.0,
+            "proj_total": 59.0,
+            "fair_spread": 9.0,
+            "fair_away_ml": "+295",
+            "fair_home_ml": "-295",
+            "away_ml": 206,
+            "home_ml": -235,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 5.5,
+            "home_spread": -5.5,
+            "away_spread_odds": -104,
+            "home_spread_odds": -106,
+            "away_spread_ev": 0,
+            "home_spread_ev": 5.9,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 1.57,
+            "total_line": 54.5,
+            "over_odds": -115,
+            "under_odds": 102,
+            "over_ev": 4.6,
+            "under_ev": 0,
+            "over_rec": 1.32,
+            "under_rec": 0.0
         },
         {
             "away_team": "CAR",
             "home_team": "ATL",
-            "away_offense": {
-                "plays": 45,
-                "off_epa_per_play": -0.042,
-                "off_pass_epa": -0.078,
-                "off_rush_epa": 0.0,
-                "def_epa_per_play": 0.077,
-                "def_pass_epa": 0.122,
-                "def_rush_epa": 0.071,
-                "pace": 49.832
-            },
-            "home_offense": {
-                "plays": 57,
-                "off_epa_per_play": -0.029,
-                "off_pass_epa": -0.056,
-                "off_rush_epa": -0.021,
-                "def_epa_per_play": -0.06,
-                "def_pass_epa": -0.107,
-                "def_rush_epa": -0.026,
-                "pace": 54.528
-            },
-            "simulation": {
-                "away_win_prob": 44.8,
-                "home_win_prob": 53.9,
-                "away_proj": 18.5,
-                "home_proj": 24.3,
-                "total_proj": 42.8,
-                "spread_probs": {
-                    "away": 0.39808073394495413,
-                    "home": 0.6019192660550459,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.4464,
-                    "under": 0.5214,
-                    "push": 0.0322
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": 126,
-                    "away": -142
-                },
-                "spreads": {
-                    "home": 100,
-                    "home_line": 2.5,
-                    "away": -112,
-                    "away_line": -2.5
-                },
-                "totals": {
-                    "over": -108,
-                    "point": 44.0,
-                    "under": -108
-                },
-                "away_ml_ev": -23.7,
-                "away_ml_units": 0.0,
-                "home_ml_ev": 21.8,
-                "home_ml_units": 2.0,
-                "away_sp_ev": -24.6,
-                "away_sp_units": 0.0,
-                "home_sp_ev": 20.4,
-                "home_sp_units": 2.0,
-                "over_ev": -10.8,
-                "over_units": 0.0,
-                "under_ev": 3.6,
-                "under_units": 0.11
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 15.1,
+            "home_prob": 84.9,
+            "proj_away_score": 13.9,
+            "proj_home_score": 27.5,
+            "proj_total": 41.4,
+            "fair_spread": 13.6,
+            "fair_away_ml": "+560",
+            "fair_home_ml": "-560",
+            "away_ml": -145,
+            "home_ml": 128,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": -2.5,
+            "home_spread": 2.5,
+            "away_spread_odds": -114,
+            "home_spread_odds": 102,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 44.0,
+            "over_odds": -108,
+            "under_odds": -108,
+            "over_ev": 0,
+            "under_ev": 3.5,
+            "over_rec": 0.0,
+            "under_rec": 0.19
         },
         {
             "away_team": "NO",
             "home_team": "BAL",
-            "away_offense": {
-                "plays": 84,
-                "off_epa_per_play": -0.061,
-                "off_pass_epa": -0.086,
-                "off_rush_epa": -0.105,
-                "def_epa_per_play": -0.018,
-                "def_pass_epa": -0.025,
-                "def_rush_epa": -0.042,
-                "pace": 59.464
-            },
-            "home_offense": {
-                "plays": 40,
-                "off_epa_per_play": 0.052,
-                "off_pass_epa": 0.05,
-                "off_rush_epa": 0.131,
-                "def_epa_per_play": 0.002,
-                "def_pass_epa": 0.014,
-                "def_rush_epa": -0.018,
-                "pace": 47.624
-            },
-            "simulation": {
-                "away_win_prob": 29.7,
-                "home_win_prob": 69.0,
-                "away_proj": 19.8,
-                "home_proj": 23.9,
-                "total_proj": 43.6,
-                "spread_probs": {
-                    "away": 0.5780079846285227,
-                    "home": 0.4113920153714774,
-                    "push": 0.0212
-                },
-                "ou_probs": {
-                    "over": 0.4373657058745991,
-                    "under": 0.5626342941254009,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -400,
-                    "away": 322
-                },
-                "spreads": {
-                    "home": 107,
-                    "home_line": -9.0,
-                    "away": -120,
-                    "away_line": 9.0
-                },
-                "totals": {
-                    "over": 101,
-                    "point": 47.5,
-                    "under": -118
-                },
-                "away_ml_ev": 25.2,
-                "away_ml_units": 1.96,
-                "home_ml_ev": -13.8,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 8.1,
-                "away_sp_units": 1.79,
-                "home_sp_ev": -12.7,
-                "home_sp_units": 0.0,
-                "over_ev": -12.1,
-                "over_units": 0.0,
-                "under_ev": 3.9,
-                "under_units": 1.16
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 1.0,
+            "home_prob": 99.0,
+            "proj_away_score": 7.0,
+            "proj_home_score": 38.3,
+            "proj_total": 45.3,
+            "fair_spread": 31.3,
+            "fair_away_ml": "+9656",
+            "fair_home_ml": "-9656",
+            "away_ml": 322,
+            "home_ml": -400,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 9.0,
+            "home_spread": -9.0,
+            "away_spread_odds": -120,
+            "home_spread_odds": 107,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 47.5,
+            "over_odds": 101,
+            "under_odds": -118,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "MIN",
             "home_team": "CHI",
-            "away_offense": {
-                "plays": 55,
-                "off_epa_per_play": -0.103,
-                "off_pass_epa": -0.193,
-                "off_rush_epa": -0.024,
-                "def_epa_per_play": -0.079,
-                "def_pass_epa": -0.108,
-                "def_rush_epa": -0.086,
-                "pace": 46.882
-            },
-            "home_offense": {
-                "plays": 54,
-                "off_epa_per_play": 0.083,
-                "off_pass_epa": 0.124,
-                "off_rush_epa": 0.114,
-                "def_epa_per_play": 0.029,
-                "def_pass_epa": 0.049,
-                "def_rush_epa": 0.006,
-                "pace": 60.283
-            },
-            "simulation": {
-                "away_win_prob": 35.7,
-                "home_win_prob": 62.8,
-                "away_proj": 19.4,
-                "home_proj": 23.3,
-                "total_proj": 42.6,
-                "spread_probs": {
-                    "away": 0.5420922042618784,
-                    "home": 0.4579077957381215,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.40787142857142855,
-                    "under": 0.5921285714285713,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -214,
-                    "away": 185
-                },
-                "spreads": {
-                    "home": 109,
-                    "home_line": -5.5,
-                    "away": -123,
-                    "away_line": 5.5
-                },
-                "totals": {
-                    "over": 100,
-                    "point": 48.5,
-                    "under": -116
-                },
-                "away_ml_ev": 1.8,
-                "away_ml_units": 0.24,
-                "home_ml_ev": -7.8,
-                "home_ml_units": 0.0,
-                "away_sp_ev": -1.7,
-                "away_sp_units": 0.0,
-                "home_sp_ev": -4.3,
-                "home_sp_units": 0.0,
-                "over_ev": -18.4,
-                "over_units": 0.0,
-                "under_ev": 10.3,
-                "under_units": 2.0
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 32.4,
+            "home_prob": 67.6,
+            "proj_away_score": 27.7,
+            "proj_home_score": 33.9,
+            "proj_total": 61.6,
+            "fair_spread": 6.2,
+            "fair_away_ml": "+208",
+            "fair_home_ml": "-208",
+            "away_ml": 186,
+            "home_ml": -215,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 5.5,
+            "home_spread": -5.5,
+            "away_spread_odds": -123,
+            "home_spread_odds": 109,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 48.5,
+            "over_odds": -101,
+            "under_odds": -116,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "CIN",
             "home_team": "HOU",
-            "away_offense": {
-                "plays": 51,
-                "off_epa_per_play": -0.005,
-                "off_pass_epa": -0.058,
-                "off_rush_epa": 0.089,
-                "def_epa_per_play": 0.077,
-                "def_pass_epa": 0.106,
-                "def_rush_epa": 0.074,
-                "pace": 51.0
-            },
-            "home_offense": {
-                "plays": 73,
-                "off_epa_per_play": -0.016,
-                "off_pass_epa": -0.009,
-                "off_rush_epa": -0.053,
-                "def_epa_per_play": -0.072,
-                "def_pass_epa": -0.074,
-                "def_rush_epa": -0.088,
-                "pace": 59.49
-            },
-            "simulation": {
-                "away_win_prob": 37.1,
-                "home_win_prob": 61.6,
-                "away_proj": 19.1,
-                "home_proj": 24.8,
-                "total_proj": 43.9,
-                "spread_probs": {
-                    "away": 0.46883584007715207,
-                    "home": 0.5076141599228479,
-                    "push": 0.0471
-                },
-                "ou_probs": {
-                    "over": 0.45157649667405764,
-                    "under": 0.5484235033259424,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": 133,
-                    "home": -151
-                },
-                "spreads": {
-                    "away": -122,
-                    "away_line": 3.0,
-                    "home": 109,
-                    "home_line": -3.0
-                },
-                "totals": {
-                    "over": 100,
-                    "point": 46.5,
-                    "under": -117
-                },
-                "away_ml_ev": -13.7,
-                "away_ml_units": 0.0,
-                "home_ml_ev": 2.3,
-                "home_ml_units": 0.88,
-                "away_sp_ev": -10.0,
-                "away_sp_units": 0.0,
-                "home_sp_ev": 10.8,
-                "home_sp_units": 1.4,
-                "over_ev": -9.7,
-                "over_units": 0.0,
-                "under_ev": 1.7,
-                "under_units": 0.5
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 82.1,
+            "home_prob": 17.9,
+            "proj_away_score": 29.9,
+            "proj_home_score": 17.8,
+            "proj_total": 47.7,
+            "fair_spread": -12.2,
+            "fair_away_ml": "-458",
+            "fair_home_ml": "+458",
+            "away_ml": 133,
+            "home_ml": -151,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 3.0,
+            "home_spread": -3.0,
+            "away_spread_odds": -122,
+            "home_spread_odds": 109,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 46.5,
+            "over_odds": 100,
+            "under_odds": -117,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "CLE",
             "home_team": "TB",
-            "away_offense": {
-                "plays": 13,
-                "off_epa_per_play": -0.193,
-                "off_pass_epa": -0.311,
-                "off_rush_epa": -0.07,
-                "def_epa_per_play": -0.062,
-                "def_pass_epa": -0.115,
-                "def_rush_epa": -0.018,
-                "pace": 49.253
-            },
-            "home_offense": {
-                "plays": 50,
-                "off_epa_per_play": -0.017,
-                "off_pass_epa": -0.044,
-                "off_rush_epa": 0.028,
-                "def_epa_per_play": 0.045,
-                "def_pass_epa": 0.078,
-                "def_rush_epa": -0.021,
-                "pace": 55.456
-            },
-            "simulation": {
-                "away_win_prob": 30.5,
-                "home_win_prob": 68.1,
-                "away_proj": 17.2,
-                "home_proj": 20.7,
-                "total_proj": 37.9,
-                "spread_probs": {
-                    "away": 0.5858298035075623,
-                    "home": 0.4029701964924376,
-                    "push": 0.0224
-                },
-                "ou_probs": {
-                    "over": 0.45587350332594234,
-                    "under": 0.5287264966740577,
-                    "push": 0.0308
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": 325,
-                    "home": -404
-                },
-                "spreads": {
-                    "away": -119,
-                    "away_line": 9.0,
-                    "home": 106,
-                    "home_line": -9.0
-                },
-                "totals": {
-                    "over": -117,
-                    "point": 41.0,
-                    "under": 100
-                },
-                "away_ml_ev": 29.5,
-                "away_ml_units": 2.0,
-                "home_ml_ev": -15.1,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 10.1,
-                "away_sp_units": 2.0,
-                "home_sp_ev": -14.7,
-                "home_sp_units": 0.0,
-                "over_ev": -12.4,
-                "over_units": 0.0,
-                "under_ev": 8.8,
-                "under_units": 1.44
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 7.0,
+            "home_prob": 93.0,
+            "proj_away_score": 9.0,
+            "proj_home_score": 28.8,
+            "proj_total": 37.8,
+            "fair_spread": 19.8,
+            "fair_away_ml": "+1335",
+            "fair_home_ml": "-1335",
+            "away_ml": 325,
+            "home_ml": -404,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 9.0,
+            "home_spread": -9.0,
+            "away_spread_odds": -119,
+            "home_spread_odds": 106,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 41.0,
+            "over_odds": -117,
+            "under_odds": 100,
+            "over_ev": 0,
+            "under_ev": 5.3,
+            "over_rec": 0.0,
+            "under_rec": 0.64
         },
         {
             "away_team": "GB",
             "home_team": "NYJ",
-            "away_offense": {
-                "plays": 56,
-                "off_epa_per_play": 0.113,
-                "off_pass_epa": 0.238,
-                "off_rush_epa": -0.066,
-                "def_epa_per_play": 0.031,
-                "def_pass_epa": 0.085,
-                "def_rush_epa": -0.021,
-                "pace": 54.949
-            },
-            "home_offense": {
-                "plays": 48,
-                "off_epa_per_play": -0.087,
-                "off_pass_epa": -0.145,
-                "off_rush_epa": -0.054,
-                "def_epa_per_play": 0.097,
-                "def_pass_epa": 0.174,
-                "def_rush_epa": 0.067,
-                "pace": 44.894
-            },
-            "simulation": {
-                "away_win_prob": 63.2,
-                "home_win_prob": 35.5,
-                "away_proj": 27.1,
-                "home_proj": 21.3,
-                "total_proj": 48.5,
-                "spread_probs": {
-                    "away": 0.5361760377615704,
-                    "home": 0.43937396223842956,
-                    "push": 0.0489
-                },
-                "ou_probs": {
-                    "over": 0.5377033658104517,
-                    "under": 0.4474966341895483,
-                    "push": 0.0296
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": -171,
-                    "home": 150
-                },
-                "spreads": {
-                    "away": -113,
-                    "away_line": -3.0,
-                    "home": 101,
-                    "home_line": 3.0
-                },
-                "totals": {
-                    "over": -102,
-                    "point": 45.0,
-                    "under": -115
-                },
-                "away_ml_ev": 0.1,
-                "away_ml_units": 0.06,
-                "home_ml_ev": -11.2,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 6.0,
-                "away_sp_units": 0.3,
-                "home_sp_ev": -6.8,
-                "home_sp_units": 0.0,
-                "over_ev": 9.4,
-                "over_units": 1.65,
-                "under_ev": -13.4,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 7.0,
+            "home_prob": 93.0,
+            "proj_away_score": 9.2,
+            "proj_home_score": 28.8,
+            "proj_total": 38.0,
+            "fair_spread": 19.6,
+            "fair_away_ml": "+1323",
+            "fair_home_ml": "-1323",
+            "away_ml": -171,
+            "home_ml": 150,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": -3.0,
+            "home_spread": 3.0,
+            "away_spread_odds": -113,
+            "home_spread_odds": 101,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 45.0,
+            "over_odds": -102,
+            "under_odds": -115,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "PIT",
             "home_team": "NE",
-            "away_offense": {
-                "plays": 59,
-                "off_epa_per_play": -0.034,
-                "off_pass_epa": -0.054,
-                "off_rush_epa": -0.001,
-                "def_epa_per_play": -0.041,
-                "def_pass_epa": -0.076,
-                "def_rush_epa": -0.003,
-                "pace": 52.464
-            },
-            "home_offense": {
-                "plays": 67,
-                "off_epa_per_play": 0.06,
-                "off_pass_epa": 0.099,
-                "off_rush_epa": 0.002,
-                "def_epa_per_play": -0.033,
-                "def_pass_epa": -0.046,
-                "def_rush_epa": -0.063,
-                "pace": 53.323
-            },
-            "simulation": {
-                "away_win_prob": 34.3,
-                "home_win_prob": 64.3,
-                "away_proj": 19.4,
-                "home_proj": 23.6,
-                "total_proj": 43.1,
-                "spread_probs": {
-                    "away": 0.522732951420715,
-                    "home": 0.4772670485792851,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.4978657058745991,
-                    "under": 0.4880842941254009,
-                    "push": 0.0281
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -237,
-                    "away": 203
-                },
-                "spreads": {
-                    "home": -102,
-                    "home_line": -5.5,
-                    "away": -110,
-                    "away_line": 5.5
-                },
-                "totals": {
-                    "over": 101,
-                    "point": 42.0,
-                    "under": -118
-                },
-                "away_ml_ev": 3.8,
-                "away_ml_units": 0.47,
-                "home_ml_ev": -8.6,
-                "home_ml_units": 0.0,
-                "away_sp_ev": -0.2,
-                "away_sp_units": 0.0,
-                "home_sp_ev": -5.5,
-                "home_sp_units": 0.0,
-                "over_ev": 2.9,
-                "over_units": 0.02,
-                "under_ev": -7.0,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 51.5,
+            "home_prob": 48.5,
+            "proj_away_score": 7.4,
+            "proj_home_score": 7.0,
+            "proj_total": 14.4,
+            "fair_spread": -0.4,
+            "fair_away_ml": "-106",
+            "fair_home_ml": "+106",
+            "away_ml": 203,
+            "home_ml": -237,
+            "away_ml_ev": 5.7,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.7,
+            "home_ml_rec": 0.0,
+            "away_spread": 5.5,
+            "home_spread": -5.5,
+            "away_spread_odds": -110,
+            "home_spread_odds": -102,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 42.0,
+            "over_odds": 101,
+            "under_odds": -118,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "PHI",
             "home_team": "TEN",
-            "away_offense": {
-                "plays": 51,
-                "off_epa_per_play": -0.004,
-                "off_pass_epa": 0.001,
-                "off_rush_epa": 0.034,
-                "def_epa_per_play": -0.062,
-                "def_pass_epa": -0.099,
-                "def_rush_epa": -0.032,
-                "pace": 53.036
-            },
-            "home_offense": {
-                "plays": 31,
-                "off_epa_per_play": -0.144,
-                "off_pass_epa": -0.219,
-                "off_rush_epa": -0.107,
-                "def_epa_per_play": 0.127,
-                "def_pass_epa": 0.218,
-                "def_rush_epa": 0.068,
-                "pace": 43.264
-            },
-            "simulation": {
-                "away_win_prob": 71.8,
-                "home_win_prob": 27.0,
-                "away_proj": 24.7,
-                "home_proj": 17.6,
-                "total_proj": 42.3,
-                "spread_probs": {
-                    "away": 0.4794701964924376,
-                    "home": 0.5205298035075623,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.520423820124666,
-                    "under": 0.4637761798753339,
-                    "push": 0.0316
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": -332,
-                    "home": 275
-                },
-                "spreads": {
-                    "away": 106,
-                    "away_line": -7.5,
-                    "home": -119,
-                    "home_line": 7.5
-                },
-                "totals": {
-                    "over": -106,
-                    "point": 40.0,
-                    "under": -110
-                },
-                "away_ml_ev": -6.6,
-                "away_ml_units": 0.0,
-                "home_ml_ev": 1.4,
-                "home_ml_units": 0.12,
-                "away_sp_ev": -1.2,
-                "away_sp_units": 0.0,
-                "home_sp_ev": -4.2,
-                "home_sp_units": 0.0,
-                "over_ev": 4.3,
-                "over_units": 0.3,
-                "under_ev": -8.3,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-20T17:00:00Z",
+            "away_prob": 90.6,
+            "home_prob": 9.4,
+            "proj_away_score": 34.2,
+            "proj_home_score": 16.5,
+            "proj_total": 50.8,
+            "fair_spread": -17.7,
+            "fair_away_ml": "-966",
+            "fair_home_ml": "+966",
+            "away_ml": -331,
+            "home_ml": 274,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": -7.5,
+            "home_spread": 7.5,
+            "away_spread_odds": 107,
+            "home_spread_odds": -120,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 40.0,
+            "over_odds": -104,
+            "under_odds": -113,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "JAX",
             "home_team": "DEN",
-            "away_offense": {
-                "plays": 30,
-                "off_epa_per_play": 0.069,
-                "off_pass_epa": 0.105,
-                "off_rush_epa": 0.037,
-                "def_epa_per_play": -0.091,
-                "def_pass_epa": -0.167,
-                "def_rush_epa": -0.066,
-                "pace": 50.144
-            },
-            "home_offense": {
-                "plays": 37,
-                "off_epa_per_play": -0.005,
-                "off_pass_epa": 0.003,
-                "off_rush_epa": -0.007,
-                "def_epa_per_play": -0.077,
-                "def_pass_epa": -0.113,
-                "def_rush_epa": 0.004,
-                "pace": 53.956
-            },
-            "simulation": {
-                "away_win_prob": 46.3,
-                "home_win_prob": 52.2,
-                "away_proj": 21.3,
-                "home_proj": 20.3,
-                "total_proj": 41.6,
-                "spread_probs": {
-                    "away": 0.5312920153714773,
-                    "home": 0.46870798462852264,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.43634526015680686,
-                    "under": 0.5636547398431931,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -154,
-                    "away": 136
-                },
-                "spreads": {
-                    "home": -120,
-                    "home_line": -2.5,
-                    "away": 107,
-                    "away_line": 2.5
-                },
-                "totals": {
-                    "over": -104,
-                    "point": 45.5,
-                    "under": -112
-                },
-                "away_ml_ev": 9.3,
-                "away_ml_units": 1.71,
-                "home_ml_ev": -13.9,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 10.0,
-                "away_sp_units": 2.0,
-                "home_sp_ev": -14.1,
-                "home_sp_units": 0.0,
-                "over_ev": -14.4,
-                "over_units": 0.0,
-                "under_ev": 6.7,
-                "under_units": 1.87
-            }
+            "commence_time": "2026-09-20T20:05:00Z",
+            "away_prob": 99.7,
+            "home_prob": 0.3,
+            "proj_away_score": 45.3,
+            "proj_home_score": 7.0,
+            "proj_total": 52.3,
+            "fair_spread": -38.3,
+            "fair_away_ml": "-34988",
+            "fair_home_ml": "+34988",
+            "away_ml": 136,
+            "home_ml": -154,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 2.5,
+            "home_spread": -2.5,
+            "away_spread_odds": 107,
+            "home_spread_odds": -120,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 45.5,
+            "over_odds": -104,
+            "under_odds": -112,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "LV",
             "home_team": "LAC",
-            "away_offense": {
-                "plays": 50,
-                "off_epa_per_play": -0.12,
-                "off_pass_epa": -0.166,
-                "off_rush_epa": -0.167,
-                "def_epa_per_play": 0.003,
-                "def_pass_epa": 0.017,
-                "def_rush_epa": -0.021,
-                "pace": 45.007
-            },
-            "home_offense": {
-                "plays": 45,
-                "off_epa_per_play": -0.027,
-                "off_pass_epa": -0.045,
-                "off_rush_epa": -0.03,
-                "def_epa_per_play": -0.034,
-                "def_pass_epa": -0.055,
-                "def_rush_epa": -0.015,
-                "pace": 52.987
-            },
-            "simulation": {
-                "away_win_prob": 31.1,
-                "home_win_prob": 67.4,
-                "away_proj": 17.5,
-                "home_proj": 22.5,
-                "total_proj": 40.0,
-                "spread_probs": {
-                    "away": 0.517405049232883,
-                    "home": 0.48259495076711695,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.4185235116479724,
-                    "under": 0.5669764883520276,
-                    "push": 0.029
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": 246,
-                    "home": -293
-                },
-                "spreads": {
-                    "away": -105,
-                    "away_line": 6.5,
-                    "home": -107,
-                    "home_line": -6.5
-                },
-                "totals": {
-                    "over": 103,
-                    "point": 44.0,
-                    "under": -120
-                },
-                "away_ml_ev": 7.7,
-                "away_ml_units": 0.78,
-                "home_ml_ev": -9.6,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 1.0,
-                "away_sp_units": 0.27,
-                "home_sp_ev": -6.6,
-                "home_sp_units": 0.0,
-                "over_ev": -12.1,
-                "over_units": 0.0,
-                "under_ev": 6.8,
-                "under_units": 1.18
-            }
+            "commence_time": "2026-09-20T20:05:00Z",
+            "away_prob": 86.8,
+            "home_prob": 13.2,
+            "proj_away_score": 22.2,
+            "proj_home_score": 7.0,
+            "proj_total": 29.2,
+            "fair_spread": -15.2,
+            "fair_away_ml": "-657",
+            "fair_home_ml": "+657",
+            "away_ml": 246,
+            "home_ml": -293,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 6.5,
+            "home_spread": -6.5,
+            "away_spread_odds": -105,
+            "home_spread_odds": -107,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 44.0,
+            "over_odds": 103,
+            "under_odds": -120,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "SEA",
             "home_team": "ARI",
-            "away_offense": {
-                "plays": 47,
-                "off_epa_per_play": 0.074,
-                "off_pass_epa": 0.137,
-                "off_rush_epa": -0.02,
-                "def_epa_per_play": -0.08,
-                "def_pass_epa": -0.095,
-                "def_rush_epa": -0.165,
-                "pace": 47.177
-            },
-            "home_offense": {
-                "plays": 64,
-                "off_epa_per_play": 0.02,
-                "off_pass_epa": 0.048,
-                "off_rush_epa": -0.04,
-                "def_epa_per_play": 0.051,
-                "def_pass_epa": 0.094,
-                "def_rush_epa": -0.045,
-                "pace": 51.005
-            },
-            "simulation": {
-                "away_win_prob": 62.1,
-                "home_win_prob": 36.6,
-                "away_proj": 24.9,
-                "home_proj": 21.2,
-                "total_proj": 46.1,
-                "spread_probs": {
-                    "away": 0.4801798470780994,
-                    "home": 0.5103201529219006,
-                    "push": 0.019
-                },
-                "ou_probs": {
-                    "over": 0.5563657058745991,
-                    "under": 0.4436342941254009,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": 172,
-                    "away": -198
-                },
-                "spreads": {
-                    "home": -111,
-                    "home_line": 4.0,
-                    "away": -102,
-                    "away_line": -4.0
-                },
-                "totals": {
-                    "over": 101,
-                    "point": 41.5,
-                    "under": -118
-                },
-                "away_ml_ev": -6.6,
-                "away_ml_units": 0.0,
-                "home_ml_ev": -0.6,
-                "home_ml_units": 0.0,
-                "away_sp_ev": -3.0,
-                "away_sp_units": 0.0,
-                "home_sp_ev": -1.1,
-                "home_sp_units": 0.0,
-                "over_ev": 11.8,
-                "over_units": 2.0,
-                "under_ev": -18.0,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-20T20:25:00Z",
+            "away_prob": 25.3,
+            "home_prob": 74.7,
+            "proj_away_score": 13.3,
+            "proj_home_score": 22.4,
+            "proj_total": 35.6,
+            "fair_spread": 9.1,
+            "fair_away_ml": "+296",
+            "fair_home_ml": "-296",
+            "away_ml": -198,
+            "home_ml": 172,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": -4.0,
+            "home_spread": 4.0,
+            "away_spread_odds": -102,
+            "home_spread_odds": -111,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 41.5,
+            "over_odds": 101,
+            "under_odds": -118,
+            "over_ev": 0,
+            "under_ev": 5.5,
+            "over_rec": 0.0,
+            "under_rec": 1.63
         },
         {
             "away_team": "WAS",
             "home_team": "DAL",
-            "away_offense": {
-                "plays": 68,
-                "off_epa_per_play": 0.012,
-                "off_pass_epa": 0.017,
-                "off_rush_epa": 0.02,
-                "def_epa_per_play": 0.091,
-                "def_pass_epa": 0.153,
-                "def_rush_epa": 0.096,
-                "pace": 49.935
-            },
-            "home_offense": {
-                "plays": 44,
-                "off_epa_per_play": 0.113,
-                "off_pass_epa": 0.206,
-                "off_rush_epa": 0.043,
-                "def_epa_per_play": 0.19,
-                "def_pass_epa": 0.322,
-                "def_rush_epa": 0.099,
-                "pace": 55.099
-            },
-            "simulation": {
-                "away_win_prob": 39.4,
-                "home_win_prob": 59.0,
-                "away_proj": 27.2,
-                "home_proj": 28.8,
-                "total_proj": 56.1,
-                "spread_probs": {
-                    "away": 0.5707,
-                    "home": 0.4124,
-                    "push": 0.0169
-                },
-                "ou_probs": {
-                    "over": 0.5865206582289764,
-                    "under": 0.40117934177102366,
-                    "push": 0.0246
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -202,
-                    "away": 176
-                },
-                "spreads": {
-                    "home": -106,
-                    "home_line": -4.0,
-                    "away": -106,
-                    "away_line": 4.0
-                },
-                "totals": {
-                    "over": -113,
-                    "point": 50.0,
-                    "under": -103
-                },
-                "away_ml_ev": 8.7,
-                "away_ml_units": 1.24,
-                "home_ml_ev": -11.8,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 12.6,
-                "away_sp_units": 2.0,
-                "home_sp_ev": -18.2,
-                "home_sp_units": 0.0,
-                "over_ev": 13.0,
-                "over_units": 2.0,
-                "under_ev": -18.5,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-20T20:25:00Z",
+            "away_prob": 61.6,
+            "home_prob": 38.4,
+            "proj_away_score": 44.4,
+            "proj_home_score": 40.1,
+            "proj_total": 84.5,
+            "fair_spread": -4.3,
+            "fair_away_ml": "-161",
+            "fair_home_ml": "+161",
+            "away_ml": 176,
+            "home_ml": -202,
+            "away_ml_ev": 7.9,
+            "home_ml_ev": 0,
+            "away_ml_rec": 1.13,
+            "home_ml_rec": 0.0,
+            "away_spread": 4.0,
+            "home_spread": -4.0,
+            "away_spread_odds": -106,
+            "home_spread_odds": -106,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 50.0,
+            "over_odds": -113,
+            "under_odds": -103,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "MIA",
             "home_team": "SF",
-            "away_offense": {
-                "plays": 38,
-                "off_epa_per_play": -0.002,
-                "off_pass_epa": 0.008,
-                "off_rush_epa": -0.024,
-                "def_epa_per_play": 0.08,
-                "def_pass_epa": 0.112,
-                "def_rush_epa": 0.037,
-                "pace": 42.365
-            },
-            "home_offense": {
-                "plays": 55,
-                "off_epa_per_play": 0.117,
-                "off_pass_epa": 0.181,
-                "off_rush_epa": 0.027,
-                "def_epa_per_play": 0.054,
-                "def_pass_epa": 0.089,
-                "def_rush_epa": 0.004,
-                "pace": 55.136
-            },
-            "simulation": {
-                "away_win_prob": 23.2,
-                "home_win_prob": 75.5,
-                "away_proj": 23.1,
-                "home_proj": 28.2,
-                "total_proj": 51.3,
-                "spread_probs": {
-                    "away": 0.6215310531383247,
-                    "home": 0.3784689468616753,
-                    "push": 0.0
-                },
-                "ou_probs": {
-                    "over": 0.5717647524924899,
-                    "under": 0.4282352475075101,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": 690,
-                    "home": -1025
-                },
-                "spreads": {
-                    "away": -111,
-                    "away_line": 13.5,
-                    "home": -101,
-                    "home_line": -13.5
-                },
-                "totals": {
-                    "over": 102,
-                    "point": 45.5,
-                    "under": -119
-                },
-                "away_ml_ev": 83.0,
-                "away_ml_units": 2.0,
-                "home_ml_ev": -17.1,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 18.1,
-                "away_sp_units": 2.0,
-                "home_sp_ev": -24.7,
-                "home_sp_units": 0.0,
-                "over_ev": 15.5,
-                "over_units": 2.0,
-                "under_ev": -21.2,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-20T20:25:00Z",
+            "away_prob": 3.4,
+            "home_prob": 96.6,
+            "proj_away_score": 7.0,
+            "proj_home_score": 31.3,
+            "proj_total": 38.3,
+            "fair_spread": 24.3,
+            "fair_away_ml": "+2854",
+            "fair_home_ml": "-2854",
+            "away_ml": 690,
+            "home_ml": -1025,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 13.5,
+            "home_spread": -13.5,
+            "away_spread_odds": -111,
+            "home_spread_odds": -101,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 45.5,
+            "over_odds": 102,
+            "under_odds": -119,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         },
         {
             "away_team": "IND",
             "home_team": "KC",
-            "away_offense": {
-                "plays": 37,
-                "off_epa_per_play": 0.017,
-                "off_pass_epa": 0.017,
-                "off_rush_epa": 0.051,
-                "def_epa_per_play": 0.07,
-                "def_pass_epa": 0.124,
-                "def_rush_epa": 0.009,
-                "pace": 49.598
-            },
-            "home_offense": {
-                "plays": 48,
-                "off_epa_per_play": -0.001,
-                "off_pass_epa": -0.038,
-                "off_rush_epa": 0.109,
-                "def_epa_per_play": -0.009,
-                "def_pass_epa": -0.012,
-                "def_rush_epa": -0.039,
-                "pace": 54.419
-            },
-            "simulation": {
-                "away_win_prob": 33.6,
-                "home_win_prob": 65.1,
-                "away_proj": 21.7,
-                "home_proj": 25.1,
-                "total_proj": 46.8,
-                "spread_probs": {
-                    "away": 0.560835840077152,
-                    "home": 0.41961415992284795,
-                    "push": 0.0391
-                },
-                "ou_probs": {
-                    "over": 0.4786147524924899,
-                    "under": 0.5063352475075101,
-                    "push": 0.0301
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "away": 242,
-                    "home": -288
-                },
-                "spreads": {
-                    "away": -122,
-                    "away_line": 7.0,
-                    "home": 109,
-                    "home_line": -7.0
-                },
-                "totals": {
-                    "over": 102,
-                    "point": 47.0,
-                    "under": -119
-                },
-                "away_ml_ev": 14.8,
-                "away_ml_units": 1.53,
-                "home_ml_ev": -12.4,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 6.0,
-                "away_sp_units": 0.63,
-                "home_sp_ev": -8.4,
-                "home_sp_units": 0.0,
-                "over_ev": -0.3,
-                "over_units": 0.0,
-                "under_ev": -3.8,
-                "under_units": 0.0
-            }
-        },
-        {
-            "away_team": "NYG",
-            "home_team": "LA",
-            "away_offense": {
-                "plays": 58,
-                "off_epa_per_play": 0.051,
-                "off_pass_epa": 0.11,
-                "off_rush_epa": -0.001,
-                "def_epa_per_play": 0.057,
-                "def_pass_epa": 0.052,
-                "def_rush_epa": 0.166,
-                "pace": 55.485
-            },
-            "home_offense": {
-                "plays": 36,
-                "off_epa_per_play": 0.12,
-                "off_pass_epa": 0.197,
-                "off_rush_epa": 0.032,
-                "def_epa_per_play": 0.014,
-                "def_pass_epa": 0.021,
-                "def_rush_epa": -0.026,
-                "pace": 53.017
-            },
-            "simulation": {
-                "away_win_prob": 30.0,
-                "home_win_prob": 68.6,
-                "away_proj": 23.4,
-                "home_proj": 28.3,
-                "total_proj": 51.7,
-                "spread_probs": {
-                    "away": 0.5171642219743446,
-                    "home": 0.4611357780256553,
-                    "push": 0.0434
-                },
-                "ou_probs": {
-                    "over": 0.5397645724160999,
-                    "under": 0.4602354275839001,
-                    "push": 0.0
-                }
-            },
-            "market_data": {
-                "h2h": {
-                    "home": -325,
-                    "away": 278
-                },
-                "spreads": {
-                    "home": -108,
-                    "home_line": -7.0,
-                    "away": -102,
-                    "away_line": 7.0
-                },
-                "totals": {
-                    "over": 103,
-                    "point": 48.5,
-                    "under": -115
-                },
-                "away_ml_ev": 13.3,
-                "away_ml_units": 1.2,
-                "home_ml_ev": -10.3,
-                "home_ml_units": 0.0,
-                "away_sp_ev": 6.8,
-                "away_sp_units": 0.62,
-                "home_sp_ev": -6.8,
-                "home_sp_units": 0.0,
-                "over_ev": 9.6,
-                "over_units": 2.0,
-                "under_ev": -14.0,
-                "under_units": 0.0
-            }
+            "commence_time": "2026-09-21T00:20:00Z",
+            "away_prob": 0.1,
+            "home_prob": 99.9,
+            "proj_away_score": 7.0,
+            "proj_home_score": 47.4,
+            "proj_total": 54.4,
+            "fair_spread": 40.4,
+            "fair_away_ml": "+99900",
+            "fair_home_ml": "-99900",
+            "away_ml": 242,
+            "home_ml": -288,
+            "away_ml_ev": 0,
+            "home_ml_ev": 0,
+            "away_ml_rec": 0.0,
+            "home_ml_rec": 0.0,
+            "away_spread": 7.0,
+            "home_spread": -7.0,
+            "away_spread_odds": -122,
+            "home_spread_odds": 109,
+            "away_spread_ev": 0,
+            "home_spread_ev": 0,
+            "away_spread_rec": 0.0,
+            "home_spread_rec": 0.0,
+            "total_line": 47.0,
+            "over_odds": 102,
+            "under_odds": -119,
+            "over_ev": 0,
+            "under_ev": 0,
+            "over_rec": 0.0,
+            "under_rec": 0.0
         }
     ]
 }
