@@ -1,7 +1,13 @@
 {
-    "last_updated": "September 17, 2026 at 08:36 AM Central",
+    "last_updated": "2026-09-17T13:43:28.004501Z",
     "games": [
         {
+            "Date": "2026-09-17",
+            "date": "2026-09-17",
+            "Away_Team": "DET",
+            "Home_Team": "BUF",
+            "AwayTeam": "DET",
+            "HomeTeam": "BUF",
             "away_team": "DET",
             "home_team": "BUF",
             "commence_time": "2026-09-18T00:15:00Z",
@@ -36,6 +42,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "CAR",
+            "Home_Team": "ATL",
+            "AwayTeam": "CAR",
+            "HomeTeam": "ATL",
             "away_team": "CAR",
             "home_team": "ATL",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -70,6 +82,12 @@
             "under_rec": 0.19
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "NO",
+            "Home_Team": "BAL",
+            "AwayTeam": "NO",
+            "HomeTeam": "BAL",
             "away_team": "NO",
             "home_team": "BAL",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -104,6 +122,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "MIN",
+            "Home_Team": "CHI",
+            "AwayTeam": "MIN",
+            "HomeTeam": "CHI",
             "away_team": "MIN",
             "home_team": "CHI",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -138,6 +162,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "CIN",
+            "Home_Team": "HOU",
+            "AwayTeam": "CIN",
+            "HomeTeam": "HOU",
             "away_team": "CIN",
             "home_team": "HOU",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -172,6 +202,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "CLE",
+            "Home_Team": "TB",
+            "AwayTeam": "CLE",
+            "HomeTeam": "TB",
             "away_team": "CLE",
             "home_team": "TB",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -206,6 +242,12 @@
             "under_rec": 0.64
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "GB",
+            "Home_Team": "NYJ",
+            "AwayTeam": "GB",
+            "HomeTeam": "NYJ",
             "away_team": "GB",
             "home_team": "NYJ",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -217,29 +259,35 @@
             "fair_spread": 19.6,
             "fair_away_ml": "+1323",
             "fair_home_ml": "-1323",
-            "away_ml": -171,
-            "home_ml": 150,
+            "away_ml": -168,
+            "home_ml": 147,
             "away_ml_ev": 0,
             "home_ml_ev": 0,
             "away_ml_rec": 0.0,
             "home_ml_rec": 0.0,
             "away_spread": -3.0,
             "home_spread": 3.0,
-            "away_spread_odds": -113,
-            "home_spread_odds": 101,
+            "away_spread_odds": -111,
+            "home_spread_odds": -101,
             "away_spread_ev": 0,
             "home_spread_ev": 0,
             "away_spread_rec": 0.0,
             "home_spread_rec": 0.0,
             "total_line": 45.0,
             "over_odds": -102,
-            "under_odds": -115,
+            "under_odds": -114,
             "over_ev": 0,
             "under_ev": 0,
             "over_rec": 0.0,
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "PIT",
+            "Home_Team": "NE",
+            "AwayTeam": "PIT",
+            "HomeTeam": "NE",
             "away_team": "PIT",
             "home_team": "NE",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -274,6 +322,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "PHI",
+            "Home_Team": "TEN",
+            "AwayTeam": "PHI",
+            "HomeTeam": "TEN",
             "away_team": "PHI",
             "home_team": "TEN",
             "commence_time": "2026-09-20T17:00:00Z",
@@ -308,6 +362,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "JAX",
+            "Home_Team": "DEN",
+            "AwayTeam": "JAX",
+            "HomeTeam": "DEN",
             "away_team": "JAX",
             "home_team": "DEN",
             "commence_time": "2026-09-20T20:05:00Z",
@@ -342,6 +402,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "LV",
+            "Home_Team": "LAC",
+            "AwayTeam": "LV",
+            "HomeTeam": "LAC",
             "away_team": "LV",
             "home_team": "LAC",
             "commence_time": "2026-09-20T20:05:00Z",
@@ -376,6 +442,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "SEA",
+            "Home_Team": "ARI",
+            "AwayTeam": "SEA",
+            "HomeTeam": "ARI",
             "away_team": "SEA",
             "home_team": "ARI",
             "commence_time": "2026-09-20T20:25:00Z",
@@ -410,6 +482,12 @@
             "under_rec": 1.63
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "WAS",
+            "Home_Team": "DAL",
+            "AwayTeam": "WAS",
+            "HomeTeam": "DAL",
             "away_team": "WAS",
             "home_team": "DAL",
             "commence_time": "2026-09-20T20:25:00Z",
@@ -444,6 +522,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "MIA",
+            "Home_Team": "SF",
+            "AwayTeam": "MIA",
+            "HomeTeam": "SF",
             "away_team": "MIA",
             "home_team": "SF",
             "commence_time": "2026-09-20T20:25:00Z",
@@ -478,6 +562,12 @@
             "under_rec": 0.0
         },
         {
+            "Date": "2026-09-20",
+            "date": "2026-09-20",
+            "Away_Team": "IND",
+            "Home_Team": "KC",
+            "AwayTeam": "IND",
+            "HomeTeam": "KC",
             "away_team": "IND",
             "home_team": "KC",
             "commence_time": "2026-09-21T00:20:00Z",
