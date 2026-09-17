@@ -5,11 +5,19 @@ from scraper_nfl import (
     simulate_nfl_game,
     proportional_devig,
     calculate_ev,
-    american_to_decimal
+    american_to_decimal,
+    get_game_rng,
+    LEAGUE_AVG_STD,
+    LEAGUE_AVG_HFA,
+    LEAGUE_AVG_PACE,
 )
 
-# Seed for consistent simulations
+# NOTE: this global seed no longer drives the simulation draws themselves —
+# simulate_nfl_game now uses a per-game RNG from get_game_rng() so each
+# historical game's draw is independent of replay order. Left here only in
+# case you add other randomness to the backtest later.
 np.random.seed(42)
+
 
 def safe_float(val):
     if val is None:
@@ -21,6 +29,7 @@ def safe_float(val):
         return float(val_str)
     except ValueError:
         return None
+
 
 def evaluate_bet(market_type, pick, row, bet_amount=25.0):
     away_score = safe_float(row.get('Actual_Away_Score'))
@@ -41,7 +50,7 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         if margin + line == 0:
             return 0.0, 'push'
         won = (margin + line) > 0
-        profit = bet_amount * (100 / 110) if won else -bet_amount  
+        profit = bet_amount * (100 / 110) if won else -bet_amount
         return profit, ('win' if won else 'loss')
 
     elif market_type == 'TOTAL':
@@ -52,19 +61,22 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         profit = bet_amount * (100 / 110) if won else -bet_amount
         return profit, ('win' if won else 'loss')
 
+
 def run_backtest(target_date=None, flat_bet=25.0):
     # Decoupled Model Weights
-    ml_weight = 0.15 
+    ml_weight = 0.15
     spread_weight = 0.40
     totals_weight = 0.35
-    
+
     # Tiered EV Hurdles
     ml_min, ml_max = 3.0, 10.0
     sp_min, sp_max = 1.5, 7.0
     tot_min, tot_max = 1.5, 7.0
-    
+
     print("Loading statistical baselines...")
-    epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026)
+    # get_blended_nfl_stats now returns team std/HFA/pace alongside EPA —
+    # unpack all four instead of treating the return as a single dict.
+    epa_stats, team_std, team_hfa, team_pace = get_blended_nfl_stats(prior_season=2025, current_season=2026)
 
     games_evaluated = 0
     total_staked = 0.0
@@ -83,10 +95,10 @@ def run_backtest(target_date=None, flat_bet=25.0):
     for row in reader:
         if target_date and row['Date'] != target_date:
             continue
-            
+
         away_score = safe_float(row.get('Actual_Away_Score'))
         home_score = safe_float(row.get('Actual_Home_Score'))
-        
+
         # Skip if the game isn't finished yet
         if away_score is None or home_score is None:
             continue
@@ -97,15 +109,27 @@ def run_backtest(target_date=None, flat_bet=25.0):
             continue
 
         games_evaluated += 1
-        
+
         # Safely convert all betting lines
         total_line = safe_float(row.get('Pinnacle_Total_Line'))
         spread_line = safe_float(row.get('Pinnacle_Home_Spread'))
         away_ml = safe_float(row.get('Pinnacle_Away_ML'))
         home_ml = safe_float(row.get('Pinnacle_Home_ML'))
 
-        # Fallback values if the specific line was blank
-        sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line if total_line is not None else 45.0, spread_line if spread_line is not None else -3.0)
+        # Per-game RNG seeded from matchup+date, matching production —
+        # keeps this game's draw independent of replay order.
+        game_rng = get_game_rng(away, home, row['Date'])
+
+        sim_res = simulate_nfl_game(
+            away, home,
+            epa_stats[away], epa_stats[home],
+            team_std.get(away, LEAGUE_AVG_STD), team_std.get(home, LEAGUE_AVG_STD),
+            team_hfa.get(home, LEAGUE_AVG_HFA),
+            team_pace.get(away, LEAGUE_AVG_PACE), team_pace.get(home, LEAGUE_AVG_PACE),
+            total_line=total_line if total_line is not None else 45.0,
+            spread_line=spread_line if spread_line is not None else -3.0,
+            rng=game_rng
+        )
 
         # --- Moneyline Check ---
         if away_ml is not None and home_ml is not None:
@@ -177,7 +201,7 @@ def run_backtest(target_date=None, flat_bet=25.0):
                 print(f"Betted TOTAL: UNDER {total_line} in {away}@{home} ({res.upper()}) | EV: {under_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
     roi = (total_profit / total_staked * 100) if total_staked > 0 else 0.0
-    
+
     print("\n--- FINAL FLAT-BETTING BACKTEST RESULTS ---")
     print(f"Games Evaluated:  {games_evaluated}")
     print(f"Total Bets Placed: {sum(results_summary['ML'].values()) + sum(results_summary['SPREAD'].values()) + sum(results_summary['TOTAL'].values())}")
@@ -187,6 +211,7 @@ def run_backtest(target_date=None, flat_bet=25.0):
     print(f"Total Staked:     ${total_staked:.2f}")
     print(f"Net Profit:       ${total_profit:.2f}")
     print(f"Recalibrated ROI: {roi:.2f}%")
+
 
 if __name__ == '__main__':
     run_backtest()
