@@ -2,37 +2,35 @@ name: Manual NFL Model Update
 
 on:
   workflow_dispatch:
-
-permissions:
-  contents: write
+  schedule:
+    - cron: '0 12 * * *' # Fires automatically every day at 12:00 PM UTC (7:00 AM CDT)
 
 jobs:
   run-model:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v4
-
+      
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-
+          python-version: '3.10'
+          
       - name: Install Dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install nfl_data_py pandas requests numpy
-
-      - name: Execute NFL Scraper
+          pip install requests pandas numpy scipy nfl_data_py
+          
+      - name: Execute NFL Scraper and Backtest
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
         run: |
           python scraper_nfl.py
-
+          python backtest.py
+          
       - name: Commit and Push Data and History
         run: |
           git config --global user.name "github-actions[bot]"
           git config --global user.email "github-actions[bot]@users.noreply.github.com"
           git add data.json history.csv
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Automated NFL data and history update" && git push)
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Automated NFL data, history update, and backtest log" && git push)
