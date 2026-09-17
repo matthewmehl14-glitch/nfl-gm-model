@@ -60,10 +60,12 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
             def_plays = df[df['defteam'] == t]
             
             stats_dict[t] = {
-                'off_epa': off_plays['epa'].mean() if not off_plays.empty else 0.0,
+                'off_epa_per_play': off_plays['epa'].mean() if not off_plays.empty else 0.0,
                 'off_pass_epa': off_plays[off_plays['play_type'] == 'pass']['epa'].mean() if not off_plays.empty else 0.0,
                 'off_rush_epa': off_plays[off_plays['play_type'] == 'run']['epa'].mean() if not off_plays.empty else 0.0,
-                'def_epa': def_plays['epa'].mean() if not def_plays.empty else 0.0,
+                'plays': len(off_plays),
+                'pace': 63.0,
+                'def_epa_per_play': def_plays['epa'].mean() if not def_plays.empty else 0.0,
                 'def_pass_epa': def_plays[def_plays['play_type'] == 'pass']['epa'].mean() if not def_plays.empty else 0.0,
                 'def_rush_epa': def_plays[def_plays['play_type'] == 'run']['epa'].mean() if not def_plays.empty else 0.0
             }
@@ -76,16 +78,19 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     for t in prior_stats.keys():
         if t in curr_stats and pbp_curr.shape[0] > 1000:
             blended[t] = {}
-            for k in ['off_epa', 'off_pass_epa', 'off_rush_epa', 'def_epa', 'def_pass_epa', 'def_rush_epa']:
+            for k in ['off_epa_per_play', 'off_pass_epa', 'off_rush_epa', 'def_epa_per_play', 'def_pass_epa', 'def_rush_epa']:
                 c_val = curr_stats[t].get(k, 0.0)
                 p_val = prior_stats[t].get(k, 0.0)
                 c_val = 0.0 if np.isnan(c_val) else c_val
                 p_val = 0.0 if np.isnan(p_val) else p_val
                 blended[t][k] = 0.8 * c_val + 0.2 * p_val
+            blended[t]['plays'] = curr_stats[t].get('plays', 0)
+            blended[t]['pace'] = curr_stats[t].get('pace', 63.0)
         else:
             blended[t] = prior_stats[t]
             for k in blended[t]:
-                if np.isnan(blended[t][k]): blended[t][k] = 0.0
+                if isinstance(blended[t][k], float) and np.isnan(blended[t][k]): 
+                    blended[t][k] = 0.0
     return blended
 
 def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0, num_sims=10000):
@@ -93,8 +98,8 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
     LEAGUE_AVG_POINTS = 21.5
     HFA_POINTS = 1.8 
 
-    away_epa_net = away_stats.get('off_epa', 0) + home_stats.get('def_epa', 0)
-    home_epa_net = home_stats.get('off_epa', 0) + away_stats.get('def_epa', 0)
+    away_epa_net = away_stats.get('off_epa_per_play', 0) + home_stats.get('def_epa_per_play', 0)
+    home_epa_net = home_stats.get('off_epa_per_play', 0) + away_stats.get('def_epa_per_play', 0)
 
     away_proj = max(7.0, LEAGUE_AVG_POINTS + (away_epa_net * PLAYS_PER_GAME) - (HFA_POINTS / 2.0))
     home_proj = max(7.0, LEAGUE_AVG_POINTS + (home_epa_net * PLAYS_PER_GAME) + (HFA_POINTS / 2.0))
@@ -163,16 +168,6 @@ def calculate_ev(win_prob, odds, push_prob=0.0):
     loss_p = max(0.0, 1.0 - win_p - push_p)
     profit_on_win = dec_odds - 1.0
     return ((win_p * profit_on_win) - loss_p) * 100.0
-
-def calc_kelly_units(win_prob, odds, push_prob=0.0, fraction=0.25, max_unit=2.0):
-    dec_odds = american_to_decimal(odds)
-    win_p = win_prob / 100.0
-    b = dec_odds - 1.0
-    if b <= 0: return 0.0
-    kelly_f = (win_p * b - (1.0 - win_p)) / b
-    if kelly_f <= 0: return 0.0
-    adj_kelly = kelly_f * fraction * 100.0 
-    return round(min(adj_kelly, max_unit), 2)
 
 def grade_historical_scores():
     if not os.path.exists('history.csv'): return
@@ -370,19 +365,19 @@ def run_live_scraper():
                 "totals": {"over": over_odds, "under": under_odds, "total": total_line},
                 
                 "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev is not None else None,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev is not None else None,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 
                 "away_sp_ev": round(away_sp_ev, 1) if away_sp_ev is not None else None,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": round(home_sp_ev, 1) if home_sp_ev is not None else None,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 
                 "over_ev": round(over_ev, 1) if over_ev is not None else None,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": round(under_ev, 1) if under_ev is not None else None,
-                "under_units": ""
+                "under_units": 0
             }
         })
 
