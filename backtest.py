@@ -11,13 +11,24 @@ from scraper_nfl import (
 # Seed for consistent simulations
 np.random.seed(42)
 
+def safe_float(val):
+    if val is None:
+        return None
+    val_str = str(val).strip()
+    if val_str in ['', 'N/A', 'nan', 'None']:
+        return None
+    try:
+        return float(val_str)
+    except ValueError:
+        return None
+
 def evaluate_bet(market_type, pick, row, bet_amount=25.0):
-    away_score = float(row['Actual_Away_Score'])
-    home_score = float(row['Actual_Home_Score'])
+    away_score = safe_float(row.get('Actual_Away_Score'))
+    home_score = safe_float(row.get('Actual_Home_Score'))
     actual_total = away_score + home_score
 
     if market_type == 'ML':
-        odds = float(row['Pinnacle_Away_ML'] if pick == 'away' else row['Pinnacle_Home_ML'])
+        odds = safe_float(row.get('Pinnacle_Away_ML') if pick == 'away' else row.get('Pinnacle_Home_ML'))
         won = (away_score > home_score) if pick == 'away' else (home_score > away_score)
         if away_score == home_score:
             return 0.0, 'push'
@@ -25,7 +36,7 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         return profit, ('win' if won else 'loss')
 
     elif market_type == 'SPREAD':
-        line = float(row['Pinnacle_Away_Spread'] if pick == 'away' else row['Pinnacle_Home_Spread'])
+        line = safe_float(row.get('Pinnacle_Away_Spread') if pick == 'away' else row.get('Pinnacle_Home_Spread'))
         margin = (away_score - home_score) if pick == 'away' else (home_score - away_score)
         if margin + line == 0:
             return 0.0, 'push'
@@ -34,7 +45,7 @@ def evaluate_bet(market_type, pick, row, bet_amount=25.0):
         return profit, ('win' if won else 'loss')
 
     elif market_type == 'TOTAL':
-        total_line = float(row['Pinnacle_Total_Line'])
+        total_line = safe_float(row.get('Pinnacle_Total_Line'))
         if actual_total == total_line:
             return 0.0, 'push'
         won = (actual_total > total_line) if pick == 'over' else (actual_total < total_line)
@@ -48,7 +59,7 @@ def run_backtest(target_date=None, flat_bet=25.0):
     totals_weight = 0.35
     
     # Tiered EV Hurdles
-    ml_min, ml_max = 3.0, 20.0
+    ml_min, ml_max = 3.0, 10.0
     sp_min, sp_max = 1.5, 7.0
     tot_min, tot_max = 1.5, 7.0
     
@@ -73,7 +84,11 @@ def run_backtest(target_date=None, flat_bet=25.0):
         if target_date and row['Date'] != target_date:
             continue
             
-        if row.get('Actual_Away_Score') in ['N/A', '', None]:
+        away_score = safe_float(row.get('Actual_Away_Score'))
+        home_score = safe_float(row.get('Actual_Home_Score'))
+        
+        # Skip if the game isn't finished yet
+        if away_score is None or home_score is None:
             continue
 
         away = row['Away_Team']
@@ -82,16 +97,18 @@ def run_backtest(target_date=None, flat_bet=25.0):
             continue
 
         games_evaluated += 1
-        total_line = float(row['Pinnacle_Total_Line']) if row['Pinnacle_Total_Line'] != 'N/A' else None
-        spread_line = float(row['Pinnacle_Home_Spread']) if row['Pinnacle_Home_Spread'] != 'N/A' else None
+        
+        # Safely convert all betting lines
+        total_line = safe_float(row.get('Pinnacle_Total_Line'))
+        spread_line = safe_float(row.get('Pinnacle_Home_Spread'))
+        away_ml = safe_float(row.get('Pinnacle_Away_ML'))
+        home_ml = safe_float(row.get('Pinnacle_Home_ML'))
 
-        sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, spread_line)
-
-        away_ml = float(row['Pinnacle_Away_ML']) if row['Pinnacle_Away_ML'] != 'N/A' else None
-        home_ml = float(row['Pinnacle_Home_ML']) if row['Pinnacle_Home_ML'] != 'N/A' else None
+        # Fallback values if the specific line was blank
+        sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line if total_line is not None else 45.0, spread_line if spread_line is not None else -3.0)
 
         # --- Moneyline Check ---
-        if away_ml and home_ml:
+        if away_ml is not None and home_ml is not None:
             t_away, t_home = proportional_devig(away_ml, home_ml)
             sim_res["away_win_prob"] = (ml_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_away)
             sim_res["home_win_prob"] = (ml_weight * (sim_res["home_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_home)
@@ -114,7 +131,7 @@ def run_backtest(target_date=None, flat_bet=25.0):
                 print(f"Betted ML: {home} ({res.upper()}) | EV: {home_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
         # --- Spread Check ---
-        if spread_line is not None and row['Pinnacle_Away_Spread'] != 'N/A':
+        if spread_line is not None and safe_float(row.get('Pinnacle_Away_Spread')) is not None:
             t_sp_a, t_sp_h = proportional_devig(-110, -110)
             sim_res["spread_probs"]["away"] = (spread_weight * sim_res["spread_probs"]["away"]) + ((1.0 - spread_weight) * t_sp_a)
             sim_res["spread_probs"]["home"] = (spread_weight * sim_res["spread_probs"]["home"]) + ((1.0 - spread_weight) * t_sp_h)
