@@ -53,14 +53,19 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     def agg_epa(df):
         if df.empty: return {}
         df = df[(df['play_type'].isin(['pass', 'run'])) & (df['epa'].notna())]
-        team_off_epa = df.groupby('posteam')['epa'].mean().to_dict()
-        team_def_epa = df.groupby('defteam')['epa'].mean().to_dict()
         
         stats_dict = {}
-        for t in team_off_epa.keys():
+        for t in df['posteam'].dropna().unique():
+            off_plays = df[df['posteam'] == t]
+            def_plays = df[df['defteam'] == t]
+            
             stats_dict[t] = {
-                'off_epa': team_off_epa.get(t, 0.0),
-                'def_epa': team_def_epa.get(t, 0.0) 
+                'off_epa': off_plays['epa'].mean() if not off_plays.empty else 0.0,
+                'off_pass_epa': off_plays[off_plays['play_type'] == 'pass']['epa'].mean() if not off_plays.empty else 0.0,
+                'off_rush_epa': off_plays[off_plays['play_type'] == 'run']['epa'].mean() if not off_plays.empty else 0.0,
+                'def_epa': def_plays['epa'].mean() if not def_plays.empty else 0.0,
+                'def_pass_epa': def_plays[def_plays['play_type'] == 'pass']['epa'].mean() if not def_plays.empty else 0.0,
+                'def_rush_epa': def_plays[def_plays['play_type'] == 'run']['epa'].mean() if not def_plays.empty else 0.0
             }
         return stats_dict
 
@@ -70,12 +75,17 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     blended = {}
     for t in prior_stats.keys():
         if t in curr_stats and pbp_curr.shape[0] > 1000:
-            blended[t] = {
-                'off_epa': 0.8 * curr_stats[t]['off_epa'] + 0.2 * prior_stats[t]['off_epa'],
-                'def_epa': 0.8 * curr_stats[t]['def_epa'] + 0.2 * prior_stats[t]['def_epa']
-            }
+            blended[t] = {}
+            for k in ['off_epa', 'off_pass_epa', 'off_rush_epa', 'def_epa', 'def_pass_epa', 'def_rush_epa']:
+                c_val = curr_stats[t].get(k, 0.0)
+                p_val = prior_stats[t].get(k, 0.0)
+                c_val = 0.0 if np.isnan(c_val) else c_val
+                p_val = 0.0 if np.isnan(p_val) else p_val
+                blended[t][k] = 0.8 * c_val + 0.2 * p_val
         else:
             blended[t] = prior_stats[t]
+            for k in blended[t]:
+                if np.isnan(blended[t][k]): blended[t][k] = 0.0
     return blended
 
 def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0, num_sims=10000):
@@ -83,8 +93,8 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
     LEAGUE_AVG_POINTS = 21.5
     HFA_POINTS = 1.8 
 
-    away_epa_net = away_stats['off_epa'] + home_stats['def_epa']
-    home_epa_net = home_stats['off_epa'] + away_stats['def_epa']
+    away_epa_net = away_stats.get('off_epa', 0) + home_stats.get('def_epa', 0)
+    home_epa_net = home_stats.get('off_epa', 0) + away_stats.get('def_epa', 0)
 
     away_proj = max(7.0, LEAGUE_AVG_POINTS + (away_epa_net * PLAYS_PER_GAME) - (HFA_POINTS / 2.0))
     home_proj = max(7.0, LEAGUE_AVG_POINTS + (home_epa_net * PLAYS_PER_GAME) + (HFA_POINTS / 2.0))
@@ -254,9 +264,6 @@ def run_live_scraper():
     dashboard_games = []
     
     ml_weight, sp_weight, tot_weight = 0.15, 0.40, 0.35
-    ml_min, ml_max = 3.0, 10.0
-    sp_min, sp_max = 1.5, 7.0
-    tot_min, tot_max = 1.5, 7.0
     
     for game in games:
         away = ODDS_API_TO_ABBR.get(game['away_team'])
@@ -312,60 +319,41 @@ def run_live_scraper():
         # --- GENERATE DASHBOARD DATA ---
         sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, home_sp)
         
-        # Moneyline Recs
-        away_ml_ev, home_ml_ev, away_ml_units, home_ml_units = None, None, None, None
+        # Calculate unrestricted EV for dashboard
+        away_ml_ev, home_ml_ev = None, None
         if away_ml != 'N/A' and home_ml != 'N/A':
             t_away, t_home = proportional_devig(away_ml, home_ml)
             b_away = (ml_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_away)
             b_home = (ml_weight * (sim_res["home_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_home)
-            ev_a = calculate_ev(b_away * 100, away_ml)
-            ev_h = calculate_ev(b_home * 100, home_ml)
-            if ml_min <= ev_a <= ml_max: 
-                away_ml_ev = ev_a
-                away_ml_units = calc_kelly_units(b_away * 100, away_ml)
-            if ml_min <= ev_h <= ml_max: 
-                home_ml_ev = ev_h
-                home_ml_units = calc_kelly_units(b_home * 100, home_ml)
+            away_ml_ev = calculate_ev(b_away * 100, away_ml)
+            home_ml_ev = calculate_ev(b_home * 100, home_ml)
 
-        # Spread Recs
-        away_sp_ev, home_sp_ev, away_sp_units, home_sp_units = None, None, None, None
+        away_sp_ev, home_sp_ev = None, None
         if away_sp_odds != 'N/A' and home_sp_odds != 'N/A':
             t_sp_a, t_sp_h = proportional_devig(away_sp_odds, home_sp_odds)
             b_sp_a = (sp_weight * sim_res["spread_probs"]["away"]) + ((1.0 - sp_weight) * t_sp_a)
             b_sp_h = (sp_weight * sim_res["spread_probs"]["home"]) + ((1.0 - sp_weight) * t_sp_h)
             b_sp_push = sim_res["spread_probs"]["push"]
-            ev_sp_a = calculate_ev(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
-            ev_sp_h = calculate_ev(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
-            if sp_min <= ev_sp_a <= sp_max:
-                away_sp_ev = ev_sp_a
-                away_sp_units = calc_kelly_units(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
-            if sp_min <= ev_sp_h <= sp_max:
-                home_sp_ev = ev_sp_h
-                home_sp_units = calc_kelly_units(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
+            away_sp_ev = calculate_ev(b_sp_a * 100, away_sp_odds, b_sp_push * 100)
+            home_sp_ev = calculate_ev(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
 
-        # Total Recs
-        over_ev, under_ev, over_units, under_units = None, None, None, None
+        over_ev, under_ev = None, None
         if over_odds != 'N/A' and under_odds != 'N/A':
             t_ou_o, t_ou_u = proportional_devig(over_odds, under_odds)
             b_ou_o = (tot_weight * sim_res["ou_probs"]["over"]) + ((1.0 - tot_weight) * t_ou_o)
             b_ou_u = (tot_weight * sim_res["ou_probs"]["under"]) + ((1.0 - tot_weight) * t_ou_u)
             b_ou_push = sim_res["ou_probs"]["push"]
-            ev_o = calculate_ev(b_ou_o * 100, over_odds, b_ou_push * 100)
-            ev_u = calculate_ev(b_ou_u * 100, under_odds, b_ou_push * 100)
-            if tot_min <= ev_o <= tot_max:
-                over_ev = ev_o
-                over_units = calc_kelly_units(b_ou_o * 100, over_odds, b_ou_push * 100)
-            if tot_min <= ev_u <= tot_max:
-                under_ev = ev_u
-                under_units = calc_kelly_units(b_ou_u * 100, under_odds, b_ou_push * 100)
+            over_ev = calculate_ev(b_ou_o * 100, over_odds, b_ou_push * 100)
+            under_ev = calculate_ev(b_ou_u * 100, under_odds, b_ou_push * 100)
 
-        # PERFECTLY MATCHED NESTED DICTIONARY
         dashboard_games.append({
             "away_team": away,
             "home_team": home,
             "date": date_str,
             "target_date": date_str,
             "commence_time": game['commence_time'],
+            "away_stats": epa_stats.get(away, {}),
+            "home_stats": epa_stats.get(home, {}),
             "simulation": {
                 "away_win_prob": round(sim_res["away_win_prob"], 1),
                 "home_win_prob": round(sim_res["home_win_prob"], 1),
@@ -382,29 +370,29 @@ def run_live_scraper():
                 "totals": {"over": over_odds, "under": under_odds, "total": total_line},
                 
                 "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev is not None else None,
-                "away_ml_units": away_ml_units if away_ml_units is not None else None,
+                "away_ml_units": "",
                 "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev is not None else None,
-                "home_ml_units": home_ml_units if home_ml_units is not None else None,
+                "home_ml_units": "",
                 
                 "away_sp_ev": round(away_sp_ev, 1) if away_sp_ev is not None else None,
-                "away_sp_units": away_sp_units if away_sp_units is not None else None,
+                "away_sp_units": "",
                 "home_sp_ev": round(home_sp_ev, 1) if home_sp_ev is not None else None,
-                "home_sp_units": home_sp_units if home_sp_units is not None else None,
+                "home_sp_units": "",
                 
                 "over_ev": round(over_ev, 1) if over_ev is not None else None,
-                "over_units": over_units if over_units is not None else None,
+                "over_units": "",
                 "under_ev": round(under_ev, 1) if under_ev is not None else None,
-                "under_units": under_units if under_units is not None else None
+                "under_units": ""
             }
         })
 
     primary_date = dashboard_games[0]['date'] if dashboard_games else (datetime.utcnow() - timedelta(hours=5)).strftime('%Y-%m-%d')
     
-    # ADDED 'todays_games' and 'target_date' explicitly to root to fix frontend parsing
     output_json = {
         "last_updated": datetime.utcnow().isoformat() + "Z", 
         "slate": primary_date,
         "target_date": primary_date,
+        "team_stats": epa_stats,
         "todays_games": dashboard_games,
         "games": dashboard_games
     }
