@@ -1,263 +1,327 @@
 {
-    "last_updated": "2026-09-17T14:44:01.159119Z",
+    "last_updated": "2026-09-17T14:55:45.003754Z",
     "slate": "2026-09-17",
     "target_date": "2026-09-17",
     "team_stats": {
         "ARI": {
-            "off_epa": 0.11161346137523652,
+            "off_epa_per_play": 0.11161346137523652,
             "off_pass_epa": 0.19020405425690115,
             "off_rush_epa": 0.012261466681957246,
-            "def_epa": -0.17747887372970583,
+            "def_epa_per_play": -0.17747887372970583,
             "def_pass_epa": -0.11955757737159729,
-            "def_rush_epa": -0.2587564188987017
+            "def_rush_epa": -0.2587564188987017,
+            "plays": 69,
+            "pace": 63.0
         },
         "NO": {
-            "off_epa": -0.04215216189622879,
+            "off_epa_per_play": -0.04215216189622879,
             "off_pass_epa": -0.028772708773612977,
             "off_rush_epa": -0.0731506735086441,
-            "def_epa": -0.011484107584692538,
+            "def_epa_per_play": -0.011484107584692538,
             "def_pass_epa": 0.005529389530420304,
-            "def_rush_epa": -0.031727482378482816
+            "def_rush_epa": -0.031727482378482816,
+            "plays": 86,
+            "pace": 63.0
         },
         "BUF": {
-            "off_epa": 0.2109217971563339,
+            "off_epa_per_play": 0.2109217971563339,
             "off_pass_epa": 0.3960927605628968,
             "off_rush_epa": -0.08257916718721389,
-            "def_epa": 0.05292680598795414,
+            "def_epa_per_play": 0.05292680598795414,
             "def_pass_epa": 0.010921223461627959,
-            "def_rush_epa": 0.10532148033380509
+            "def_rush_epa": 0.10532148033380509,
+            "plays": 52,
+            "pace": 63.0
         },
         "BAL": {
-            "off_epa": 0.26397844180464747,
+            "off_epa_per_play": 0.26397844180464747,
             "off_pass_epa": 0.2938195832073689,
             "off_rush_epa": 0.24372930228710177,
-            "def_epa": -0.1879705246537924,
+            "def_epa_per_play": -0.1879705246537924,
             "def_pass_epa": -0.3544482231140137,
-            "def_rush_epa": 0.08749921098351479
+            "def_rush_epa": 0.08749921098351479,
+            "plays": 60,
+            "pace": 63.0
         },
         "JAX": {
-            "off_epa": 0.2767872214317322,
+            "off_epa_per_play": 0.2767872214317322,
             "off_pass_epa": 0.6455436944961548,
             "off_rush_epa": -0.030779566988348963,
-            "def_epa": -0.16465001851320268,
+            "def_epa_per_play": -0.16465001851320268,
             "def_pass_epa": -0.31528590321540834,
-            "def_rush_epa": 0.024331719055771826
+            "def_rush_epa": 0.024331719055771826,
+            "plays": 53,
+            "pace": 63.0
         },
         "CAR": {
-            "off_epa": 0.1369628742337227,
+            "off_epa_per_play": 0.1369628742337227,
             "off_pass_epa": 0.18887316435575488,
             "off_rush_epa": 0.04055737033486367,
-            "def_epa": 0.34159185737371445,
+            "def_epa_per_play": 0.34159185737371445,
             "def_pass_epa": 0.3806513458490372,
-            "def_rush_epa": 0.30779066346585754
+            "def_rush_epa": 0.30779066346585754,
+            "plays": 62,
+            "pace": 63.0
         },
         "CIN": {
-            "off_epa": -0.0029388773255050182,
+            "off_epa_per_play": -0.0029388773255050182,
             "off_pass_epa": -0.06369517110288143,
             "off_rush_epa": 0.08276422806084156,
-            "def_epa": -0.1222076177597046,
+            "def_epa_per_play": -0.1222076177597046,
             "def_pass_epa": -0.16486568152904513,
-            "def_rush_epa": -0.04719741344451904
+            "def_rush_epa": -0.04719741344451904,
+            "plays": 62,
+            "pace": 63.0
         },
         "CLE": {
-            "off_epa": -0.18546198904514316,
+            "off_epa_per_play": -0.18546198904514316,
             "off_pass_epa": -0.349051707983017,
             "off_rush_epa": 0.01973995044827461,
-            "def_epa": 0.25136640667915344,
+            "def_epa_per_play": 0.25136640667915344,
             "def_pass_epa": 0.6077478229999542,
-            "def_rush_epa": -0.04098859578371048
+            "def_rush_epa": -0.04098859578371048,
+            "plays": 49,
+            "pace": 63.0
         },
         "DAL": {
-            "off_epa": 0.19610282629728318,
+            "off_epa_per_play": 0.19610282629728318,
             "off_pass_epa": 0.27654657065868377,
             "off_rush_epa": 0.049625704530626535,
-            "def_epa": 0.32858092784881593,
+            "def_epa_per_play": 0.32858092784881593,
             "def_pass_epa": 0.6096006333827972,
-            "def_rush_epa": 0.06751999258995056
+            "def_rush_epa": 0.06751999258995056,
+            "plays": 52,
+            "pace": 63.0
         },
         "PHI": {
-            "off_epa": 0.061076159030199056,
+            "off_epa_per_play": 0.061076159030199056,
             "off_pass_epa": 0.04341367110610008,
             "off_rush_epa": 0.08279733788222075,
-            "def_epa": 0.033917476236820225,
+            "def_epa_per_play": 0.033917476236820225,
             "def_pass_epa": 0.06583591401576996,
-            "def_rush_epa": -0.0013614255934953695
+            "def_rush_epa": -0.0013614255934953695,
+            "plays": 51,
+            "pace": 63.0
         },
         "GB": {
-            "off_epa": -0.11553358882665635,
+            "off_epa_per_play": -0.11553358882665635,
             "off_pass_epa": 0.0013399034738540636,
             "off_rush_epa": -0.34626815672963857,
-            "def_epa": -0.007865811884403232,
+            "def_epa_per_play": -0.007865811884403232,
             "def_pass_epa": 0.03294124007225037,
-            "def_rush_epa": -0.04845691993832588
+            "def_rush_epa": -0.04845691993832588,
+            "plays": 67,
+            "pace": 63.0
         },
         "DET": {
-            "off_epa": 0.016768451570533215,
+            "off_epa_per_play": 0.016768451570533215,
             "off_pass_epa": 0.04835449308156967,
             "off_rush_epa": -0.025308252125978467,
-            "def_epa": -0.0265233064070344,
+            "def_epa_per_play": -0.0265233064070344,
             "def_pass_epa": -0.01417370866984129,
-            "def_rush_epa": -0.0559513146057725
+            "def_rush_epa": -0.0559513146057725,
+            "plays": 73,
+            "pace": 63.0
         },
         "HOU": {
-            "off_epa": 0.04897208176553249,
+            "off_epa_per_play": 0.04897208176553249,
             "off_pass_epa": 0.028929087240248917,
             "off_rush_epa": 0.07420884668827057,
-            "def_epa": 0.1512619823217392,
+            "def_epa_per_play": 0.1512619823217392,
             "def_pass_epa": 0.31999222934246063,
-            "def_rush_epa": -0.11995744854211807
+            "def_rush_epa": -0.11995744854211807,
+            "plays": 73,
+            "pace": 63.0
         },
         "LA": {
-            "off_epa": -0.18280592560768127,
+            "off_epa_per_play": -0.18280592560768127,
             "off_pass_epa": -0.27080310881137853,
             "off_rush_epa": -0.10138467624783516,
-            "def_epa": 0.13366415351629257,
+            "def_epa_per_play": 0.13366415351629257,
             "def_pass_epa": 0.10410177633166315,
-            "def_rush_epa": 0.1671989105641842
+            "def_rush_epa": 0.1671989105641842,
+            "plays": 56,
+            "pace": 63.0
         },
         "KC": {
-            "off_epa": 0.1385184429585934,
+            "off_epa_per_play": 0.1385184429585934,
             "off_pass_epa": -0.055513645708560946,
             "off_rush_epa": 0.29859739542007446,
-            "def_epa": -0.278913002833724,
+            "def_epa_per_play": -0.278913002833724,
             "def_pass_epa": -0.3596118348650635,
-            "def_rush_epa": -0.09060378223657609
+            "def_rush_epa": -0.09060378223657609,
+            "plays": 64,
+            "pace": 63.0
         },
         "LAC": {
-            "off_epa": -0.20225419998168948,
+            "off_epa_per_play": -0.20225419998168948,
             "off_pass_epa": -0.16378762871026994,
             "off_rush_epa": -0.2574981983751059,
-            "def_epa": 0.09952352792024613,
+            "def_epa_per_play": 0.09952352792024613,
             "def_pass_epa": 0.17190719544887545,
-            "def_rush_epa": 0.011053171753883364
+            "def_rush_epa": 0.011053171753883364,
+            "plays": 51,
+            "pace": 63.0
         },
         "LV": {
-            "off_epa": -0.07439128756523133,
+            "off_epa_per_play": -0.07439128756523133,
             "off_pass_epa": -0.026906093209981916,
             "off_rush_epa": -0.12029805779457092,
-            "def_epa": -0.18386031575500966,
+            "def_epa_per_play": -0.18386031575500966,
             "def_pass_epa": -0.21536587923765182,
-            "def_rush_epa": -0.12115875706076623
+            "def_rush_epa": -0.12115875706076623,
+            "plays": 64,
+            "pace": 63.0
         },
         "NE": {
-            "off_epa": -0.06963742971420289,
+            "off_epa_per_play": -0.06963742971420289,
             "off_pass_epa": -0.06922969520092011,
             "off_rush_epa": -0.07084665708243848,
-            "def_epa": 0.03429785072803497,
+            "def_epa_per_play": 0.03429785072803497,
             "def_pass_epa": 0.11115779876708985,
-            "def_rush_epa": -0.05987597182393074
+            "def_rush_epa": -0.05987597182393074,
+            "plays": 67,
+            "pace": 63.0
         },
         "IND": {
-            "off_epa": -0.1785650134086609,
+            "off_epa_per_play": -0.1785650134086609,
             "off_pass_epa": -0.3581201329827309,
             "off_rush_epa": 0.11670927852392197,
-            "def_epa": 0.25804081670939927,
+            "def_epa_per_play": 0.25804081670939927,
             "def_pass_epa": 0.3087877735495568,
-            "def_rush_epa": 0.21386877149343492
+            "def_rush_epa": 0.21386877149343492,
+            "plays": 53,
+            "pace": 63.0
         },
         "MIA": {
-            "off_epa": -0.19207505807280542,
+            "off_epa_per_play": -0.19207505807280542,
             "off_pass_epa": -0.23260329011827707,
             "off_rush_epa": -0.11918680705130101,
-            "def_epa": -0.01367800384759903,
+            "def_epa_per_play": -0.01367800384759903,
             "def_pass_epa": 0.0355981595814228,
-            "def_rush_epa": -0.059559504687786105
+            "def_rush_epa": -0.059559504687786105,
+            "plays": 50,
+            "pace": 63.0
         },
         "MIN": {
-            "off_epa": -0.0387779861688614,
+            "off_epa_per_play": -0.0387779861688614,
             "off_pass_epa": -0.022839391231536867,
             "off_rush_epa": -0.04621180165559054,
-            "def_epa": -0.15975226759910585,
+            "def_epa_per_play": -0.15975226759910585,
             "def_pass_epa": -0.07663524746894837,
-            "def_rush_epa": -0.3538603998720646
+            "def_rush_epa": -0.3538603998720646,
+            "plays": 59,
+            "pace": 63.0
         },
         "CHI": {
-            "off_epa": 0.34222955852746967,
+            "off_epa_per_play": 0.34222955852746967,
             "off_pass_epa": 0.37724513560533524,
             "off_rush_epa": 0.31302472203969955,
-            "def_epa": 0.1515024036169052,
+            "def_epa_per_play": 0.1515024036169052,
             "def_pass_epa": 0.2120968483388424,
-            "def_rush_epa": 0.0438452993053943
+            "def_rush_epa": 0.0438452993053943,
+            "plays": 70,
+            "pace": 63.0
         },
         "WAS": {
-            "off_epa": 0.04921325473114849,
+            "off_epa_per_play": 0.04921325473114849,
             "off_pass_epa": 0.0856947128660977,
             "off_rush_epa": 0.008018312230706214,
-            "def_epa": 0.08548014760017396,
+            "def_epa_per_play": 0.08548014760017396,
             "def_pass_epa": 0.07655693888664246,
-            "def_rush_epa": 0.09666074067354204
+            "def_rush_epa": 0.09666074067354204,
+            "plays": 68,
+            "pace": 63.0
         },
         "NYG": {
-            "off_epa": 0.297571225464344,
+            "off_epa_per_play": 0.297571225464344,
             "off_pass_epa": 0.5638874271884561,
             "off_rush_epa": 0.05570169091224671,
-            "def_epa": 0.1940149560570717,
+            "def_epa_per_play": 0.1940149560570717,
             "def_pass_epa": 0.2498282965272665,
-            "def_rush_epa": 0.08192988634109497
+            "def_rush_epa": 0.08192988634109497,
+            "plays": 65,
+            "pace": 63.0
         },
         "NYJ": {
-            "off_epa": 0.1093789428472519,
+            "off_epa_per_play": 0.1093789428472519,
             "off_pass_epa": 0.2891811013221741,
             "off_rush_epa": -0.004501128941774369,
-            "def_epa": -0.06545493304729462,
+            "def_epa_per_play": -0.06545493304729462,
             "def_pass_epa": -0.11735188364982604,
-            "def_rush_epa": 0.09484838768839837
+            "def_rush_epa": 0.09484838768839837,
+            "plays": 60,
+            "pace": 63.0
         },
         "PIT": {
-            "off_epa": -0.24317838083952667,
+            "off_epa_per_play": -0.24317838083952667,
             "off_pass_epa": -0.26150657478719946,
             "off_rush_epa": -0.20063743749633434,
-            "def_epa": -0.2524624280631542,
+            "def_epa_per_play": -0.2524624280631542,
             "def_pass_epa": -0.479554183036089,
-            "def_rush_epa": -0.06273291725665332
+            "def_rush_epa": -0.06273291725665332,
+            "plays": 61,
+            "pace": 63.0
         },
         "SEA": {
-            "off_epa": 0.061441839486360554,
+            "off_epa_per_play": 0.061441839486360554,
             "off_pass_epa": 0.16111143231391908,
             "off_rush_epa": -0.05837522149085999,
-            "def_epa": -0.11226840615272522,
+            "def_epa_per_play": -0.11226840615272522,
             "def_pass_epa": -0.125691194832325,
-            "def_rush_epa": -0.09738582968711854
+            "def_rush_epa": -0.09738582968711854,
+            "plays": 47,
+            "pace": 63.0
         },
         "SF": {
-            "off_epa": 0.1552246779203415,
+            "off_epa_per_play": 0.1552246779203415,
             "off_pass_epa": 0.13863255679607392,
             "off_rush_epa": 0.17176436819136146,
-            "def_epa": -0.19773852676153184,
+            "def_epa_per_play": -0.19773852676153184,
             "def_pass_epa": -0.29391267895698553,
-            "def_rush_epa": -0.104131368547678
+            "def_rush_epa": -0.104131368547678,
+            "plays": 64,
+            "pace": 63.0
         },
         "ATL": {
-            "off_epa": -0.2610784418880939,
+            "off_epa_per_play": -0.2610784418880939,
             "off_pass_epa": -0.4876973938196898,
             "off_rush_epa": -0.07164905518293381,
-            "def_epa": -0.2429689081851393,
+            "def_epa_per_play": -0.2429689081851393,
             "def_pass_epa": -0.26487416252493856,
-            "def_rush_epa": -0.1960958890616894
+            "def_rush_epa": -0.1960958890616894,
+            "plays": 57,
+            "pace": 63.0
         },
         "TB": {
-            "off_epa": -0.14994733966886997,
+            "off_epa_per_play": -0.14994733966886997,
             "off_pass_epa": -0.20308727622032166,
             "off_rush_epa": -0.061811525374650955,
-            "def_epa": 0.0014075727201998236,
+            "def_epa_per_play": 0.0014075727201998236,
             "def_pass_epa": -0.04477069675922394,
-            "def_rush_epa": 0.0633739560842514
+            "def_rush_epa": 0.0633739560842514,
+            "plays": 51,
+            "pace": 63.0
         },
         "TEN": {
-            "off_epa": -0.12683277130126952,
+            "off_epa_per_play": -0.12683277130126952,
             "off_pass_epa": -0.2121856391429901,
             "off_rush_epa": 0.07646195441484452,
-            "def_epa": 0.1549492657184601,
+            "def_epa_per_play": 0.1549492657184601,
             "def_pass_epa": 0.358619374036789,
-            "def_rush_epa": 0.01100488305091858
+            "def_rush_epa": 0.01100488305091858,
+            "plays": 49,
+            "pace": 63.0
         },
         "DEN": {
-            "off_epa": -0.268811122328043,
+            "off_epa_per_play": -0.268811122328043,
             "off_pass_epa": -0.3480451159179211,
             "off_rush_epa": -0.08355633933097126,
-            "def_epa": 0.11569018959999086,
+            "def_epa_per_play": 0.11569018959999086,
             "def_pass_epa": -0.08600671142339707,
-            "def_rush_epa": 0.287621008977294
+            "def_rush_epa": 0.287621008977294,
+            "plays": 46,
+            "pace": 63.0
         }
     },
     "todays_games": [
@@ -268,20 +332,24 @@
             "target_date": "2026-09-17",
             "commence_time": "2026-09-18T00:15:00Z",
             "away_stats": {
-                "off_epa": 0.016768451570533215,
+                "off_epa_per_play": 0.016768451570533215,
                 "off_pass_epa": 0.04835449308156967,
                 "off_rush_epa": -0.025308252125978467,
-                "def_epa": -0.0265233064070344,
+                "def_epa_per_play": -0.0265233064070344,
                 "def_pass_epa": -0.01417370866984129,
-                "def_rush_epa": -0.0559513146057725
+                "def_rush_epa": -0.0559513146057725,
+                "plays": 73,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.2109217971563339,
+                "off_epa_per_play": 0.2109217971563339,
                 "off_pass_epa": 0.3960927605628968,
                 "off_rush_epa": -0.08257916718721389,
-                "def_epa": 0.05292680598795414,
+                "def_epa_per_play": 0.05292680598795414,
                 "def_pass_epa": 0.010921223461627959,
-                "def_rush_epa": 0.10532148033380509
+                "def_rush_epa": 0.10532148033380509,
+                "plays": 52,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 25.3,
@@ -295,32 +363,32 @@
             },
             "market_data": {
                 "h2h": {
-                    "away": 206,
-                    "home": -235
+                    "away": 212,
+                    "home": -242
                 },
                 "spreads": {
-                    "away": -104,
-                    "home": -106,
+                    "away": 100,
+                    "home": -110,
                     "away_line": 5.5,
                     "home_line": -5.5
                 },
                 "totals": {
-                    "over": -115,
-                    "under": 102,
-                    "total": 54.5
+                    "over": -107,
+                    "under": -105,
+                    "total": 55.0
                 },
-                "away_ml_ev": -5.7,
-                "away_ml_units": "",
-                "home_ml_ev": -1.4,
-                "home_ml_units": "",
-                "away_sp_ev": -10.7,
-                "away_sp_units": "",
-                "home_sp_ev": 5.9,
-                "home_sp_units": "",
-                "over_ev": 4.6,
-                "over_units": "",
-                "under_ev": -11.0,
-                "under_units": ""
+                "away_ml_ev": -5.5,
+                "away_ml_units": 0,
+                "home_ml_ev": -1.5,
+                "home_ml_units": 0,
+                "away_sp_ev": -10.1,
+                "away_sp_units": 0,
+                "home_sp_ev": 5.1,
+                "home_sp_units": 0,
+                "over_ev": 7.0,
+                "over_units": 0,
+                "under_ev": -9.0,
+                "under_units": 0
             }
         },
         {
@@ -330,20 +398,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": 0.1369628742337227,
+                "off_epa_per_play": 0.1369628742337227,
                 "off_pass_epa": 0.18887316435575488,
                 "off_rush_epa": 0.04055737033486367,
-                "def_epa": 0.34159185737371445,
+                "def_epa_per_play": 0.34159185737371445,
                 "def_pass_epa": 0.3806513458490372,
-                "def_rush_epa": 0.30779066346585754
+                "def_rush_epa": 0.30779066346585754,
+                "plays": 62,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.2610784418880939,
+                "off_epa_per_play": -0.2610784418880939,
                 "off_pass_epa": -0.4876973938196898,
                 "off_rush_epa": -0.07164905518293381,
-                "def_epa": -0.2429689081851393,
+                "def_epa_per_play": -0.2429689081851393,
                 "def_pass_epa": -0.26487416252493856,
-                "def_rush_epa": -0.1960958890616894
+                "def_rush_epa": -0.1960958890616894,
+                "plays": 57,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 15.1,
@@ -372,17 +444,17 @@
                     "total": 44.0
                 },
                 "away_ml_ev": -13.7,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 11.5,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -33.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 30.0,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -7.2,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 3.5,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -392,20 +464,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.04215216189622879,
+                "off_epa_per_play": -0.04215216189622879,
                 "off_pass_epa": -0.028772708773612977,
                 "off_rush_epa": -0.0731506735086441,
-                "def_epa": -0.011484107584692538,
+                "def_epa_per_play": -0.011484107584692538,
                 "def_pass_epa": 0.005529389530420304,
-                "def_rush_epa": -0.031727482378482816
+                "def_rush_epa": -0.031727482378482816,
+                "plays": 86,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.26397844180464747,
+                "off_epa_per_play": 0.26397844180464747,
                 "off_pass_epa": 0.2938195832073689,
                 "off_rush_epa": 0.24372930228710177,
-                "def_epa": -0.1879705246537924,
+                "def_epa_per_play": -0.1879705246537924,
                 "def_pass_epa": -0.3544482231140137,
-                "def_rush_epa": 0.08749921098351479
+                "def_rush_epa": 0.08749921098351479,
+                "plays": 60,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 1.0,
@@ -434,17 +510,17 @@
                     "total": 47.5
                 },
                 "away_ml_ev": -17.4,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 0.5,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -37.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 37.2,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -6.4,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -1.3,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -454,20 +530,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.0387779861688614,
+                "off_epa_per_play": -0.0387779861688614,
                 "off_pass_epa": -0.022839391231536867,
                 "off_rush_epa": -0.04621180165559054,
-                "def_epa": -0.15975226759910585,
+                "def_epa_per_play": -0.15975226759910585,
                 "def_pass_epa": -0.07663524746894837,
-                "def_rush_epa": -0.3538603998720646
+                "def_rush_epa": -0.3538603998720646,
+                "plays": 59,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.34222955852746967,
+                "off_epa_per_play": 0.34222955852746967,
                 "off_pass_epa": 0.37724513560533524,
                 "off_rush_epa": 0.31302472203969955,
-                "def_epa": 0.1515024036169052,
+                "def_epa_per_play": 0.1515024036169052,
                 "def_pass_epa": 0.2120968483388424,
-                "def_rush_epa": 0.0438452993053943
+                "def_rush_epa": 0.0438452993053943,
+                "plays": 70,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 32.4,
@@ -496,17 +576,17 @@
                     "total": 48.5
                 },
                 "away_ml_ev": -3.7,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -2.8,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -6.6,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 1.3,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 20.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -26.9,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -516,20 +596,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.0029388773255050182,
+                "off_epa_per_play": -0.0029388773255050182,
                 "off_pass_epa": -0.06369517110288143,
                 "off_rush_epa": 0.08276422806084156,
-                "def_epa": -0.1222076177597046,
+                "def_epa_per_play": -0.1222076177597046,
                 "def_pass_epa": -0.16486568152904513,
-                "def_rush_epa": -0.04719741344451904
+                "def_rush_epa": -0.04719741344451904,
+                "plays": 62,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.04897208176553249,
+                "off_epa_per_play": 0.04897208176553249,
                 "off_pass_epa": 0.028929087240248917,
                 "off_rush_epa": 0.07420884668827057,
-                "def_epa": 0.1512619823217392,
+                "def_epa_per_play": 0.1512619823217392,
                 "def_pass_epa": 0.31999222934246063,
-                "def_rush_epa": -0.11995744854211807
+                "def_rush_epa": -0.11995744854211807,
+                "plays": 73,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 82.1,
@@ -543,32 +627,32 @@
             },
             "market_data": {
                 "h2h": {
-                    "away": 133,
-                    "home": -151
+                    "away": 132,
+                    "home": -149
                 },
                 "spreads": {
-                    "away": -122,
-                    "home": 109,
+                    "away": -124,
+                    "home": 110,
                     "away_line": 3.0,
                     "home_line": -3.0
                 },
                 "totals": {
-                    "over": 100,
-                    "under": -117,
+                    "over": 103,
+                    "under": -120,
                     "total": 46.5
                 },
                 "away_ml_ev": 11.1,
-                "away_ml_units": "",
-                "home_ml_ev": -13.1,
-                "home_ml_units": "",
-                "away_sp_ev": 23.1,
-                "away_sp_units": "",
+                "away_ml_units": 0,
+                "home_ml_ev": -12.9,
+                "home_ml_units": 0,
+                "away_sp_ev": 22.5,
+                "away_sp_units": 0,
                 "home_sp_ev": -30.3,
-                "home_sp_units": "",
-                "over_ev": 0.0,
-                "over_units": "",
-                "under_ev": -7.3,
-                "under_units": ""
+                "home_sp_units": 0,
+                "over_ev": 0.7,
+                "over_units": 0,
+                "under_ev": -7.6,
+                "under_units": 0
             }
         },
         {
@@ -578,20 +662,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.18546198904514316,
+                "off_epa_per_play": -0.18546198904514316,
                 "off_pass_epa": -0.349051707983017,
                 "off_rush_epa": 0.01973995044827461,
-                "def_epa": 0.25136640667915344,
+                "def_epa_per_play": 0.25136640667915344,
                 "def_pass_epa": 0.6077478229999542,
-                "def_rush_epa": -0.04098859578371048
+                "def_rush_epa": -0.04098859578371048,
+                "plays": 49,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.14994733966886997,
+                "off_epa_per_play": -0.14994733966886997,
                 "off_pass_epa": -0.20308727622032166,
                 "off_rush_epa": -0.061811525374650955,
-                "def_epa": 0.0014075727201998236,
+                "def_epa_per_play": 0.0014075727201998236,
                 "def_pass_epa": -0.04477069675922394,
-                "def_rush_epa": 0.0633739560842514
+                "def_rush_epa": 0.0633739560842514,
+                "plays": 51,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 7.0,
@@ -620,17 +708,17 @@
                     "total": 42.0
                 },
                 "away_ml_ev": -13.6,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -0.6,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -25.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 24.6,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -8.4,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 4.0,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -640,20 +728,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.11553358882665635,
+                "off_epa_per_play": -0.11553358882665635,
                 "off_pass_epa": 0.0013399034738540636,
                 "off_rush_epa": -0.34626815672963857,
-                "def_epa": -0.007865811884403232,
+                "def_epa_per_play": -0.007865811884403232,
                 "def_pass_epa": 0.03294124007225037,
-                "def_rush_epa": -0.04845691993832588
+                "def_rush_epa": -0.04845691993832588,
+                "plays": 67,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.1093789428472519,
+                "off_epa_per_play": 0.1093789428472519,
                 "off_pass_epa": 0.2891811013221741,
                 "off_rush_epa": -0.004501128941774369,
-                "def_epa": -0.06545493304729462,
+                "def_epa_per_play": -0.06545493304729462,
                 "def_pass_epa": -0.11735188364982604,
-                "def_rush_epa": 0.09484838768839837
+                "def_rush_epa": 0.09484838768839837,
+                "plays": 60,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 7.0,
@@ -682,17 +774,17 @@
                     "total": 45.0
                 },
                 "away_ml_ev": -15.9,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 16.8,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -37.8,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 34.7,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -15.1,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 10.8,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -702,20 +794,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.24317838083952667,
+                "off_epa_per_play": -0.24317838083952667,
                 "off_pass_epa": -0.26150657478719946,
                 "off_rush_epa": -0.20063743749633434,
-                "def_epa": -0.2524624280631542,
+                "def_epa_per_play": -0.2524624280631542,
                 "def_pass_epa": -0.479554183036089,
-                "def_rush_epa": -0.06273291725665332
+                "def_rush_epa": -0.06273291725665332,
+                "plays": 61,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.06963742971420289,
+                "off_epa_per_play": -0.06963742971420289,
                 "off_pass_epa": -0.06922969520092011,
                 "off_rush_epa": -0.07084665708243848,
-                "def_epa": 0.03429785072803497,
+                "def_epa_per_play": 0.03429785072803497,
                 "def_pass_epa": 0.11115779876708985,
-                "def_rush_epa": -0.05987597182393074
+                "def_rush_epa": -0.05987597182393074,
+                "plays": 67,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 51.5,
@@ -744,17 +840,17 @@
                     "total": 42.0
                 },
                 "away_ml_ev": 5.7,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -7.4,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 9.7,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -15.7,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -35.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 26.3,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -764,20 +860,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": 0.061076159030199056,
+                "off_epa_per_play": 0.061076159030199056,
                 "off_pass_epa": 0.04341367110610008,
                 "off_rush_epa": 0.08279733788222075,
-                "def_epa": 0.033917476236820225,
+                "def_epa_per_play": 0.033917476236820225,
                 "def_pass_epa": 0.06583591401576996,
-                "def_rush_epa": -0.0013614255934953695
+                "def_rush_epa": -0.0013614255934953695,
+                "plays": 51,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.12683277130126952,
+                "off_epa_per_play": -0.12683277130126952,
                 "off_pass_epa": -0.2121856391429901,
                 "off_rush_epa": 0.07646195441484452,
-                "def_epa": 0.1549492657184601,
+                "def_epa_per_play": 0.1549492657184601,
                 "def_pass_epa": 0.358619374036789,
-                "def_rush_epa": 0.01100488305091858
+                "def_rush_epa": 0.01100488305091858,
+                "plays": 49,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 90.6,
@@ -806,17 +906,17 @@
                     "total": 40.0
                 },
                 "away_ml_ev": -0.2,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -12.6,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 22.4,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -25.1,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 17.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -22.0,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -826,20 +926,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:05:00Z",
             "away_stats": {
-                "off_epa": 0.2767872214317322,
+                "off_epa_per_play": 0.2767872214317322,
                 "off_pass_epa": 0.6455436944961548,
                 "off_rush_epa": -0.030779566988348963,
-                "def_epa": -0.16465001851320268,
+                "def_epa_per_play": -0.16465001851320268,
                 "def_pass_epa": -0.31528590321540834,
-                "def_rush_epa": 0.024331719055771826
+                "def_rush_epa": 0.024331719055771826,
+                "plays": 53,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.268811122328043,
+                "off_epa_per_play": -0.268811122328043,
                 "off_pass_epa": -0.3480451159179211,
                 "off_rush_epa": -0.08355633933097126,
-                "def_epa": 0.11569018959999086,
+                "def_epa_per_play": 0.11569018959999086,
                 "def_pass_epa": -0.08600671142339707,
-                "def_rush_epa": 0.287621008977294
+                "def_rush_epa": 0.287621008977294,
+                "plays": 46,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 99.7,
@@ -868,17 +972,17 @@
                     "total": 45.5
                 },
                 "away_ml_ev": 17.8,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -17.4,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 41.0,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -41.6,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 9.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -16.8,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -888,20 +992,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:05:00Z",
             "away_stats": {
-                "off_epa": -0.07439128756523133,
+                "off_epa_per_play": -0.07439128756523133,
                 "off_pass_epa": -0.026906093209981916,
                 "off_rush_epa": -0.12029805779457092,
-                "def_epa": -0.18386031575500966,
+                "def_epa_per_play": -0.18386031575500966,
                 "def_pass_epa": -0.21536587923765182,
-                "def_rush_epa": -0.12115875706076623
+                "def_rush_epa": -0.12115875706076623,
+                "plays": 64,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.20225419998168948,
+                "off_epa_per_play": -0.20225419998168948,
                 "off_pass_epa": -0.16378762871026994,
                 "off_rush_epa": -0.2574981983751059,
-                "def_epa": 0.09952352792024613,
+                "def_epa_per_play": 0.09952352792024613,
                 "def_pass_epa": 0.17190719544887545,
-                "def_rush_epa": 0.011053171753883364
+                "def_rush_epa": 0.011053171753883364,
+                "plays": 51,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 86.8,
@@ -930,17 +1038,17 @@
                     "total": 44.0
                 },
                 "away_ml_ev": 27.2,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -15.2,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 32.2,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -37.5,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -27.1,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 19.3,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -950,20 +1058,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "away_stats": {
-                "off_epa": 0.061441839486360554,
+                "off_epa_per_play": 0.061441839486360554,
                 "off_pass_epa": 0.16111143231391908,
                 "off_rush_epa": -0.05837522149085999,
-                "def_epa": -0.11226840615272522,
+                "def_epa_per_play": -0.11226840615272522,
                 "def_pass_epa": -0.125691194832325,
-                "def_rush_epa": -0.09738582968711854
+                "def_rush_epa": -0.09738582968711854,
+                "plays": 47,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.11161346137523652,
+                "off_epa_per_play": 0.11161346137523652,
                 "off_pass_epa": 0.19020405425690115,
                 "off_rush_epa": 0.012261466681957246,
-                "def_epa": -0.17747887372970583,
+                "def_epa_per_play": -0.17747887372970583,
                 "def_pass_epa": -0.11955757737159729,
-                "def_rush_epa": -0.2587564188987017
+                "def_rush_epa": -0.2587564188987017,
+                "plays": 69,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 25.3,
@@ -992,17 +1104,17 @@
                     "total": 41.5
                 },
                 "away_ml_ev": -11.9,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 12.9,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -27.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 22.5,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -13.8,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 5.5,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1012,20 +1124,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "away_stats": {
-                "off_epa": 0.04921325473114849,
+                "off_epa_per_play": 0.04921325473114849,
                 "off_pass_epa": 0.0856947128660977,
                 "off_rush_epa": 0.008018312230706214,
-                "def_epa": 0.08548014760017396,
+                "def_epa_per_play": 0.08548014760017396,
                 "def_pass_epa": 0.07655693888664246,
-                "def_rush_epa": 0.09666074067354204
+                "def_rush_epa": 0.09666074067354204,
+                "plays": 68,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.19610282629728318,
+                "off_epa_per_play": 0.19610282629728318,
                 "off_pass_epa": 0.27654657065868377,
                 "off_rush_epa": 0.049625704530626535,
-                "def_epa": 0.32858092784881593,
+                "def_epa_per_play": 0.32858092784881593,
                 "def_pass_epa": 0.6096006333827972,
-                "def_rush_epa": 0.06751999258995056
+                "def_rush_epa": 0.06751999258995056,
+                "plays": 52,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 61.6,
@@ -1054,17 +1170,17 @@
                     "total": 50.0
                 },
                 "away_ml_ev": 7.9,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -9.0,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 16.3,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -18.7,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 28.3,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -36.9,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1074,20 +1190,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "away_stats": {
-                "off_epa": -0.19207505807280542,
+                "off_epa_per_play": -0.19207505807280542,
                 "off_pass_epa": -0.23260329011827707,
                 "off_rush_epa": -0.11918680705130101,
-                "def_epa": -0.01367800384759903,
+                "def_epa_per_play": -0.01367800384759903,
                 "def_pass_epa": 0.0355981595814228,
-                "def_rush_epa": -0.059559504687786105
+                "def_rush_epa": -0.059559504687786105,
+                "plays": 50,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.1552246779203415,
+                "off_epa_per_play": 0.1552246779203415,
                 "off_pass_epa": 0.13863255679607392,
                 "off_rush_epa": 0.17176436819136146,
-                "def_epa": -0.19773852676153184,
+                "def_epa_per_play": -0.19773852676153184,
                 "def_pass_epa": -0.29391267895698553,
-                "def_rush_epa": -0.104131368547678
+                "def_rush_epa": -0.104131368547678,
+                "plays": 64,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 3.4,
@@ -1116,17 +1236,17 @@
                     "total": 45.5
                 },
                 "away_ml_ev": -14.1,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -2.2,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -26.0,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 21.6,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -16.2,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 7.7,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1136,20 +1256,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-21T00:20:00Z",
             "away_stats": {
-                "off_epa": -0.1785650134086609,
+                "off_epa_per_play": -0.1785650134086609,
                 "off_pass_epa": -0.3581201329827309,
                 "off_rush_epa": 0.11670927852392197,
-                "def_epa": 0.25804081670939927,
+                "def_epa_per_play": 0.25804081670939927,
                 "def_pass_epa": 0.3087877735495568,
-                "def_rush_epa": 0.21386877149343492
+                "def_rush_epa": 0.21386877149343492,
+                "plays": 53,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.1385184429585934,
+                "off_epa_per_play": 0.1385184429585934,
                 "off_pass_epa": -0.055513645708560946,
                 "off_rush_epa": 0.29859739542007446,
-                "def_epa": -0.278913002833724,
+                "def_epa_per_play": -0.278913002833724,
                 "def_pass_epa": -0.3596118348650635,
-                "def_rush_epa": -0.09060378223657609
+                "def_rush_epa": -0.09060378223657609,
+                "plays": 64,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 0.1,
@@ -1178,17 +1302,17 @@
                     "total": 47.0
                 },
                 "away_ml_ev": -17.8,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 2.3,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -41.0,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 41.5,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 14.3,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -16.9,
-                "under_units": ""
+                "under_units": 0
             }
         }
     ],
@@ -1200,20 +1324,24 @@
             "target_date": "2026-09-17",
             "commence_time": "2026-09-18T00:15:00Z",
             "away_stats": {
-                "off_epa": 0.016768451570533215,
+                "off_epa_per_play": 0.016768451570533215,
                 "off_pass_epa": 0.04835449308156967,
                 "off_rush_epa": -0.025308252125978467,
-                "def_epa": -0.0265233064070344,
+                "def_epa_per_play": -0.0265233064070344,
                 "def_pass_epa": -0.01417370866984129,
-                "def_rush_epa": -0.0559513146057725
+                "def_rush_epa": -0.0559513146057725,
+                "plays": 73,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.2109217971563339,
+                "off_epa_per_play": 0.2109217971563339,
                 "off_pass_epa": 0.3960927605628968,
                 "off_rush_epa": -0.08257916718721389,
-                "def_epa": 0.05292680598795414,
+                "def_epa_per_play": 0.05292680598795414,
                 "def_pass_epa": 0.010921223461627959,
-                "def_rush_epa": 0.10532148033380509
+                "def_rush_epa": 0.10532148033380509,
+                "plays": 52,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 25.3,
@@ -1227,32 +1355,32 @@
             },
             "market_data": {
                 "h2h": {
-                    "away": 206,
-                    "home": -235
+                    "away": 212,
+                    "home": -242
                 },
                 "spreads": {
-                    "away": -104,
-                    "home": -106,
+                    "away": 100,
+                    "home": -110,
                     "away_line": 5.5,
                     "home_line": -5.5
                 },
                 "totals": {
-                    "over": -115,
-                    "under": 102,
-                    "total": 54.5
+                    "over": -107,
+                    "under": -105,
+                    "total": 55.0
                 },
-                "away_ml_ev": -5.7,
-                "away_ml_units": "",
-                "home_ml_ev": -1.4,
-                "home_ml_units": "",
-                "away_sp_ev": -10.7,
-                "away_sp_units": "",
-                "home_sp_ev": 5.9,
-                "home_sp_units": "",
-                "over_ev": 4.6,
-                "over_units": "",
-                "under_ev": -11.0,
-                "under_units": ""
+                "away_ml_ev": -5.5,
+                "away_ml_units": 0,
+                "home_ml_ev": -1.5,
+                "home_ml_units": 0,
+                "away_sp_ev": -10.1,
+                "away_sp_units": 0,
+                "home_sp_ev": 5.1,
+                "home_sp_units": 0,
+                "over_ev": 7.0,
+                "over_units": 0,
+                "under_ev": -9.0,
+                "under_units": 0
             }
         },
         {
@@ -1262,20 +1390,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": 0.1369628742337227,
+                "off_epa_per_play": 0.1369628742337227,
                 "off_pass_epa": 0.18887316435575488,
                 "off_rush_epa": 0.04055737033486367,
-                "def_epa": 0.34159185737371445,
+                "def_epa_per_play": 0.34159185737371445,
                 "def_pass_epa": 0.3806513458490372,
-                "def_rush_epa": 0.30779066346585754
+                "def_rush_epa": 0.30779066346585754,
+                "plays": 62,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.2610784418880939,
+                "off_epa_per_play": -0.2610784418880939,
                 "off_pass_epa": -0.4876973938196898,
                 "off_rush_epa": -0.07164905518293381,
-                "def_epa": -0.2429689081851393,
+                "def_epa_per_play": -0.2429689081851393,
                 "def_pass_epa": -0.26487416252493856,
-                "def_rush_epa": -0.1960958890616894
+                "def_rush_epa": -0.1960958890616894,
+                "plays": 57,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 15.1,
@@ -1304,17 +1436,17 @@
                     "total": 44.0
                 },
                 "away_ml_ev": -13.7,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 11.5,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -33.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 30.0,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -7.2,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 3.5,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1324,20 +1456,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.04215216189622879,
+                "off_epa_per_play": -0.04215216189622879,
                 "off_pass_epa": -0.028772708773612977,
                 "off_rush_epa": -0.0731506735086441,
-                "def_epa": -0.011484107584692538,
+                "def_epa_per_play": -0.011484107584692538,
                 "def_pass_epa": 0.005529389530420304,
-                "def_rush_epa": -0.031727482378482816
+                "def_rush_epa": -0.031727482378482816,
+                "plays": 86,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.26397844180464747,
+                "off_epa_per_play": 0.26397844180464747,
                 "off_pass_epa": 0.2938195832073689,
                 "off_rush_epa": 0.24372930228710177,
-                "def_epa": -0.1879705246537924,
+                "def_epa_per_play": -0.1879705246537924,
                 "def_pass_epa": -0.3544482231140137,
-                "def_rush_epa": 0.08749921098351479
+                "def_rush_epa": 0.08749921098351479,
+                "plays": 60,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 1.0,
@@ -1366,17 +1502,17 @@
                     "total": 47.5
                 },
                 "away_ml_ev": -17.4,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 0.5,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -37.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 37.2,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -6.4,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -1.3,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1386,20 +1522,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.0387779861688614,
+                "off_epa_per_play": -0.0387779861688614,
                 "off_pass_epa": -0.022839391231536867,
                 "off_rush_epa": -0.04621180165559054,
-                "def_epa": -0.15975226759910585,
+                "def_epa_per_play": -0.15975226759910585,
                 "def_pass_epa": -0.07663524746894837,
-                "def_rush_epa": -0.3538603998720646
+                "def_rush_epa": -0.3538603998720646,
+                "plays": 59,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.34222955852746967,
+                "off_epa_per_play": 0.34222955852746967,
                 "off_pass_epa": 0.37724513560533524,
                 "off_rush_epa": 0.31302472203969955,
-                "def_epa": 0.1515024036169052,
+                "def_epa_per_play": 0.1515024036169052,
                 "def_pass_epa": 0.2120968483388424,
-                "def_rush_epa": 0.0438452993053943
+                "def_rush_epa": 0.0438452993053943,
+                "plays": 70,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 32.4,
@@ -1428,17 +1568,17 @@
                     "total": 48.5
                 },
                 "away_ml_ev": -3.7,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -2.8,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -6.6,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 1.3,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 20.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -26.9,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1448,20 +1588,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.0029388773255050182,
+                "off_epa_per_play": -0.0029388773255050182,
                 "off_pass_epa": -0.06369517110288143,
                 "off_rush_epa": 0.08276422806084156,
-                "def_epa": -0.1222076177597046,
+                "def_epa_per_play": -0.1222076177597046,
                 "def_pass_epa": -0.16486568152904513,
-                "def_rush_epa": -0.04719741344451904
+                "def_rush_epa": -0.04719741344451904,
+                "plays": 62,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.04897208176553249,
+                "off_epa_per_play": 0.04897208176553249,
                 "off_pass_epa": 0.028929087240248917,
                 "off_rush_epa": 0.07420884668827057,
-                "def_epa": 0.1512619823217392,
+                "def_epa_per_play": 0.1512619823217392,
                 "def_pass_epa": 0.31999222934246063,
-                "def_rush_epa": -0.11995744854211807
+                "def_rush_epa": -0.11995744854211807,
+                "plays": 73,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 82.1,
@@ -1475,32 +1619,32 @@
             },
             "market_data": {
                 "h2h": {
-                    "away": 133,
-                    "home": -151
+                    "away": 132,
+                    "home": -149
                 },
                 "spreads": {
-                    "away": -122,
-                    "home": 109,
+                    "away": -124,
+                    "home": 110,
                     "away_line": 3.0,
                     "home_line": -3.0
                 },
                 "totals": {
-                    "over": 100,
-                    "under": -117,
+                    "over": 103,
+                    "under": -120,
                     "total": 46.5
                 },
                 "away_ml_ev": 11.1,
-                "away_ml_units": "",
-                "home_ml_ev": -13.1,
-                "home_ml_units": "",
-                "away_sp_ev": 23.1,
-                "away_sp_units": "",
+                "away_ml_units": 0,
+                "home_ml_ev": -12.9,
+                "home_ml_units": 0,
+                "away_sp_ev": 22.5,
+                "away_sp_units": 0,
                 "home_sp_ev": -30.3,
-                "home_sp_units": "",
-                "over_ev": 0.0,
-                "over_units": "",
-                "under_ev": -7.3,
-                "under_units": ""
+                "home_sp_units": 0,
+                "over_ev": 0.7,
+                "over_units": 0,
+                "under_ev": -7.6,
+                "under_units": 0
             }
         },
         {
@@ -1510,20 +1654,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.18546198904514316,
+                "off_epa_per_play": -0.18546198904514316,
                 "off_pass_epa": -0.349051707983017,
                 "off_rush_epa": 0.01973995044827461,
-                "def_epa": 0.25136640667915344,
+                "def_epa_per_play": 0.25136640667915344,
                 "def_pass_epa": 0.6077478229999542,
-                "def_rush_epa": -0.04098859578371048
+                "def_rush_epa": -0.04098859578371048,
+                "plays": 49,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.14994733966886997,
+                "off_epa_per_play": -0.14994733966886997,
                 "off_pass_epa": -0.20308727622032166,
                 "off_rush_epa": -0.061811525374650955,
-                "def_epa": 0.0014075727201998236,
+                "def_epa_per_play": 0.0014075727201998236,
                 "def_pass_epa": -0.04477069675922394,
-                "def_rush_epa": 0.0633739560842514
+                "def_rush_epa": 0.0633739560842514,
+                "plays": 51,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 7.0,
@@ -1552,17 +1700,17 @@
                     "total": 42.0
                 },
                 "away_ml_ev": -13.6,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -0.6,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -25.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 24.6,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -8.4,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 4.0,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1572,20 +1720,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.11553358882665635,
+                "off_epa_per_play": -0.11553358882665635,
                 "off_pass_epa": 0.0013399034738540636,
                 "off_rush_epa": -0.34626815672963857,
-                "def_epa": -0.007865811884403232,
+                "def_epa_per_play": -0.007865811884403232,
                 "def_pass_epa": 0.03294124007225037,
-                "def_rush_epa": -0.04845691993832588
+                "def_rush_epa": -0.04845691993832588,
+                "plays": 67,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.1093789428472519,
+                "off_epa_per_play": 0.1093789428472519,
                 "off_pass_epa": 0.2891811013221741,
                 "off_rush_epa": -0.004501128941774369,
-                "def_epa": -0.06545493304729462,
+                "def_epa_per_play": -0.06545493304729462,
                 "def_pass_epa": -0.11735188364982604,
-                "def_rush_epa": 0.09484838768839837
+                "def_rush_epa": 0.09484838768839837,
+                "plays": 60,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 7.0,
@@ -1614,17 +1766,17 @@
                     "total": 45.0
                 },
                 "away_ml_ev": -15.9,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 16.8,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -37.8,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 34.7,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -15.1,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 10.8,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1634,20 +1786,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": -0.24317838083952667,
+                "off_epa_per_play": -0.24317838083952667,
                 "off_pass_epa": -0.26150657478719946,
                 "off_rush_epa": -0.20063743749633434,
-                "def_epa": -0.2524624280631542,
+                "def_epa_per_play": -0.2524624280631542,
                 "def_pass_epa": -0.479554183036089,
-                "def_rush_epa": -0.06273291725665332
+                "def_rush_epa": -0.06273291725665332,
+                "plays": 61,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.06963742971420289,
+                "off_epa_per_play": -0.06963742971420289,
                 "off_pass_epa": -0.06922969520092011,
                 "off_rush_epa": -0.07084665708243848,
-                "def_epa": 0.03429785072803497,
+                "def_epa_per_play": 0.03429785072803497,
                 "def_pass_epa": 0.11115779876708985,
-                "def_rush_epa": -0.05987597182393074
+                "def_rush_epa": -0.05987597182393074,
+                "plays": 67,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 51.5,
@@ -1676,17 +1832,17 @@
                     "total": 42.0
                 },
                 "away_ml_ev": 5.7,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -7.4,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 9.7,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -15.7,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -35.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 26.3,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1696,20 +1852,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T17:00:00Z",
             "away_stats": {
-                "off_epa": 0.061076159030199056,
+                "off_epa_per_play": 0.061076159030199056,
                 "off_pass_epa": 0.04341367110610008,
                 "off_rush_epa": 0.08279733788222075,
-                "def_epa": 0.033917476236820225,
+                "def_epa_per_play": 0.033917476236820225,
                 "def_pass_epa": 0.06583591401576996,
-                "def_rush_epa": -0.0013614255934953695
+                "def_rush_epa": -0.0013614255934953695,
+                "plays": 51,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.12683277130126952,
+                "off_epa_per_play": -0.12683277130126952,
                 "off_pass_epa": -0.2121856391429901,
                 "off_rush_epa": 0.07646195441484452,
-                "def_epa": 0.1549492657184601,
+                "def_epa_per_play": 0.1549492657184601,
                 "def_pass_epa": 0.358619374036789,
-                "def_rush_epa": 0.01100488305091858
+                "def_rush_epa": 0.01100488305091858,
+                "plays": 49,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 90.6,
@@ -1738,17 +1898,17 @@
                     "total": 40.0
                 },
                 "away_ml_ev": -0.2,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -12.6,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 22.4,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -25.1,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 17.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -22.0,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1758,20 +1918,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:05:00Z",
             "away_stats": {
-                "off_epa": 0.2767872214317322,
+                "off_epa_per_play": 0.2767872214317322,
                 "off_pass_epa": 0.6455436944961548,
                 "off_rush_epa": -0.030779566988348963,
-                "def_epa": -0.16465001851320268,
+                "def_epa_per_play": -0.16465001851320268,
                 "def_pass_epa": -0.31528590321540834,
-                "def_rush_epa": 0.024331719055771826
+                "def_rush_epa": 0.024331719055771826,
+                "plays": 53,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.268811122328043,
+                "off_epa_per_play": -0.268811122328043,
                 "off_pass_epa": -0.3480451159179211,
                 "off_rush_epa": -0.08355633933097126,
-                "def_epa": 0.11569018959999086,
+                "def_epa_per_play": 0.11569018959999086,
                 "def_pass_epa": -0.08600671142339707,
-                "def_rush_epa": 0.287621008977294
+                "def_rush_epa": 0.287621008977294,
+                "plays": 46,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 99.7,
@@ -1800,17 +1964,17 @@
                     "total": 45.5
                 },
                 "away_ml_ev": 17.8,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -17.4,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 41.0,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -41.6,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 9.9,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -16.8,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1820,20 +1984,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:05:00Z",
             "away_stats": {
-                "off_epa": -0.07439128756523133,
+                "off_epa_per_play": -0.07439128756523133,
                 "off_pass_epa": -0.026906093209981916,
                 "off_rush_epa": -0.12029805779457092,
-                "def_epa": -0.18386031575500966,
+                "def_epa_per_play": -0.18386031575500966,
                 "def_pass_epa": -0.21536587923765182,
-                "def_rush_epa": -0.12115875706076623
+                "def_rush_epa": -0.12115875706076623,
+                "plays": 64,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": -0.20225419998168948,
+                "off_epa_per_play": -0.20225419998168948,
                 "off_pass_epa": -0.16378762871026994,
                 "off_rush_epa": -0.2574981983751059,
-                "def_epa": 0.09952352792024613,
+                "def_epa_per_play": 0.09952352792024613,
                 "def_pass_epa": 0.17190719544887545,
-                "def_rush_epa": 0.011053171753883364
+                "def_rush_epa": 0.011053171753883364,
+                "plays": 51,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 86.8,
@@ -1862,17 +2030,17 @@
                     "total": 44.0
                 },
                 "away_ml_ev": 27.2,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -15.2,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 32.2,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -37.5,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -27.1,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 19.3,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1882,20 +2050,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "away_stats": {
-                "off_epa": 0.061441839486360554,
+                "off_epa_per_play": 0.061441839486360554,
                 "off_pass_epa": 0.16111143231391908,
                 "off_rush_epa": -0.05837522149085999,
-                "def_epa": -0.11226840615272522,
+                "def_epa_per_play": -0.11226840615272522,
                 "def_pass_epa": -0.125691194832325,
-                "def_rush_epa": -0.09738582968711854
+                "def_rush_epa": -0.09738582968711854,
+                "plays": 47,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.11161346137523652,
+                "off_epa_per_play": 0.11161346137523652,
                 "off_pass_epa": 0.19020405425690115,
                 "off_rush_epa": 0.012261466681957246,
-                "def_epa": -0.17747887372970583,
+                "def_epa_per_play": -0.17747887372970583,
                 "def_pass_epa": -0.11955757737159729,
-                "def_rush_epa": -0.2587564188987017
+                "def_rush_epa": -0.2587564188987017,
+                "plays": 69,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 25.3,
@@ -1924,17 +2096,17 @@
                     "total": 41.5
                 },
                 "away_ml_ev": -11.9,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 12.9,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -27.1,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 22.5,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -13.8,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 5.5,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -1944,20 +2116,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "away_stats": {
-                "off_epa": 0.04921325473114849,
+                "off_epa_per_play": 0.04921325473114849,
                 "off_pass_epa": 0.0856947128660977,
                 "off_rush_epa": 0.008018312230706214,
-                "def_epa": 0.08548014760017396,
+                "def_epa_per_play": 0.08548014760017396,
                 "def_pass_epa": 0.07655693888664246,
-                "def_rush_epa": 0.09666074067354204
+                "def_rush_epa": 0.09666074067354204,
+                "plays": 68,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.19610282629728318,
+                "off_epa_per_play": 0.19610282629728318,
                 "off_pass_epa": 0.27654657065868377,
                 "off_rush_epa": 0.049625704530626535,
-                "def_epa": 0.32858092784881593,
+                "def_epa_per_play": 0.32858092784881593,
                 "def_pass_epa": 0.6096006333827972,
-                "def_rush_epa": 0.06751999258995056
+                "def_rush_epa": 0.06751999258995056,
+                "plays": 52,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 61.6,
@@ -1986,17 +2162,17 @@
                     "total": 50.0
                 },
                 "away_ml_ev": 7.9,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -9.0,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": 16.3,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": -18.7,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 28.3,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -36.9,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -2006,20 +2182,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-20T20:25:00Z",
             "away_stats": {
-                "off_epa": -0.19207505807280542,
+                "off_epa_per_play": -0.19207505807280542,
                 "off_pass_epa": -0.23260329011827707,
                 "off_rush_epa": -0.11918680705130101,
-                "def_epa": -0.01367800384759903,
+                "def_epa_per_play": -0.01367800384759903,
                 "def_pass_epa": 0.0355981595814228,
-                "def_rush_epa": -0.059559504687786105
+                "def_rush_epa": -0.059559504687786105,
+                "plays": 50,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.1552246779203415,
+                "off_epa_per_play": 0.1552246779203415,
                 "off_pass_epa": 0.13863255679607392,
                 "off_rush_epa": 0.17176436819136146,
-                "def_epa": -0.19773852676153184,
+                "def_epa_per_play": -0.19773852676153184,
                 "def_pass_epa": -0.29391267895698553,
-                "def_rush_epa": -0.104131368547678
+                "def_rush_epa": -0.104131368547678,
+                "plays": 64,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 3.4,
@@ -2048,17 +2228,17 @@
                     "total": 45.5
                 },
                 "away_ml_ev": -14.1,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": -2.2,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -26.0,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 21.6,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": -16.2,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": 7.7,
-                "under_units": ""
+                "under_units": 0
             }
         },
         {
@@ -2068,20 +2248,24 @@
             "target_date": "2026-09-20",
             "commence_time": "2026-09-21T00:20:00Z",
             "away_stats": {
-                "off_epa": -0.1785650134086609,
+                "off_epa_per_play": -0.1785650134086609,
                 "off_pass_epa": -0.3581201329827309,
                 "off_rush_epa": 0.11670927852392197,
-                "def_epa": 0.25804081670939927,
+                "def_epa_per_play": 0.25804081670939927,
                 "def_pass_epa": 0.3087877735495568,
-                "def_rush_epa": 0.21386877149343492
+                "def_rush_epa": 0.21386877149343492,
+                "plays": 53,
+                "pace": 63.0
             },
             "home_stats": {
-                "off_epa": 0.1385184429585934,
+                "off_epa_per_play": 0.1385184429585934,
                 "off_pass_epa": -0.055513645708560946,
                 "off_rush_epa": 0.29859739542007446,
-                "def_epa": -0.278913002833724,
+                "def_epa_per_play": -0.278913002833724,
                 "def_pass_epa": -0.3596118348650635,
-                "def_rush_epa": -0.09060378223657609
+                "def_rush_epa": -0.09060378223657609,
+                "plays": 64,
+                "pace": 63.0
             },
             "simulation": {
                 "away_win_prob": 0.1,
@@ -2110,17 +2294,17 @@
                     "total": 47.0
                 },
                 "away_ml_ev": -17.8,
-                "away_ml_units": "",
+                "away_ml_units": 0,
                 "home_ml_ev": 2.3,
-                "home_ml_units": "",
+                "home_ml_units": 0,
                 "away_sp_ev": -41.0,
-                "away_sp_units": "",
+                "away_sp_units": 0,
                 "home_sp_ev": 41.5,
-                "home_sp_units": "",
+                "home_sp_units": 0,
                 "over_ev": 14.3,
-                "over_units": "",
+                "over_units": 0,
                 "under_ev": -16.9,
-                "under_units": ""
+                "under_units": 0
             }
         }
     ]
