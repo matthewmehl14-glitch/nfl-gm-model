@@ -18,7 +18,6 @@ REGIONS = 'us'
 MARKETS = 'h2h,spreads,totals'
 BOOKMAKER = 'pinnacle'
 
-# Standardizing team abbreviations from Odds API
 ODDS_API_TO_ABBR = {
     'Arizona Cardinals': 'ARI', 'Atlanta Falcons': 'ATL', 'Baltimore Ravens': 'BAL',
     'Buffalo Bills': 'BUF', 'Carolina Panthers': 'CAR', 'Chicago Bears': 'CHI',
@@ -33,7 +32,6 @@ ODDS_API_TO_ABBR = {
     'Tennessee Titans': 'TEN', 'Washington Commanders': 'WAS'
 }
 
-# Mapping ESPN Mascot names back to standard abbreviations
 ESPN_TEAM_MAPPING = {
     'Cardinals': 'ARI', 'Falcons': 'ATL', 'Ravens': 'BAL', 'Bills': 'BUF',
     'Panthers': 'CAR', 'Bears': 'CHI', 'Bengals': 'CIN', 'Browns': 'CLE',
@@ -46,7 +44,6 @@ ESPN_TEAM_MAPPING = {
 }
 
 # --- STATISTICAL ENGINE ---
-
 def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     print("Loading statistical baselines...")
     pbp_prior = nfl.import_pbp_data([prior_season])
@@ -90,11 +87,14 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
     away_proj = 21.0 + (away_adv * 10) 
     home_proj = 21.0 + (home_adv * 10) + 1.5 
 
-    away_sims = np.random.normal(away_proj, 10, num_sims)
-    home_sims = np.random.normal(home_proj, 10, num_sims)
+    # Rounding to integers to mimic true NFL scoring distributions
+    away_sims = np.round(np.random.normal(away_proj, 10, num_sims)).astype(int)
+    home_sims = np.round(np.random.normal(home_proj, 10, num_sims)).astype(int)
 
-    away_wins = np.sum(away_sims > home_sims)
-    home_wins = np.sum(home_sims > away_sims)
+    # Splitting ties for moneyline probabilities
+    ties = np.sum(away_sims == home_sims)
+    away_wins = np.sum(away_sims > home_sims) + (ties / 2)
+    home_wins = np.sum(home_sims > away_sims) + (ties / 2)
     
     total_sims = away_sims + home_sims
     margin_sims = home_sims - away_sims 
@@ -125,7 +125,6 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
     }
 
 # --- MATH & BETTING HELPERS ---
-
 def american_to_decimal(odds):
     if odds > 0: return 1 + (odds / 100.0)
     else: return 1 + (100.0 / abs(odds))
@@ -155,7 +154,6 @@ def calc_kelly_units(win_prob, odds, push_prob=0, fraction=0.25, max_unit=2.0):
     return round(min(adj_kelly, max_unit), 2)
 
 # --- GRADING / SCORE RETRIEVAL ---
-
 def grade_historical_scores():
     if not os.path.exists('history.csv'): return
     print("Checking for ungraded games in history.csv...")
@@ -163,7 +161,6 @@ def grade_historical_scores():
     df = pd.read_csv('history.csv')
     updated = False
     
-    # Identify unique dates that need grading
     ungraded_dates = df[(df['Actual_Away_Score'].isna()) | (df['Actual_Away_Score'] == 'N/A')]['Date'].unique()
     
     if len(ungraded_dates) == 0:
@@ -171,7 +168,6 @@ def grade_historical_scores():
         return
 
     for target_date in ungraded_dates:
-        # ESPN API requires YYYYMMDD format without hyphens
         dt_str = target_date.replace('-', '')
         url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={dt_str}"
         
@@ -206,7 +202,6 @@ def grade_historical_scores():
         print("history.csv updated successfully.")
 
 # --- LIVE ODDS SCRAPING ---
-
 def run_live_scraper():
     print("Running Live Odds Scraper...")
     if not ODDS_API_KEY:
@@ -232,7 +227,6 @@ def run_live_scraper():
             writer.writerow(history_fields)
             
     existing_history = pd.read_csv(history_file)
-    model_weight = 0.15 
     
     for game in games:
         away = ODDS_API_TO_ABBR.get(game['away_team'])
@@ -269,7 +263,6 @@ def run_live_scraper():
         if away_ml == 'N/A' or away_sp == 'N/A' or total_line == 'N/A':
             continue
             
-        # Save to history if the match doesn't exist yet
         match_exists = not existing_history.empty and not existing_history[(existing_history['Date'] == date) & (existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home)].empty
         
         if not match_exists:
