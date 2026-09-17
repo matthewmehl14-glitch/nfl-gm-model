@@ -99,15 +99,16 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
     total_sims = away_sims + home_sims
     margin_sims = home_sims - away_sims 
 
-    spread_home = spread_line if spread_line is not None else 0.0
+    spread_home = spread_line if spread_line is not None and spread_line != 'N/A' else 0.0
+    total_line_val = total_line if total_line is not None and total_line != 'N/A' else 45.0
     
-    over_win = np.sum(total_sims > total_line) if total_line else 0
-    under_win = np.sum(total_sims < total_line) if total_line else 0
-    ou_push = np.sum(total_sims == total_line) if total_line else 0
+    over_win = np.sum(total_sims > total_line_val)
+    under_win = np.sum(total_sims < total_line_val)
+    ou_push = np.sum(total_sims == total_line_val)
 
-    away_cover = np.sum(margin_sims < -spread_home) if spread_home is not None else 0
-    home_cover = np.sum(margin_sims > -spread_home) if spread_home is not None else 0
-    spread_push = np.sum(margin_sims == -spread_home) if spread_home is not None else 0
+    away_cover = np.sum(margin_sims < -spread_home)
+    home_cover = np.sum(margin_sims > -spread_home)
+    spread_push = np.sum(margin_sims == -spread_home)
 
     return {
         "away_proj_score": round(away_proj, 1),
@@ -117,14 +118,14 @@ def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0,
         "away_win_prob": (away_wins / num_sims) * 100.0,
         "home_win_prob": (home_wins / num_sims) * 100.0,
         "ou_probs": {
-            "over": over_win / num_sims if total_line else 0.0,
-            "under": under_win / num_sims if total_line else 0.0,
-            "push": ou_push / num_sims if total_line else 0.0
+            "over": over_win / num_sims,
+            "under": under_win / num_sims,
+            "push": ou_push / num_sims
         },
         "spread_probs": {
-            "away": away_cover / num_sims if spread_home is not None else 0.0,
-            "home": home_cover / num_sims if spread_home is not None else 0.0,
-            "push": spread_push / num_sims if spread_home is not None else 0.0
+            "away": away_cover / num_sims,
+            "home": home_cover / num_sims,
+            "push": spread_push / num_sims
         }
     }
 
@@ -298,24 +299,21 @@ def run_live_scraper():
                     total_line, over_odds = out['point'], out['price']
                 elif out['name'] == 'Under':
                     under_odds = out['price']
-
-        if away_ml == 'N/A' or away_sp == 'N/A' or total_line == 'N/A':
-            continue
             
         # CSV Deduplication Logic
         is_ungraded = existing_history['Actual_Away_Score'].isna() | (existing_history['Actual_Away_Score'] == 'N/A')
         match_exists = not existing_history[(existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home) & is_ungraded].empty
         
-        if not match_exists:
+        if not match_exists and (away_ml != 'N/A' or away_sp != 'N/A' or total_line != 'N/A'):
             with open(history_file, 'a', newline='') as f:
                 writer = csv.writer(f)
                 writer.writerow([date_str, away, home, away_ml, home_ml, away_sp, home_sp, total_line, 'N/A', 'N/A'])
 
-        # --- GENERATE DASHBOARD DATA ---
+        # --- GENERATE DASHBOARD DATA (ALLOWS MISSING LINES) ---
         sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, home_sp)
         
         # Moneyline Recs
-        away_ml_ev, home_ml_ev, away_ml_rec, home_ml_rec = 0.0, 0.0, 0.0, 0.0
+        away_ml_ev, home_ml_ev, away_ml_rec, home_ml_rec = None, None, None, None
         if away_ml != 'N/A' and home_ml != 'N/A':
             t_away, t_home = proportional_devig(away_ml, home_ml)
             b_away = (ml_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - ml_weight) * t_away)
@@ -330,7 +328,7 @@ def run_live_scraper():
                 home_ml_rec = calc_kelly_units(b_home * 100, home_ml)
 
         # Spread Recs
-        away_sp_ev, home_sp_ev, away_sp_rec, home_sp_rec = 0.0, 0.0, 0.0, 0.0
+        away_sp_ev, home_sp_ev, away_sp_rec, home_sp_rec = None, None, None, None
         if away_sp_odds != 'N/A' and home_sp_odds != 'N/A':
             t_sp_a, t_sp_h = proportional_devig(away_sp_odds, home_sp_odds)
             b_sp_a = (sp_weight * sim_res["spread_probs"]["away"]) + ((1.0 - sp_weight) * t_sp_a)
@@ -346,7 +344,7 @@ def run_live_scraper():
                 home_sp_rec = calc_kelly_units(b_sp_h * 100, home_sp_odds, b_sp_push * 100)
 
         # Total Recs
-        over_ev, under_ev, over_rec, under_rec = 0.0, 0.0, 0.0, 0.0
+        over_ev, under_ev, over_rec, under_rec = None, None, None, None
         if over_odds != 'N/A' and under_odds != 'N/A':
             t_ou_o, t_ou_u = proportional_devig(over_odds, under_odds)
             b_ou_o = (tot_weight * sim_res["ou_probs"]["over"]) + ((1.0 - tot_weight) * t_ou_o)
@@ -362,6 +360,8 @@ def run_live_scraper():
                 under_rec = calc_kelly_units(b_ou_u * 100, under_odds, b_ou_push * 100)
 
         dashboard_games.append({
+            "id": f"{away}_{home}",
+            "matchup": f"{away} @ {home}",
             "Date": date_str,
             "date": date_str,
             "Away_Team": away,
@@ -370,6 +370,8 @@ def run_live_scraper():
             "HomeTeam": home,
             "away_team": away,
             "home_team": home,
+            "away_team_full": game['away_team'],
+            "home_team_full": game['home_team'],
             "commence_time": game['commence_time'],
             
             "away_prob": round(sim_res["away_win_prob"], 1),
@@ -383,30 +385,29 @@ def run_live_scraper():
             
             "away_ml": away_ml,
             "home_ml": home_ml,
-            "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev else 0,
-            "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev else 0,
-            "away_ml_rec": away_ml_rec,
-            "home_ml_rec": home_ml_rec,
+            "away_ml_ev": round(away_ml_ev, 1) if away_ml_ev is not None else None,
+            "home_ml_ev": round(home_ml_ev, 1) if home_ml_ev is not None else None,
+            "away_ml_rec": away_ml_rec if away_ml_rec is not None else None,
+            "home_ml_rec": home_ml_rec if home_ml_rec is not None else None,
             
             "away_spread": away_sp,
             "home_spread": home_sp,
             "away_spread_odds": away_sp_odds,
             "home_spread_odds": home_sp_odds,
-            "away_spread_ev": round(away_sp_ev, 1) if away_sp_ev else 0,
-            "home_spread_ev": round(home_sp_ev, 1) if home_sp_ev else 0,
-            "away_spread_rec": away_sp_rec,
-            "home_spread_rec": home_sp_rec,
+            "away_spread_ev": round(away_sp_ev, 1) if away_sp_ev is not None else None,
+            "home_spread_ev": round(home_sp_ev, 1) if home_sp_ev is not None else None,
+            "away_spread_rec": away_sp_rec if away_sp_rec is not None else None,
+            "home_spread_rec": home_sp_rec if home_sp_rec is not None else None,
             
             "total_line": total_line,
             "over_odds": over_odds,
             "under_odds": under_odds,
-            "over_ev": round(over_ev, 1) if over_ev else 0,
-            "under_ev": round(under_ev, 1) if under_ev else 0,
-            "over_rec": over_rec,
-            "under_rec": under_rec
+            "over_ev": round(over_ev, 1) if over_ev is not None else None,
+            "under_ev": round(under_ev, 1) if under_ev is not None else None,
+            "over_rec": over_rec if over_rec is not None else None,
+            "under_rec": under_rec if under_rec is not None else None
         })
 
-    # Grab the date of the first game to serve as the slate identifier for the frontend
     primary_date = dashboard_games[0]['date'] if dashboard_games else (datetime.utcnow() - timedelta(hours=5)).strftime('%Y-%m-%d')
     
     output_json = {
@@ -414,12 +415,14 @@ def run_live_scraper():
         "slate": primary_date,
         "slate_date": primary_date,
         "date": primary_date,
-        "games": dashboard_games
+        "games": dashboard_games,
+        "matches": dashboard_games,
+        "matchups": dashboard_games
     }
     with open('data.json', 'w') as f:
         json.dump(output_json, f, indent=4)
 
-    print("Scraping, JSON export, and line updates complete.")
+    print(f"Scraping, JSON export, and line updates complete. Exported {len(dashboard_games)} games.")
 
 if __name__ == '__main__':
     grade_historical_scores()
