@@ -1,448 +1,284 @@
 import os
-import requests
 import json
 import csv
+import requests
 import numpy as np
+import pandas as pd
+import scipy.stats as stats
 import nfl_data_py as nfl
-from datetime import datetime, timedelta
+from datetime import datetime
 
-TEAM_MAPPING = {
-    "Arizona Cardinals": "ARI", "Atlanta Falcons": "ATL", "Baltimore Ravens": "BAL",
-    "Buffalo Bills": "BUF", "Carolina Panthers": "CAR", "Chicago Bears": "CHI",
-    "Cincinnati Bengals": "CIN", "Cleveland Browns": "CLE", "Dallas Cowboys": "DAL",
-    "Denver Broncos": "DEN", "Detroit Lions": "DET", "Green Bay Packers": "GB",
-    "Houston Texans": "HOU", "Indianapolis Colts": "IND", "Jacksonville Jaguars": "JAX",
-    "Kansas City Chiefs": "KC", "Las Vegas Raiders": "LV", "Los Angeles Chargers": "LAC",
-    "Los Angeles Rams": "LA", "Miami Dolphins": "MIA", "Minnesota Vikings": "MIN",
-    "New England Patriots": "NE", "New Orleans Saints": "NO", "New York Giants": "NYG",
-    "New York Jets": "NYJ", "Philadelphia Eagles": "PHI", "Pittsburgh Steelers": "PIT",
-    "San Francisco 49ers": "SF", "Seattle Seahawks": "SEA", "Tampa Bay Buccaneers": "TB",
-    "Tennessee Titans": "TEN", "Washington Commanders": "WAS"
+# Set seed to lock in Monte Carlo variance
+np.random.seed(42)
+
+# --- CONFIGURATION & MAPPINGS ---
+ODDS_API_KEY = os.environ.get('ODDS_API_KEY', '')
+SPORT = 'americanfootball_nfl'
+REGIONS = 'us'
+MARKETS = 'h2h,spreads,totals'
+BOOKMAKER = 'pinnacle'
+
+# Standardizing team abbreviations from Odds API
+ODDS_API_TO_ABBR = {
+    'Arizona Cardinals': 'ARI', 'Atlanta Falcons': 'ATL', 'Baltimore Ravens': 'BAL',
+    'Buffalo Bills': 'BUF', 'Carolina Panthers': 'CAR', 'Chicago Bears': 'CHI',
+    'Cincinnati Bengals': 'CIN', 'Cleveland Browns': 'CLE', 'Dallas Cowboys': 'DAL',
+    'Denver Broncos': 'DEN', 'Detroit Lions': 'DET', 'Green Bay Packers': 'GB',
+    'Houston Texans': 'HOU', 'Indianapolis Colts': 'IND', 'Jacksonville Jaguars': 'JAX',
+    'Kansas City Chiefs': 'KC', 'Las Vegas Raiders': 'LV', 'Los Angeles Chargers': 'LAC',
+    'Los Angeles Rams': 'LAR', 'Miami Dolphins': 'MIA', 'Minnesota Vikings': 'MIN',
+    'New England Patriots': 'NE', 'New Orleans Saints': 'NO', 'New York Giants': 'NYG',
+    'New York Jets': 'NYJ', 'Philadelphia Eagles': 'PHI', 'Pittsburgh Steelers': 'PIT',
+    'San Francisco 49ers': 'SF', 'Seattle Seahawks': 'SEA', 'Tampa Bay Buccaneers': 'TB',
+    'Tennessee Titans': 'TEN', 'Washington Commanders': 'WAS'
 }
 
-def load_season_pbp(season):
-    """Safely fetch play-by-play data, filtering out garbage time (WP < 5% or > 95%)."""
+# Mapping ESPN Mascot names back to standard abbreviations
+ESPN_TEAM_MAPPING = {
+    'Cardinals': 'ARI', 'Falcons': 'ATL', 'Ravens': 'BAL', 'Bills': 'BUF',
+    'Panthers': 'CAR', 'Bears': 'CHI', 'Bengals': 'CIN', 'Browns': 'CLE',
+    'Cowboys': 'DAL', 'Broncos': 'DEN', 'Lions': 'DET', 'Packers': 'GB',
+    'Texans': 'HOU', 'Colts': 'IND', 'Jaguars': 'JAX', 'Chiefs': 'KC',
+    'Raiders': 'LV', 'Chargers': 'LAC', 'Rams': 'LAR', 'Dolphins': 'MIA',
+    'Vikings': 'MIN', 'Patriots': 'NE', 'Saints': 'NO', 'Giants': 'NYG',
+    'Jets': 'NYJ', 'Eagles': 'PHI', 'Steelers': 'PIT', '49ers': 'SF',
+    'Seahawks': 'SEA', 'Buccaneers': 'TB', 'Titans': 'TEN', 'Commanders': 'WAS'
+}
+
+# --- STATISTICAL ENGINE ---
+
+def get_blended_nfl_stats(prior_season=2025, current_season=2026):
+    print("Loading statistical baselines...")
+    pbp_prior = nfl.import_pbp_data([prior_season])
     try:
-        pbp = nfl.import_pbp_data([season])
-        if pbp is not None and not pbp.empty:
-            pbp = pbp[(pbp['play_type'].isin(['pass', 'run'])) & (pbp['epa'].notna())]
-            # Garbage time filter
-            if 'wp' in pbp.columns:
-                pbp = pbp[(pbp['wp'] >= 0.05) & (pbp['wp'] <= 0.95)]
-            return pbp
-    except Exception as e:
-        print(f"Notice: No data available for {season} ({e}).")
-    return None
+        pbp_curr = nfl.import_pbp_data([current_season])
+    except:
+        pbp_curr = pd.DataFrame()
 
-def compute_raw_stats(pbp):
-    """Blends EPA (60%) and Success Rate (40%) across a 75/25 Pass/Rush split."""
-    if pbp is None or pbp.empty:
-        return {}
+    def agg_epa(df):
+        if df.empty: return {}
+        df = df[(df['play_type'].isin(['pass', 'run'])) & (df['epa'].notna())]
+        team_epa = df.groupby('posteam')['epa'].mean().to_dict()
+        def_epa = df.groupby('defteam')['epa'].mean().to_dict()
+        
+        stats_dict = {}
+        for t in team_epa.keys():
+            stats_dict[t] = {
+                'off_epa': team_epa.get(t, 0),
+                'def_epa': def_epa.get(t, 0)
+            }
+        return stats_dict
 
-    pbp = pbp.copy()
-    pbp['success'] = (pbp['epa'] > 0).astype(int)
+    prior_stats = agg_epa(pbp_prior)
+    curr_stats = agg_epa(pbp_curr)
 
-    off_stats = pbp.groupby(['posteam', 'play_type']).agg(epa=('epa', 'mean'), sr=('success', 'mean')).reset_index()
-    def_stats = pbp.groupby(['defteam', 'play_type']).agg(epa=('epa', 'mean'), sr=('success', 'mean')).reset_index()
+    blended = {}
+    for t in prior_stats.keys():
+        if t in curr_stats and pbp_curr.shape[0] > 1000:
+            blended[t] = {
+                'off_epa': 0.8 * curr_stats[t]['off_epa'] + 0.2 * prior_stats[t]['off_epa'],
+                'def_epa': 0.8 * curr_stats[t]['def_epa'] + 0.2 * prior_stats[t]['def_epa']
+            }
+        else:
+            blended[t] = prior_stats[t]
+    return blended
+
+def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0, num_sims=10000):
+    away_adv = away_stats['off_epa'] - home_stats['def_epa']
+    home_adv = home_stats['off_epa'] - away_stats['def_epa']
+
+    away_proj = 21.0 + (away_adv * 10) 
+    home_proj = 21.0 + (home_adv * 10) + 1.5 
+
+    away_sims = np.random.normal(away_proj, 10, num_sims)
+    home_sims = np.random.normal(home_proj, 10, num_sims)
+
+    away_wins = np.sum(away_sims > home_sims)
+    home_wins = np.sum(home_sims > away_sims)
     
-    vol = pbp.groupby('posteam').agg(plays=('play_id', 'count'), games=('game_id', 'nunique')).reset_index()
+    total_sims = away_sims + home_sims
+    margin_sims = home_sims - away_sims 
 
-    stats = {}
-    for _, row in vol.iterrows():
-        team = row['posteam']
-        t_off = off_stats[off_stats['posteam'] == team]
-        pass_off = t_off[t_off['play_type'] == 'pass']
-        run_off = t_off[t_off['play_type'] == 'run']
-        
-        off_pass_epa = pass_off['epa'].values[0] if len(pass_off) > 0 else 0.0
-        off_rush_epa = run_off['epa'].values[0] if len(run_off) > 0 else 0.0
-        off_pass_sr = pass_off['sr'].values[0] if len(pass_off) > 0 else 0.0
-        off_rush_sr = run_off['sr'].values[0] if len(run_off) > 0 else 0.0
-        
-        # 75/25 Pass/Rush Split
-        comp_off_epa = (0.75 * off_pass_epa) + (0.25 * off_rush_epa)
-        comp_off_sr = (0.75 * off_pass_sr) + (0.25 * off_rush_sr)
-        
-        # Drive Quality (60% EPA, 40% SR relative to NFL avg of 0.44)
-        off_dq = (0.60 * comp_off_epa) + (0.40 * (comp_off_sr - 0.44))
+    spread_home = spread_line if spread_line is not None else 0
+    
+    over_win = np.sum(total_sims > total_line) if total_line else 0
+    under_win = np.sum(total_sims < total_line) if total_line else 0
+    ou_push = np.sum(total_sims == total_line) if total_line else 0
 
-        stats[team] = {
-            "off_epa_per_play": float(off_dq),
-            "off_pass_epa": float(off_pass_epa),
-            "off_rush_epa": float(off_rush_epa),
-            "plays": int(row['plays']),
-            "pace": float(row['plays'] / row['games']) if row['games'] > 0 else 63.0
+    away_cover = np.sum(margin_sims < -spread_home) if spread_home else 0
+    home_cover = np.sum(margin_sims > -spread_home) if spread_home else 0
+    spread_push = np.sum(margin_sims == -spread_home) if spread_home else 0
+
+    return {
+        "away_win_prob": away_wins / num_sims * 100,
+        "home_win_prob": home_wins / num_sims * 100,
+        "ou_probs": {
+            "over": over_win / num_sims if total_line else 0,
+            "under": under_win / num_sims if total_line else 0,
+            "push": ou_push / num_sims if total_line else 0
+        },
+        "spread_probs": {
+            "away": away_cover / num_sims if spread_home else 0,
+            "home": home_cover / num_sims if spread_home else 0,
+            "push": spread_push / num_sims if spread_home else 0
         }
-
-    for team in stats.keys():
-        t_def = def_stats[def_stats['defteam'] == team]
-        pass_def = t_def[t_def['play_type'] == 'pass']
-        run_def = t_def[t_def['play_type'] == 'run']
-        
-        def_pass_epa = pass_def['epa'].values[0] if len(pass_def) > 0 else 0.0
-        def_rush_epa = run_def['epa'].values[0] if len(run_def) > 0 else 0.0
-        def_pass_sr = pass_def['sr'].values[0] if len(pass_def) > 0 else 0.0
-        def_rush_sr = run_def['sr'].values[0] if len(run_def) > 0 else 0.0
-        
-        comp_def_epa = (0.75 * def_pass_epa) + (0.25 * def_rush_epa)
-        comp_def_sr = (0.75 * def_pass_sr) + (0.25 * def_rush_sr)
-        
-        def_dq = (0.60 * comp_def_epa) + (0.40 * (comp_def_sr - 0.44))
-        
-        stats[team].update({
-            "def_epa_per_play": float(def_dq),
-            "def_pass_epa": float(def_pass_epa),
-            "def_rush_epa": float(def_rush_epa)
-        })
-
-    return stats
-
-def get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0):
-    print(f"Loading {prior_season} baseline data...")
-    pbp_prior = load_season_pbp(prior_season)
-    prior_stats = compute_raw_stats(pbp_prior)
-
-    print(f"Checking for {current_season} in-season data...")
-    pbp_current = load_season_pbp(current_season)
-    current_stats = compute_raw_stats(pbp_current)
-
-    blended_stats = {}
-    all_teams = set(prior_stats.keys()).union(set(current_stats.keys()))
-
-    for team in all_teams:
-        p_team = prior_stats.get(team, {})
-        c_team = current_stats.get(team, {})
-
-        current_plays = c_team.get("plays", 0)
-        w_current = min(1.0, current_plays / sample_threshold)
-        w_prior = 1.0 - w_current
-
-        metrics = ["off_epa_per_play", "off_pass_epa", "off_rush_epa", "def_epa_per_play", "def_pass_epa", "def_rush_epa", "pace"]
-
-        blended_stats[team] = {"plays": current_plays}
-        for m in metrics:
-            val_prior = p_team.get(m, 0.0)
-            val_current = c_team.get(m, val_prior)
-            blended_stats[team][m] = round((w_current * val_current) + (w_prior * val_prior), 3)
-
-    return blended_stats
-
-def get_pinnacle_odds(api_key):
-    if not api_key: return {}
-    cutoff = (datetime.utcnow() + timedelta(days=7)).strftime('%Y-%m-%dT%H:%M:%SZ')
-    url = f"https://api.the-odds-api.com/v4/sports/americanfootball_nfl/odds/?apiKey={api_key}&bookmakers=pinnacle&markets=h2h,spreads,totals&oddsFormat=american&commenceTimeTo={cutoff}"
-    
-    try:
-        res = requests.get(url)
-        res.raise_for_status()
-        data = res.json()
-        odds_dict = {}
-        for game in data:
-            home, away = game.get('home_team'), game.get('away_team')
-            if home in TEAM_MAPPING and away in TEAM_MAPPING:
-                home_abbr, away_abbr = TEAM_MAPPING[home], TEAM_MAPPING[away]
-                matchup_key = f"{away_abbr}@{home_abbr}"
-                
-                game_odds = {'h2h': {}, 'spreads': {}, 'totals': {}}
-                for book in game.get('bookmakers', []):
-                    if book['key'] == 'pinnacle':
-                        for market in book.get('markets', []):
-                            for out in market['outcomes']:
-                                if market['key'] == 'h2h':
-                                    if out['name'] == home: game_odds['h2h']['home'] = out['price']
-                                    elif out['name'] == away: game_odds['h2h']['away'] = out['price']
-                                elif market['key'] == 'spreads':
-                                    if out['name'] == home: 
-                                        game_odds['spreads']['home'] = out['price']
-                                        game_odds['spreads']['home_line'] = out['point']
-                                    elif out['name'] == away: 
-                                        game_odds['spreads']['away'] = out['price']
-                                        game_odds['spreads']['away_line'] = out['point']
-                                elif market['key'] == 'totals':
-                                    if out['name'] == 'Over':
-                                        game_odds['totals']['over'] = out['price']
-                                        game_odds['totals']['point'] = out.get('point')
-                                    elif out['name'] == 'Under':
-                                        game_odds['totals']['under'] = out['price']
-                odds_dict[matchup_key] = game_odds
-        return odds_dict
-    except Exception as e:
-        print(f"Odds API Error: {e}")
-        return {}
-
-def american_to_decimal(am_odds):
-    return (am_odds / 100.0) + 1.0 if am_odds > 0 else (100.0 / abs(am_odds)) + 1.0
-
-def proportional_devig(odds_a, odds_b):
-    if not odds_a or not odds_b:
-        return 0.5, 0.5
-    dec_a = american_to_decimal(odds_a)
-    dec_b = american_to_decimal(odds_b)
-    imp_a = 1.0 / dec_a
-    imp_b = 1.0 / dec_b
-    total_imp = imp_a + imp_b
-    if total_imp == 0: return 0.5, 0.5
-    return imp_a / total_imp, imp_b / total_imp
-
-def calculate_ev(prob_pct, am_odds, push_pct=0.0):
-    if not am_odds or prob_pct == 0: return None
-    prob, p_push, dec = prob_pct / 100.0, push_pct / 100.0, american_to_decimal(am_odds)
-    return round(((prob * dec) - 1.0 + p_push) * 100, 1)
-
-def calc_kelly_units(prob_pct, am_odds, push_pct=0.0, multiplier=0.25):
-    if not am_odds or prob_pct == 0: return 0.0
-    prob = prob_pct / 100.0
-    b = american_to_decimal(am_odds) - 1.0
-    q = 1.0 - prob
-    k = ((b * prob) - q) / b
-    if k > 0:
-        units = round((k * 100) * multiplier, 2)
-        return min(units, 2.0)
-    return 0.0
-
-def simulate_nfl_game(away_epa, home_epa, total_line=None, spread_line=None, iterations=10000):
-    expected_plays = (away_epa.get("pace", 63.0) + home_epa.get("pace", 63.0)) / 2.0
-    scale_factor = 0.55
-    away_net_epa = (away_epa["off_epa_per_play"] + home_epa["def_epa_per_play"]) * scale_factor
-    home_net_epa = (home_epa["off_epa_per_play"] + away_epa["def_epa_per_play"]) * scale_factor
-    
-    away_exp = max(13.0, min(34.0, 21.5 + (away_net_epa * expected_plays)))
-    home_exp = max(13.0, min(34.0, 23.0 + (home_net_epa * expected_plays)))
-    
-    away_sims = np.random.normal(away_exp, 9.5, iterations)
-    home_sims = np.random.normal(home_exp, 9.5, iterations)
-    
-    margin_sims = np.round(home_sims - away_sims)
-    total_sims = np.round(away_sims + home_sims)
-    
-    for i in range(iterations):
-        if margin_sims[i] in [2, 4] and np.random.random() < 0.35: margin_sims[i] = 3
-        elif margin_sims[i] in [-2, -4] and np.random.random() < 0.35: margin_sims[i] = -3
-        elif margin_sims[i] in [6, 8] and np.random.random() < 0.25: margin_sims[i] = 7
-        elif margin_sims[i] in [-6, -8] and np.random.random() < 0.25: margin_sims[i] = -7
-        elif margin_sims[i] in [9, 11] and np.random.random() < 0.20: margin_sims[i] = 10
-        elif margin_sims[i] in [-9, -11] and np.random.random() < 0.20: margin_sims[i] = -10
-    
-    home_win = np.sum(margin_sims > 0)
-    away_win = np.sum(margin_sims < 0)
-    
-    results = {
-        "away_win_prob": float(away_win / iterations) * 100,
-        "home_win_prob": float(home_win / iterations) * 100,
-        "away_proj": round(float(np.mean(away_sims)), 1),
-        "home_proj": round(float(np.mean(home_sims)), 1),
-        "total_proj": round(float(np.mean(total_sims)), 1),
-        "spread_probs": {"away": 0, "home": 0, "push": 0},
-        "ou_probs": {"over": 0, "under": 0, "push": 0}
     }
+
+# --- MATH & BETTING HELPERS ---
+
+def american_to_decimal(odds):
+    if odds > 0: return 1 + (odds / 100.0)
+    else: return 1 + (100.0 / abs(odds))
+
+def proportional_devig(odds1, odds2):
+    p1 = 1 / american_to_decimal(odds1)
+    p2 = 1 / american_to_decimal(odds2)
+    total = p1 + p2
+    return p1 / total, p2 / total
+
+def calculate_ev(win_prob, odds, push_prob=0):
+    dec_odds = american_to_decimal(odds)
+    win_p = win_prob / 100.0
+    push_p = push_prob / 100.0
+    loss_p = 1.0 - win_p - push_p
+    profit_on_win = dec_odds - 1.0
+    return ((win_p * profit_on_win) - loss_p) * 100
+
+def calc_kelly_units(win_prob, odds, push_prob=0, fraction=0.25, max_unit=2.0):
+    dec_odds = american_to_decimal(odds)
+    win_p = win_prob / 100.0
+    b = dec_odds - 1.0
+    if b <= 0: return 0.0
+    kelly_f = (win_p * b - (1.0 - win_p)) / b
+    if kelly_f <= 0: return 0.0
+    adj_kelly = kelly_f * fraction * 100 
+    return round(min(adj_kelly, max_unit), 2)
+
+# --- GRADING / SCORE RETRIEVAL ---
+
+def grade_historical_scores():
+    if not os.path.exists('history.csv'): return
+    print("Checking for ungraded games in history.csv...")
     
-    if spread_line is not None:
-        home_cover = np.sum(margin_sims > spread_line * -1)
-        away_cover = np.sum(margin_sims < spread_line * -1)
-        push_spread = np.sum(margin_sims == spread_line * -1)
-        results["spread_probs"] = {
-            "away": float(away_cover / iterations),
-            "home": float(home_cover / iterations),
-            "push": float(push_spread / iterations)
-        }
-        
-    if total_line is not None:
-        over = np.sum(total_sims > total_line)
-        under = np.sum(total_sims < total_line)
-        push_tot = np.sum(total_sims == total_line)
-        results["ou_probs"] = {
-            "over": float(over / iterations),
-            "under": float(under / iterations),
-            "push": float(push_tot / iterations)
-        }
-        
-    return results
-
-def update_history_csv(todays_games, date_str):
-    file_name = 'history.csv'
-    headers = [
-        'Date', 'Away_Team', 'Home_Team', 'Away_Win_Prob', 'Home_Win_Prob',
-        'Away_Proj_Score', 'Home_Proj_Score', 'Proj_Total',
-        'Pinnacle_Away_ML', 'Pinnacle_Home_ML', 'Pinnacle_Away_Spread', 'Pinnacle_Home_Spread', 'Pinnacle_Total_Line',
-        'Away_ML_EV', 'Home_ML_EV', 'Away_Sp_EV', 'Home_Sp_EV', 'Over_EV', 'Under_EV',
-        'Actual_Away_Score', 'Actual_Home_Score', 'Actual_Total'
-    ]
+    df = pd.read_csv('history.csv')
+    updated = False
     
-    existing_data = {}
-    if os.path.exists(file_name):
-        with open(file_name, mode='r', newline='', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                key = f"{row['Date']}_{row['Away_Team']}_{row['Home_Team']}"
-                existing_data[key] = row
-                
-    for game in todays_games:
-        sim = game['simulation']
-        mkt = game['market_data']
-        key = f"{date_str}_{game['away_team']}_{game['home_team']}"
-        
-        actual_away = existing_data.get(key, {}).get('Actual_Away_Score', 'N/A')
-        actual_home = existing_data.get(key, {}).get('Actual_Home_Score', 'N/A')
-        actual_total = existing_data.get(key, {}).get('Actual_Total', 'N/A')
-
-        existing_data[key] = {
-            'Date': date_str,
-            'Away_Team': game['away_team'],
-            'Home_Team': game['home_team'],
-            'Away_Win_Prob': sim.get('away_win_prob', 'N/A'),
-            'Home_Win_Prob': sim.get('home_win_prob', 'N/A'),
-            'Away_Proj_Score': sim.get('away_proj', 'N/A'),
-            'Home_Proj_Score': sim.get('home_proj', 'N/A'),
-            'Proj_Total': sim.get('total_proj', 'N/A'),
-            'Pinnacle_Away_ML': mkt.get('h2h', {}).get('away', 'N/A'),
-            'Pinnacle_Home_ML': mkt.get('h2h', {}).get('home', 'N/A'),
-            'Pinnacle_Away_Spread': mkt.get('spreads', {}).get('away_line', 'N/A'),
-            'Pinnacle_Home_Spread': mkt.get('spreads', {}).get('home_line', 'N/A'),
-            'Pinnacle_Total_Line': mkt.get('totals', {}).get('point', 'N/A'),
-            'Away_ML_EV': mkt.get('away_ml_ev', 'N/A'),
-            'Home_ML_EV': mkt.get('home_ml_ev', 'N/A'),
-            'Away_Sp_EV': mkt.get('away_sp_ev', 'N/A'),
-            'Home_Sp_EV': mkt.get('home_sp_ev', 'N/A'),
-            'Over_EV': mkt.get('over_ev', 'N/A'),
-            'Under_EV': mkt.get('under_ev', 'N/A'),
-            'Actual_Away_Score': actual_away,
-            'Actual_Home_Score': actual_home,
-            'Actual_Total': actual_total
-        }
-        
-    try:
-        unique_dates = set([row['Date'].replace("-", "") for row in existing_data.values() if row.get('Actual_Away_Score') in ['N/A', '', None]])
-        
-        for u_date in unique_dates:
-            espn_url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={u_date}"
-            res = requests.get(espn_url)
-            if res.status_code == 200:
-                espn_data = res.json()
-                for event in espn_data.get('events', []):
-                    competition = event['competitions'][0]
-                    status = competition['status']['type']
-                    if status['completed']:
-                        competitors = competition['competitors']
-                        team1 = competitors[0]
-                        team2 = competitors[1]
-                        
-                        t1_abbr = team1['team']['abbreviation']
-                        t2_abbr = team2['team']['abbreviation']
-                        t1_abbr = "LA" if t1_abbr == "LAR" else ("WAS" if t1_abbr == "WSH" else t1_abbr)
-                        t2_abbr = "LA" if t2_abbr == "LAR" else ("WAS" if t2_abbr == "WSH" else t2_abbr)
-                        
-                        for row in existing_data.values():
-                            if row['Date'].replace("-", "") == u_date and row.get('Actual_Away_Score') in ['N/A', '', None]:
-                                if (row['Away_Team'] == t1_abbr and row['Home_Team'] == t2_abbr) or (row['Away_Team'] == t2_abbr and row['Home_Team'] == t1_abbr):
-                                    if team1['homeAway'] == 'home':
-                                        home_s = int(team1['score'])
-                                        away_s = int(team2['score'])
-                                    else:
-                                        away_s = int(team1['score'])
-                                        home_s = int(team2['score'])
-                                        
-                                    row['Actual_Away_Score'] = away_s
-                                    row['Actual_Home_Score'] = home_s
-                                    row['Actual_Total'] = away_s + home_s
-    except Exception as e:
-        print(f"Could not auto-fetch ESPN final scores: {e}")
-        
-    with open(file_name, mode='w', newline='', encoding='utf-8') as f:
-        writer = csv.DictWriter(f, fieldnames=headers)
-        writer.writeheader()
-        for row in existing_data.values():
-            writer.writerow(row)
-
-def generate_nfl_json():
-    print("Executing dynamic 2025/2026 Bayesian EPA blend...")
-    epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026, sample_threshold=400.0)
+    # Identify unique dates that need grading
+    ungraded_dates = df[(df['Actual_Away_Score'].isna()) | (df['Actual_Away_Score'] == 'N/A')]['Date'].unique()
     
-    api_key = os.environ.get("ODDS_API_KEY")
-    pinnacle_data = get_pinnacle_odds(api_key)
-    todays_games = []
+    if len(ungraded_dates) == 0:
+        print("All games are graded.")
+        return
 
-    for match_key, mkt in pinnacle_data.items():
-        away_abbr, home_abbr = match_key.split('@')
-        if away_abbr in epa_stats and home_abbr in epa_stats:
-            total_line = mkt.get('totals', {}).get('point')
-            spread_line = mkt.get('spreads', {}).get('home_line')
+    for target_date in ungraded_dates:
+        # ESPN API requires YYYYMMDD format without hyphens
+        dt_str = target_date.replace('-', '')
+        url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={dt_str}"
+        
+        resp = requests.get(url)
+        if resp.status_code != 200: continue
+        data = resp.json()
+        
+        scores = {}
+        for event in data.get('events', []):
+            for comp in event.get('competitions', []):
+                if comp.get('status', {}).get('type', {}).get('completed', False):
+                    for team in comp.get('competitors', []):
+                        mascot = team.get('team', {}).get('name', '')
+                        score = team.get('score', 0)
+                        home_away = team.get('homeAway')
+                        abbr = ESPN_TEAM_MAPPING.get(mascot)
+                        if abbr:
+                            scores[f"{abbr}_{home_away}"] = score
+        
+        for idx, row in df[df['Date'] == target_date].iterrows():
+            away = row['Away_Team']
+            home = row['Home_Team']
             
-            sim_res = simulate_nfl_game(
-                epa_stats[away_abbr], epa_stats[home_abbr], total_line, spread_line
-            )
+            if f"{away}_away" in scores and f"{home}_home" in scores:
+                df.at[idx, 'Actual_Away_Score'] = scores[f"{away}_away"]
+                df.at[idx, 'Actual_Home_Score'] = scores[f"{home}_home"]
+                updated = True
+                print(f"Graded: {away} {scores[f'{away}_away']} @ {home} {scores[f'{home}_home']}")
+                
+    if updated:
+        df.to_csv('history.csv', index=False)
+        print("history.csv updated successfully.")
+
+# --- LIVE ODDS SCRAPING ---
+
+def run_live_scraper():
+    print("Running Live Odds Scraper...")
+    if not ODDS_API_KEY:
+        print("Missing ODDS_API_KEY environment variable.")
+        return
+        
+    url = f"https://api.the-odds-api.com/v4/sports/{SPORT}/odds?regions={REGIONS}&markets={MARKETS}&bookmakers={BOOKMAKER}&oddsFormat=american&apiKey={ODDS_API_KEY}"
+    response = requests.get(url)
+    
+    if response.status_code != 200:
+        print("Failed to fetch odds.")
+        return
+        
+    games = response.json()
+    epa_stats = get_blended_nfl_stats(2025, 2026)
+    
+    history_file = 'history.csv'
+    history_fields = ['Date', 'Away_Team', 'Home_Team', 'Pinnacle_Away_ML', 'Pinnacle_Home_ML', 'Pinnacle_Away_Spread', 'Pinnacle_Home_Spread', 'Pinnacle_Total_Line', 'Actual_Away_Score', 'Actual_Home_Score']
+    
+    if not os.path.exists(history_file):
+        with open(history_file, 'w', newline='') as f:
+            writer = csv.writer(f)
+            writer.writerow(history_fields)
             
-            if mkt:
-                model_weight = 0.50
+    existing_history = pd.read_csv(history_file)
+    model_weight = 0.15 
+    
+    for game in games:
+        away = ODDS_API_TO_ABBR.get(game['away_team'])
+        home = ODDS_API_TO_ABBR.get(game['home_team'])
+        if not away or not home or away not in epa_stats or home not in epa_stats:
+            continue
+            
+        date = game['commence_time'][:10]
+        bookmaker = game.get('bookmakers', [])
+        if not bookmaker: continue
+        markets = bookmaker[0].get('markets', [])
+        
+        h2h_market = next((m for m in markets if m['key'] == 'h2h'), None)
+        spread_market = next((m for m in markets if m['key'] == 'spreads'), None)
+        totals_market = next((m for m in markets if m['key'] == 'totals'), None)
+        
+        away_ml, home_ml = 'N/A', 'N/A'
+        if h2h_market:
+            for out in h2h_market['outcomes']:
+                if out['name'] == game['away_team']: away_ml = out['price']
+                elif out['name'] == game['home_team']: home_ml = out['price']
                 
-                # Shrink Moneyline Probabilities using Proportional De-vigging
-                away_odds = mkt.get('h2h', {}).get('away')
-                home_odds = mkt.get('h2h', {}).get('home')
-                t_away, t_home = proportional_devig(away_odds, home_odds)
-                
-                if t_away != 0.5:
-                    sim_res["away_win_prob"] = (model_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - model_weight) * t_away)
-                    sim_res["home_win_prob"] = (model_weight * (sim_res["home_win_prob"] / 100.0)) + ((1.0 - model_weight) * t_home)
-                else:
-                    sim_res["away_win_prob"] = sim_res["away_win_prob"] / 100.0
-                    sim_res["home_win_prob"] = sim_res["home_win_prob"] / 100.0
+        away_sp, home_sp = 'N/A', 'N/A'
+        if spread_market:
+            for out in spread_market['outcomes']:
+                if out['name'] == game['away_team']: away_sp = out['point']
+                elif out['name'] == game['home_team']: home_sp = out['point']
                     
-                # Shrink Spread Probabilities
-                sp_away_odds = mkt.get('spreads', {}).get('away')
-                sp_home_odds = mkt.get('spreads', {}).get('home')
-                t_sp_away, t_sp_home = proportional_devig(sp_away_odds, sp_home_odds)
-                if t_sp_away != 0.5:
-                    sim_res["spread_probs"]["away"] = (model_weight * sim_res["spread_probs"]["away"]) + ((1.0 - model_weight) * t_sp_away)
-                    sim_res["spread_probs"]["home"] = (model_weight * sim_res["spread_probs"]["home"]) + ((1.0 - model_weight) * t_sp_home)
+        total_line = 'N/A'
+        if totals_market:
+            for out in totals_market['outcomes']:
+                total_line = out['point']
 
-                # Shrink Totals Probabilities
-                ou_over_odds = mkt.get('totals', {}).get('over')
-                ou_under_odds = mkt.get('totals', {}).get('under')
-                t_over, t_under = proportional_devig(ou_over_odds, ou_under_odds)
-                if t_over != 0.5:
-                    sim_res["ou_probs"]["over"] = (model_weight * sim_res["ou_probs"]["over"]) + ((1.0 - model_weight) * t_over)
-                    sim_res["ou_probs"]["under"] = (model_weight * sim_res["ou_probs"]["under"]) + ((1.0 - model_weight) * t_under)
-
-                # Calculate EV & Units
-                mkt["away_ml_ev"] = calculate_ev(sim_res["away_win_prob"] * 100, away_odds)
-                mkt["away_ml_units"] = calc_kelly_units(sim_res["away_win_prob"] * 100, away_odds)
-                mkt["home_ml_ev"] = calculate_ev(sim_res["home_win_prob"] * 100, home_odds)
-                mkt["home_ml_units"] = calc_kelly_units(sim_res["home_win_prob"] * 100, home_odds)
-                
-                # Format final win prob display
-                sim_res["away_win_prob"] = round(sim_res["away_win_prob"] * 100, 1)
-                sim_res["home_win_prob"] = round(sim_res["home_win_prob"] * 100, 1)
-                
-                if spread_line is not None:
-                    mkt["away_sp_ev"] = calculate_ev(sim_res["spread_probs"]["away"] * 100, sp_away_odds, sim_res["spread_probs"]["push"] * 100)
-                    mkt["away_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["away"] * 100, sp_away_odds, sim_res["spread_probs"]["push"] * 100)
-                    mkt["home_sp_ev"] = calculate_ev(sim_res["spread_probs"]["home"] * 100, sp_home_odds, sim_res["spread_probs"]["push"] * 100)
-                    mkt["home_sp_units"] = calc_kelly_units(sim_res["spread_probs"]["home"] * 100, sp_home_odds, sim_res["spread_probs"]["push"] * 100)
-                
-                if total_line is not None:
-                    mkt["over_ev"] = calculate_ev(sim_res["ou_probs"]["over"] * 100, ou_over_odds, sim_res["ou_probs"]["push"] * 100)
-                    mkt["over_units"] = calc_kelly_units(sim_res["ou_probs"]["over"] * 100, ou_over_odds, sim_res["ou_probs"]["push"] * 100)
-                    mkt["under_ev"] = calculate_ev(sim_res["ou_probs"]["under"] * 100, ou_under_odds, sim_res["ou_probs"]["push"] * 100)
-                    mkt["under_units"] = calc_kelly_units(sim_res["ou_probs"]["under"] * 100, ou_under_odds, sim_res["ou_probs"]["push"] * 100)
-
-            todays_games.append({
-                "away_team": away_abbr, "home_team": home_abbr,
-                "away_offense": epa_stats[away_abbr], "home_offense": epa_stats[home_abbr],
-                "simulation": sim_res, "market_data": mkt
-            })
-
-    date_str = datetime.now().strftime('%Y-%m-%d')
-    output_data = {
-        "date": date_str,
-        "last_updated": datetime.utcnow().isoformat() + "Z",
-        "teams": epa_stats,
-        "todays_games": todays_games
-    }
-    
-    with open('data.json', 'w') as f:
-        json.dump(output_data, f, indent=4)
+        if away_ml == 'N/A' or away_sp == 'N/A' or total_line == 'N/A':
+            continue
+            
+        # Save to history if the match doesn't exist yet
+        match_exists = not existing_history.empty and not existing_history[(existing_history['Date'] == date) & (existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home)].empty
         
-    update_history_csv(todays_games, date_str)
-    print(f"NFL Engine successfully updated for {len(todays_games)} matchups.")
+        if not match_exists:
+            with open(history_file, 'a', newline='') as f:
+                writer = csv.writer(f)
+                writer.writerow([date, away, home, away_ml, home_ml, away_sp, home_sp, total_line, 'N/A', 'N/A'])
 
-if __name__ == "__main__":
-    generate_nfl_json()
+    print("Scraping and line updates complete.")
+
+if __name__ == '__main__':
+    grade_historical_scores()
+    run_live_scraper()
