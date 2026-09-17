@@ -265,7 +265,7 @@ def run_live_scraper():
             
         utc_time = datetime.strptime(game['commence_time'], "%Y-%m-%dT%H:%M:%SZ")
         local_time = utc_time - timedelta(hours=5) 
-        date = local_time.strftime('%Y-%m-%d')
+        date_str = local_time.strftime('%Y-%m-%d')
         
         bookmaker = game.get('bookmakers', [])
         if not bookmaker: continue
@@ -309,7 +309,7 @@ def run_live_scraper():
         if not match_exists:
             with open(history_file, 'a', newline='') as f:
                 writer = csv.writer(f)
-                writer.writerow([date, away, home, away_ml, home_ml, away_sp, home_sp, total_line, 'N/A', 'N/A'])
+                writer.writerow([date_str, away, home, away_ml, home_ml, away_sp, home_sp, total_line, 'N/A', 'N/A'])
 
         # --- GENERATE DASHBOARD DATA ---
         sim_res = simulate_nfl_game(epa_stats[away], epa_stats[home], total_line, home_sp)
@@ -362,9 +362,16 @@ def run_live_scraper():
                 under_rec = calc_kelly_units(b_ou_u * 100, under_odds, b_ou_push * 100)
 
         dashboard_games.append({
+            "Date": date_str,
+            "date": date_str,
+            "Away_Team": away,
+            "Home_Team": home,
+            "AwayTeam": away,
+            "HomeTeam": home,
             "away_team": away,
             "home_team": home,
             "commence_time": game['commence_time'],
+            
             "away_prob": round(sim_res["away_win_prob"], 1),
             "home_prob": round(sim_res["home_win_prob"], 1),
             "proj_away_score": sim_res["away_proj_score"],
@@ -399,9 +406,9 @@ def run_live_scraper():
             "under_rec": under_rec
         })
 
-    # Export to data.json
+    # Output standard ISO format so JavaScript Date() functions can parse it
     output_json = {
-        "last_updated": (datetime.utcnow() - timedelta(hours=5)).strftime("%B %d, %Y at %I:%M %p Central"),
+        "last_updated": datetime.utcnow().isoformat() + "Z", 
         "games": dashboard_games
     }
     with open('data.json', 'w') as f:
