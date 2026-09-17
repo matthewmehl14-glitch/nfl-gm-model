@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 import scipy.stats as stats
 import nfl_data_py as nfl
-from datetime import datetime
+from datetime import datetime, timedelta
 
 # Set seed for reproducible Monte Carlo draws
 np.random.seed(42)
@@ -60,7 +60,7 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
         for t in team_off_epa.keys():
             stats_dict[t] = {
                 'off_epa': team_off_epa.get(t, 0.0),
-                'def_epa': team_def_epa.get(t, 0.0)  # Positive = allows EPA (bad), Negative = stifles EPA (good)
+                'def_epa': team_def_epa.get(t, 0.0) 
             }
         return stats_dict
 
@@ -79,12 +79,10 @@ def get_blended_nfl_stats(prior_season=2025, current_season=2026):
     return blended
 
 def simulate_nfl_game(away_stats, home_stats, total_line=45.0, spread_line=-3.0, num_sims=10000):
-    # Standard NFL game: ~63 offensive plays per team
     PLAYS_PER_GAME = 63.0
     LEAGUE_AVG_POINTS = 21.5
-    HFA_POINTS = 1.8  # Home field advantage
+    HFA_POINTS = 1.8 
 
-    # Correct sign: Positive def_epa means defense allows more points
     away_epa_net = away_stats['off_epa'] + home_stats['def_epa']
     home_epa_net = home_stats['off_epa'] + away_stats['def_epa']
 
@@ -130,30 +128,6 @@ def american_to_decimal(odds):
     if odds > 0: return 1.0 + (odds / 100.0)
     else: return 1.0 + (100.0 / abs(odds))
 
-def proportional_devig(odds1, odds2):
-    p1 = 1.0 / american_to_decimal(odds1)
-    p2 = 1.0 / american_to_decimal(odds2)
-    total = p1 + p2
-    return p1 / total, p2 / total
-
-def calculate_ev(win_prob, odds, push_prob=0.0):
-    dec_odds = american_to_decimal(odds)
-    win_p = win_prob / 100.0
-    push_p = push_prob / 100.0
-    loss_p = max(0.0, 1.0 - win_p - push_p)
-    profit_on_win = dec_odds - 1.0
-    return ((win_p * profit_on_win) - loss_p) * 100.0
-
-def calc_kelly_units(win_prob, odds, push_prob=0.0, fraction=0.25, max_unit=2.0):
-    dec_odds = american_to_decimal(odds)
-    win_p = win_prob / 100.0
-    b = dec_odds - 1.0
-    if b <= 0: return 0.0
-    kelly_f = (win_p * b - (1.0 - win_p)) / b
-    if kelly_f <= 0: return 0.0
-    adj_kelly = kelly_f * fraction * 100.0 
-    return round(min(adj_kelly, max_unit), 2)
-
 def grade_historical_scores():
     if not os.path.exists('history.csv'): return
     print("Checking for ungraded games in history.csv...")
@@ -161,44 +135,58 @@ def grade_historical_scores():
     df = pd.read_csv('history.csv')
     updated = False
     
-    ungraded_dates = df[(df['Actual_Away_Score'].isna()) | (df['Actual_Away_Score'] == 'N/A')]['Date'].unique()
+    is_ungraded = df['Actual_Away_Score'].isna() | (df['Actual_Away_Score'] == 'N/A')
+    ungraded_dates = df[is_ungraded]['Date'].unique()
     
     if len(ungraded_dates) == 0:
         print("All games are graded.")
         return
 
     for target_date in ungraded_dates:
-        dt_str = str(target_date).replace('-', '')
-        url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={dt_str}"
-        
         try:
-            resp = requests.get(url, timeout=10)
-            if resp.status_code != 200: continue
-            data = resp.json()
-        except Exception:
+            dt = datetime.strptime(str(target_date), "%Y-%m-%d")
+        except ValueError:
             continue
+            
+        # Search window: Target day, day before, day after to catch timezone bleeding
+        check_dates = [
+            dt.strftime("%Y%m%d"),
+            (dt + timedelta(days=1)).strftime("%Y%m%d"),
+            (dt - timedelta(days=1)).strftime("%Y%m%d")
+        ]
         
         scores = {}
-        for event in data.get('events', []):
-            for comp in event.get('competitions', []):
-                if comp.get('status', {}).get('type', {}).get('completed', False):
-                    for team in comp.get('competitors', []):
-                        mascot = team.get('team', {}).get('name', '')
-                        score = team.get('score', 0)
-                        home_away = team.get('homeAway')
-                        abbr = ESPN_TEAM_MAPPING.get(mascot)
-                        if abbr:
-                            scores[f"{abbr}_{home_away}"] = score
+        for dt_str in check_dates:
+            url = f"https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates={dt_str}"
+            try:
+                resp = requests.get(url, timeout=10)
+                if resp.status_code != 200: continue
+                data = resp.json()
+                
+                for event in data.get('events', []):
+                    for comp in event.get('competitions', []):
+                        if comp.get('status', {}).get('type', {}).get('completed', False):
+                            for team in comp.get('competitors', []):
+                                mascot = team.get('team', {}).get('name', '')
+                                score = team.get('score', 0)
+                                home_away = team.get('homeAway')
+                                abbr = ESPN_TEAM_MAPPING.get(mascot)
+                                if abbr:
+                                    scores[f"{abbr}_{home_away}"] = score
+            except Exception:
+                continue
         
-        for idx, row in df[df['Date'] == target_date].iterrows():
-            away = row['Away_Team']
-            home = row['Home_Team']
-            
-            if f"{away}_away" in scores and f"{home}_home" in scores:
-                df.at[idx, 'Actual_Away_Score'] = scores[f"{away}_away"]
-                df.at[idx, 'Actual_Home_Score'] = scores[f"{home}_home"]
-                updated = True
-                print(f"Graded: {away} {scores[f'{away}_away']} @ {home} {scores[f'{home}_home']}")
+        # Apply matched scores to ANY ungraded row with the correct matchup
+        for idx, row in df.iterrows():
+            if pd.isna(row['Actual_Away_Score']) or row['Actual_Away_Score'] == 'N/A':
+                away = row['Away_Team']
+                home = row['Home_Team']
+                
+                if f"{away}_away" in scores and f"{home}_home" in scores:
+                    df.at[idx, 'Actual_Away_Score'] = scores[f"{away}_away"]
+                    df.at[idx, 'Actual_Home_Score'] = scores[f"{home}_home"]
+                    updated = True
+                    print(f"Graded: {away} {scores[f'{away}_away']} @ {home} {scores[f'{home}_home']}")
                 
     if updated:
         df.to_csv('history.csv', index=False)
@@ -236,7 +224,11 @@ def run_live_scraper():
         if not away or not home or away not in epa_stats or home not in epa_stats:
             continue
             
-        date = game['commence_time'][:10]
+        # Convert UTC to Central Time for local scheduling
+        utc_time = datetime.strptime(game['commence_time'], "%Y-%m-%dT%H:%M:%SZ")
+        local_time = utc_time - timedelta(hours=5) 
+        date = local_time.strftime('%Y-%m-%d')
+        
         bookmaker = game.get('bookmakers', [])
         if not bookmaker: continue
         markets = bookmaker[0].get('markets', [])
@@ -265,7 +257,9 @@ def run_live_scraper():
         if away_ml == 'N/A' or away_sp == 'N/A' or total_line == 'N/A':
             continue
             
-        match_exists = not existing_history.empty and not existing_history[(existing_history['Date'] == date) & (existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home)].empty
+        # Deduplication Check: Prevent logging upcoming games multiple times
+        is_ungraded = existing_history['Actual_Away_Score'].isna() | (existing_history['Actual_Away_Score'] == 'N/A')
+        match_exists = not existing_history[(existing_history['Away_Team'] == away) & (existing_history['Home_Team'] == home) & is_ungraded].empty
         
         if not match_exists:
             with open(history_file, 'a', newline='') as f:
