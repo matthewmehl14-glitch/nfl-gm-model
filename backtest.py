@@ -5,11 +5,13 @@ from scraper_nfl import (
     simulate_nfl_game,
     proportional_devig,
     calculate_ev,
-    calc_kelly_units,
     american_to_decimal
 )
 
-def evaluate_bet(market_type, pick, row, bet_amount):
+# Seed for consistent simulations across multiple runs
+np.random.seed(42)
+
+def evaluate_bet(market_type, pick, row, bet_amount=25.0):
     away_score = float(row['Actual_Away_Score'])
     home_score = float(row['Actual_Home_Score'])
     actual_total = away_score + home_score
@@ -39,11 +41,10 @@ def evaluate_bet(market_type, pick, row, bet_amount):
         profit = bet_amount * (100 / 110) if won else -bet_amount
         return profit, ('win' if won else 'loss')
 
-def run_backtest(target_date='2026-09-13', base_unit_dollars=25.0):
-    # Adjusting parameters for early-season variance
+def run_backtest(target_date=None, flat_bet=25.0):
     model_weight = 0.15 
     min_ev_hurdle = 3.0
-    max_ev_hurdle = 10.0
+    max_ev_hurdle = 50.0
     
     print("Loading statistical baselines...")
     epa_stats = get_blended_nfl_stats(prior_season=2025, current_season=2026)
@@ -51,15 +52,22 @@ def run_backtest(target_date='2026-09-13', base_unit_dollars=25.0):
     games_evaluated = 0
     total_staked = 0.0
     total_profit = 0.0
-    results_summary = {'ML': {'W': 0, 'L': 0, 'P': 0}, 'SPREAD': {'W': 0, 'L': 0, 'P': 0}, 'TOTAL': {'W': 0, 'L': 0, 'P': 0}}
+    results_summary = {
+        'ML': {'W': 0, 'L': 0, 'P': 0},
+        'SPREAD': {'W': 0, 'L': 0, 'P': 0},
+        'TOTAL': {'W': 0, 'L': 0, 'P': 0}
+    }
 
     with open('history.csv', mode='r', encoding='utf-8') as f:
         reader = list(csv.DictReader(f))
 
-    print(f"\n--- REPLAYING SLATE FOR {target_date} WITH KELLY STAKING & EV CAPS ---\n")
+    print(f"\n--- REPLAYING SLATE WITH FLAT ${flat_bet:.2f} BETS & EV CAPS ({min_ev_hurdle}% - {max_ev_hurdle}%) ---\n")
 
     for row in reader:
-        if row['Date'] != target_date or row.get('Actual_Away_Score') in ['N/A', '', None]:
+        if target_date and row['Date'] != target_date:
+            continue
+            
+        if row.get('Actual_Away_Score') in ['N/A', '', None]:
             continue
 
         away = row['Away_Team']
@@ -76,6 +84,7 @@ def run_backtest(target_date='2026-09-13', base_unit_dollars=25.0):
         away_ml = float(row['Pinnacle_Away_ML']) if row['Pinnacle_Away_ML'] != 'N/A' else None
         home_ml = float(row['Pinnacle_Home_ML']) if row['Pinnacle_Home_ML'] != 'N/A' else None
 
+        # --- Moneyline Check ---
         if away_ml and home_ml:
             t_away, t_home = proportional_devig(away_ml, home_ml)
             sim_res["away_win_prob"] = (model_weight * (sim_res["away_win_prob"] / 100.0)) + ((1.0 - model_weight) * t_away)
@@ -85,25 +94,20 @@ def run_backtest(target_date='2026-09-13', base_unit_dollars=25.0):
             home_ml_ev = calculate_ev(sim_res["home_win_prob"] * 100, home_ml)
 
             if away_ml_ev and min_ev_hurdle <= away_ml_ev <= max_ev_hurdle:
-                units = calc_kelly_units(sim_res["away_win_prob"] * 100, away_ml)
-                bet_amt = units * base_unit_dollars
-                if bet_amt > 0:
-                    p, res = evaluate_bet('ML', 'away', row, bet_amt)
-                    total_staked += bet_amt
-                    total_profit += p
-                    results_summary['ML'][res[0].upper()] += 1
-                    print(f"Betted ML: {away} ({res.upper()}) | EV: {away_ml_ev}% | Stake: ${bet_amt:.2f} ({units}u) | Profit: ${p:.2f}")
+                p, res = evaluate_bet('ML', 'away', row, flat_bet)
+                total_staked += flat_bet
+                total_profit += p
+                results_summary['ML'][res[0].upper()] += 1
+                print(f"Betted ML: {away} ({res.upper()}) | EV: {away_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
             elif home_ml_ev and min_ev_hurdle <= home_ml_ev <= max_ev_hurdle:
-                units = calc_kelly_units(sim_res["home_win_prob"] * 100, home_ml)
-                bet_amt = units * base_unit_dollars
-                if bet_amt > 0:
-                    p, res = evaluate_bet('ML', 'home', row, bet_amt)
-                    total_staked += bet_amt
-                    total_profit += p
-                    results_summary['ML'][res[0].upper()] += 1
-                    print(f"Betted ML: {home} ({res.upper()}) | EV: {home_ml_ev}% | Stake: ${bet_amt:.2f} ({units}u) | Profit: ${p:.2f}")
+                p, res = evaluate_bet('ML', 'home', row, flat_bet)
+                total_staked += flat_bet
+                total_profit += p
+                results_summary['ML'][res[0].upper()] += 1
+                print(f"Betted ML: {home} ({res.upper()}) | EV: {home_ml_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
+        # --- Spread Check ---
         if spread_line is not None and row['Pinnacle_Away_Spread'] != 'N/A':
             t_sp_a, t_sp_h = proportional_devig(-110, -110)
             sim_res["spread_probs"]["away"] = (model_weight * sim_res["spread_probs"]["away"]) + ((1.0 - model_weight) * t_sp_a)
@@ -113,25 +117,20 @@ def run_backtest(target_date='2026-09-13', base_unit_dollars=25.0):
             home_sp_ev = calculate_ev(sim_res["spread_probs"]["home"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
 
             if away_sp_ev and min_ev_hurdle <= away_sp_ev <= max_ev_hurdle:
-                units = calc_kelly_units(sim_res["spread_probs"]["away"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
-                bet_amt = units * base_unit_dollars
-                if bet_amt > 0:
-                    p, res = evaluate_bet('SPREAD', 'away', row, bet_amt)
-                    total_staked += bet_amt
-                    total_profit += p
-                    results_summary['SPREAD'][res[0].upper()] += 1
-                    print(f"Betted SPREAD: {away} ({res.upper()}) | EV: {away_sp_ev}% | Stake: ${bet_amt:.2f} ({units}u) | Profit: ${p:.2f}")
+                p, res = evaluate_bet('SPREAD', 'away', row, flat_bet)
+                total_staked += flat_bet
+                total_profit += p
+                results_summary['SPREAD'][res[0].upper()] += 1
+                print(f"Betted SPREAD: {away} ({res.upper()}) | EV: {away_sp_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
             elif home_sp_ev and min_ev_hurdle <= home_sp_ev <= max_ev_hurdle:
-                units = calc_kelly_units(sim_res["spread_probs"]["home"] * 100, -110, sim_res["spread_probs"]["push"] * 100)
-                bet_amt = units * base_unit_dollars
-                if bet_amt > 0:
-                    p, res = evaluate_bet('SPREAD', 'home', row, bet_amt)
-                    total_staked += bet_amt
-                    total_profit += p
-                    results_summary['SPREAD'][res[0].upper()] += 1
-                    print(f"Betted SPREAD: {home} ({res.upper()}) | EV: {home_sp_ev}% | Stake: ${bet_amt:.2f} ({units}u) | Profit: ${p:.2f}")
+                p, res = evaluate_bet('SPREAD', 'home', row, flat_bet)
+                total_staked += flat_bet
+                total_profit += p
+                results_summary['SPREAD'][res[0].upper()] += 1
+                print(f"Betted SPREAD: {home} ({res.upper()}) | EV: {home_sp_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
+        # --- Totals Check ---
         if total_line is not None:
             t_ou_o, t_ou_u = proportional_devig(-110, -110)
             sim_res["ou_probs"]["over"] = (model_weight * sim_res["ou_probs"]["over"]) + ((1.0 - model_weight) * t_ou_o)
@@ -141,28 +140,22 @@ def run_backtest(target_date='2026-09-13', base_unit_dollars=25.0):
             under_ev = calculate_ev(sim_res["ou_probs"]["under"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
 
             if over_ev and min_ev_hurdle <= over_ev <= max_ev_hurdle:
-                units = calc_kelly_units(sim_res["ou_probs"]["over"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
-                bet_amt = units * base_unit_dollars
-                if bet_amt > 0:
-                    p, res = evaluate_bet('TOTAL', 'over', row, bet_amt)
-                    total_staked += bet_amt
-                    total_profit += p
-                    results_summary['TOTAL'][res[0].upper()] += 1
-                    print(f"Betted TOTAL: OVER {total_line} in {away}@{home} ({res.upper()}) | EV: {over_ev}% | Stake: ${bet_amt:.2f} ({units}u) | Profit: ${p:.2f}")
+                p, res = evaluate_bet('TOTAL', 'over', row, flat_bet)
+                total_staked += flat_bet
+                total_profit += p
+                results_summary['TOTAL'][res[0].upper()] += 1
+                print(f"Betted TOTAL: OVER {total_line} in {away}@{home} ({res.upper()}) | EV: {over_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
             elif under_ev and min_ev_hurdle <= under_ev <= max_ev_hurdle:
-                units = calc_kelly_units(sim_res["ou_probs"]["under"] * 100, -110, sim_res["ou_probs"]["push"] * 100)
-                bet_amt = units * base_unit_dollars
-                if bet_amt > 0:
-                    p, res = evaluate_bet('TOTAL', 'under', row, bet_amt)
-                    total_staked += bet_amt
-                    total_profit += p
-                    results_summary['TOTAL'][res[0].upper()] += 1
-                    print(f"Betted TOTAL: UNDER {total_line} in {away}@{home} ({res.upper()}) | EV: {under_ev}% | Stake: ${bet_amt:.2f} ({units}u) | Profit: ${p:.2f}")
+                p, res = evaluate_bet('TOTAL', 'under', row, flat_bet)
+                total_staked += flat_bet
+                total_profit += p
+                results_summary['TOTAL'][res[0].upper()] += 1
+                print(f"Betted TOTAL: UNDER {total_line} in {away}@{home} ({res.upper()}) | EV: {under_ev:.1f}% | Stake: ${flat_bet:.2f} | Profit: ${p:.2f}")
 
     roi = (total_profit / total_staked * 100) if total_staked > 0 else 0.0
     
-    print("\n--- FINAL BACKTEST RESULTS ---")
+    print("\n--- FINAL FLAT-BETTING BACKTEST RESULTS ---")
     print(f"Games Evaluated:  {games_evaluated}")
     print(f"Total Bets Placed: {sum(results_summary['ML'].values()) + sum(results_summary['SPREAD'].values()) + sum(results_summary['TOTAL'].values())}")
     print(f"Moneyline Record: {results_summary['ML']['W']}-{results_summary['ML']['L']}-{results_summary['ML']['P']}")
