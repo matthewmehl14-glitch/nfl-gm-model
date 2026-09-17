@@ -406,9 +406,14 @@ def run_live_scraper():
             "under_rec": under_rec
         })
 
-    # Output standard ISO format so JavaScript Date() functions can parse it
+    # Grab the date of the first game to serve as the slate identifier for the frontend
+    primary_date = dashboard_games[0]['date'] if dashboard_games else (datetime.utcnow() - timedelta(hours=5)).strftime('%Y-%m-%d')
+    
     output_json = {
         "last_updated": datetime.utcnow().isoformat() + "Z", 
+        "slate": primary_date,
+        "slate_date": primary_date,
+        "date": primary_date,
         "games": dashboard_games
     }
     with open('data.json', 'w') as f:
